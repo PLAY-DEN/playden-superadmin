@@ -79,6 +79,15 @@ export default {
           DEFAULT: colors.emerald[500],
           dark: colors.emerald[700],
         },
+
+        /*
+        * play-den colors
+        */
+        playden: {
+          primary: "#41244B",
+          DEFAULT: "#FFA500",
+          dark: "#FF8C00",
+        },
       },
     },
   },
