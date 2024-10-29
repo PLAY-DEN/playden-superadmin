@@ -1,21 +1,27 @@
 import { Outlet } from "react-router-dom";
-import { AuthBg } from "../assets/images";
+import { AuthBg, logo } from "../assets/images";
 
 const AuthLayout = () => {
     return (
-        <div className="min-h-screen w-full grid grid-cols-2">
-            <div className="mx-auto my-auto">
+        <div className="min-h-screen w-full grid grid-cols-1 md:grid-cols-2">
+            <div className="mx-auto my-auto p-6 sm:p-10">
                 <Outlet />
             </div>
-            <div className={`bg-playden-primary bg-cover bg-none bg-center w-full`} 
+            {/* Background Image Container - Only visible on medium and larger screens */}
+            <div 
+                className="hidden md:block w-full" 
                 style={{
                     backgroundImage: `url(${AuthBg})`,
-                }}>
-                    <div className='flex justify-center my-auto'>
-                        <h1 className='text-[100px] text-white'>Logo</h1>
-                    </div>
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                }}
+            >
+                <div className="flex justify-center items-center h-screen">
+                    <img src={logo} alt="logo" />
+                </div>
             </div>
         </div>
     );
-}
+};
+
 export default AuthLayout;
