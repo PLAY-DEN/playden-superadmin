@@ -1,8 +1,8 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import DashboardPage from "./pages/dashboard";
-import BaseLayout from "./layouts/base";
-import AuthLayout from "./layouts/auth";
-import LoginPage from "./pages/auth/login";
+import { BrowserRouter, Route, Routes } from "react-router-dom"
+import DashboardPage from "./pages/dashboard"
+import BaseLayout from "./layouts/base"
+import AuthLayout from "./layouts/auth"
+import LoginPage from "./pages/auth/login"
 
 const MyRoutes = () => (
   <Routes>

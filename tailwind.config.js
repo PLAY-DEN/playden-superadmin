@@ -89,6 +89,9 @@ export default {
           dark: "#FF8C00",
         },
       },
+      FontFamily: {
+        Poppins: ['Poppins','sans-serif'],
+      },
     },
   },
   plugins: [require("@tailwindcss/forms")],
