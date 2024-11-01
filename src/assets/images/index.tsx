@@ -13,7 +13,15 @@ import setting from "./settings.png"
 import user from "./user.png"
 import dashboard from "./dashboard.png"
 import logout from "./logout.png"
-
+import Ellipse from "./Ellipse.svg"
+import vector12 from "./Vector12.png"
+import Chart from "./Chart.png"
+import vector6 from "./Vector6.png"
+import pitchImg from "./pitchImg.png"
+import person from "./person.png"
+import compiling from "./Compiling.png"
+import equalizer from "./Equalizer.png"
+import page from "./page.png"
 
 export {
     AuthBg,
@@ -30,5 +38,14 @@ export {
     setting,
     user,
     dashboard,
-    logout
+    logout,
+    Ellipse,
+    vector12,
+    Chart,
+    vector6,
+    pitchImg,
+    person,
+    equalizer,
+    compiling,
+    page
 }

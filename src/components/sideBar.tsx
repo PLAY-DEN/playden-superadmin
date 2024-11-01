@@ -17,7 +17,7 @@ const Sidebar: React.FC = () => {
     const [activeLink, setActiveLink] = useState('Dashboard');
 
     return (
-        <div className="h-screen w-64 shadow-2xl mt-16 font-poppins p-6 fixed flex flex-col text-playden-primary" style={{ backgroundColor: '#8F55A21A' }}>
+        <div className="h-screen w-64 shadow-2xl mt-16 font-poppins p-6 fixed flex flex-col text-playden-primary bg-[#8F55A21A] transition-all duration-300">
             {/* Top Section: Profile */}
             <div className="pt-5 flex items-center gap-2">
                 <img 
@@ -111,7 +111,7 @@ const Sidebar: React.FC = () => {
             </div>
 
             {/* Bottom Section: Logout */}
-            <div className="flex items-center gap-1 px-2 font-bold py-2 rounded-md text-red-500 cursor-pointer ">
+            <div className="flex items-center gap-1 px-2 font-bold py-2 rounded-md text-red-500 cursor-pointer">
                 <img src={logout} alt="Logout Icon" className="w-4 h-4" />
                 <span>Logout</span>
             </div>
