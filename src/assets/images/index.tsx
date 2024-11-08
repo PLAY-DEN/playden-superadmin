@@ -22,6 +22,14 @@ import person from "./person.png"
 import compiling from "./Compiling.png"
 import equalizer from "./Equalizer.png"
 import page from "./page.png"
+import plus from "./plus.png"
+import filter from "./filter.png"
+import pitchPic from "./pitchPic.png"
+import coloredStar from "./coloredStar.png"
+import star from "./star.png"
+import Home7 from './Home 7.png'
+import pitchPic2 from './pitchPic2.png'
+import bookingImg from './bookingImg.png'
 
 export {
     AuthBg,
@@ -47,5 +55,13 @@ export {
     person,
     equalizer,
     compiling,
-    page
+    page,
+    filter,
+    plus,
+    pitchPic,
+    coloredStar,
+    star,
+    Home7,
+    pitchPic2,
+    bookingImg
 }

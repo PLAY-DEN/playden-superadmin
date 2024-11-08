@@ -12,6 +12,7 @@ import {
     cancle,
     logout
 } from "../assets/images";
+import { Link } from 'react-router-dom';
 
 const Sidebar: React.FC = () => {
     const [activeLink, setActiveLink] = useState('Dashboard');
@@ -34,7 +35,7 @@ const Sidebar: React.FC = () => {
             {/* Dashboard Link */}
             <div className="mt-2">
                 <a
-                    href="#"
+                    href="/"
                     onClick={() => setActiveLink('Dashboard')}
                     className={`flex items-center gap-4 px-4 mt-8 py-2 text-xs font-bold rounded-md hover:bg-[#35354C] hover:text-white
                         ${activeLink === 'Dashboard' ? 'bg-[#35354C] text-white relative' : ''}`}
@@ -56,15 +57,15 @@ const Sidebar: React.FC = () => {
                 
                 {/* Menu Links */}
                 {[
-                    { name: 'Pitch Listing', icon: pitch },
-                    { name: 'Booking Management', icon: booking },
-                    { name: 'Cancellation', icon: cancle },
-                    { name: 'Play Points', icon: playPoint },
-                    { name: 'Financials & Analytics', icon: finance },
+                    { name: 'Pitch Listing', icon: pitch, route: '/pitch-listing' },
+                    { name: 'Booking Management', icon: booking, route: '/booking-management' },
+                    { name: 'Cancellation', icon: cancle, route: '/cancellation-management'  },
+                    { name: 'Play Points', icon: playPoint, route: '/play-point' },
+                    { name: 'Financials & Analytics', icon: finance, route: '/finances' },
                 ].map(item => (
-                    <a
+                    <Link
                         key={item.name}
-                        href="#"
+                        to={item.route}
                         onClick={() => setActiveLink(item.name)}
                         className={`flex items-center gap-3 px-2 py-2 text-sm font-bold rounded-md hover:bg-[#35354C] hover:text-white 
                             ${activeLink === item.name ? 'bg-[#35354C] text-white relative' : ''}`}
@@ -77,7 +78,7 @@ const Sidebar: React.FC = () => {
                         />
                         <span>{item.name}</span>
                         {activeLink === item.name && <span className="absolute right-2 text-xs font-bold">&gt;</span>}
-                    </a>
+                    </Link>
                 ))}
             </div>
 
@@ -87,13 +88,13 @@ const Sidebar: React.FC = () => {
                 
                 {/* Menu Links */}
                 {[
-                     { name: 'User Management', icon: user },                     
-                     { name: 'Pitch Admin Management', icon: pitchAdmin }, 
-                     { name: 'Settings', icon: setting },
+                     { name: 'User Management', icon: user, route: '/user-management' },                     
+                     { name: 'Pitch Admin Management', icon: pitchAdmin, route: '/pitch-admin-management'  }, 
+                     { name: 'Settings', icon: setting, route: '/account-settings'  },
                 ].map(item => (
-                    <a
+                    <Link
                         key={item.name}
-                        href="#"
+                        to={item.route}
                         onClick={() => setActiveLink(item.name)}
                         className={`flex items-center gap-3 px-2 py-2 text-sm font-bold rounded-md hover:bg-[#35354C] hover:text-white 
                             ${activeLink === item.name ? 'bg-[#35354C] text-white relative' : ''}`}
@@ -106,7 +107,7 @@ const Sidebar: React.FC = () => {
                         />
                         <span>{item.name}</span>
                         {activeLink === item.name && <span className="absolute right-2 text-xs font-bold">&gt;</span>}
-                    </a>
+                    </Link>
                 ))}
             </div>
 
@@ -119,4 +120,4 @@ const Sidebar: React.FC = () => {
     );
 };
 
-export default Sidebar;
+export default Sidebar
