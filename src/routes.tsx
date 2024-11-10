@@ -17,7 +17,7 @@ import UserDetails from "./components/userDetails"
 import PitchAdminManagement from "./pages/pitchAdminManagement"
 import AddNewAdmin from "./components/addNewAdmin"
 import AdminDetails from "./components/adminDetails"
-import AccountSettings from "./pages/accountSettings"
+import SettingsPage from "./pages/accountSettings"
 
 const MyRoutes = () => (
   <Routes>
@@ -42,7 +42,7 @@ const MyRoutes = () => (
       <Route path="/pitch-admin-management" element={<PitchAdminManagement />} />
       <Route path="/add-new-admin" element={<AddNewAdmin />} />
       <Route path="/admin-details" element={<AdminDetails />} />
-      <Route path="/account-settings" element={<AccountSettings />} />
+      <Route path="/account-settings" element={<SettingsPage />} />
       {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
     </Route>
 
