@@ -23,7 +23,7 @@ const financialRecords = [
 
 const Financials: React.FC = () => {
   return (
-    <div className="bg-white rounded-lg shadow-md relative ml-64 p-8 mt-20 overflow-auto">
+    <div className="relative ml-64 p-8 mt-20 overflow-">
       
       {/* Header Section */}
       <div className="flex flex-row justify-between mb-6">

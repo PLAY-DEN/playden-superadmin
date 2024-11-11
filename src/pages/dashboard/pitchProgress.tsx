@@ -17,7 +17,7 @@ const pitches: Pitch[] = [
 
 const PitchProgress: React.FC = () => {
     return (
-        <div className="bg-white shadow-md w-[630px] rounded-lg h-[457px] pb-12 mb-10">
+        <div className="bg-white shadow-md minw-[630px] w-full rounded-lg h-[457px] pb-12 mb-10">
             <div className="flex flex-row p-3 justify-between mb-3">
                 <div>
                      <h2 className="text-xl font-bold">Pitch Progress</h2>
@@ -37,9 +37,9 @@ const PitchProgress: React.FC = () => {
                   <span className="text-[#A1A5B7] text-xs">PROGRESS</span>
                   <span className="text-[#A1A5B7] text-xs">ACTION</span>
             </div>
-            <div className="grid grid-cols-1">
+            <div className="grid grid-cols-1 space-y-3">
                 {pitches.map((pitch, index) => (
-                    <div key={index} className="flex items-center justify-between p-2 pr-10 bg-gray-100 rounded-lg">
+                    <div key={index} className="flex items-center justify-between p-2 pr-10 bg-gray-100 roundedlg">
                         <div className="flex items-center">
                             <img src={pitch.imageSrc} alt={pitch.name} className="w-12 h-12 rounded-full mr-2" />
                             <p>{pitch.name}</p>
