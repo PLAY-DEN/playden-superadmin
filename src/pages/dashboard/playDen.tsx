@@ -11,8 +11,8 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, icon }) => {
         <div className="bg-white text-end rounded-lg p-4 w-52 h-24 shadow-sm relative">
             {/* Display icon at top-right of the card */}
             {icon && <img src={icon} alt={`${title} icon`} className="absolute top-2 left-2 w-6 h-6" />}
-            <p style={{ color: '#41244B', position: 'absolute', bottom: '20px', right: '10px' }} className="text-xs font-bold">{value}</p>
-            <p style={{ color: '#41244B', position: 'absolute', bottom: '5px', right: '5px' }} className="text-[12px]">{title}</p>
+            <p  className="text-[#41244B] text-xs font-bold">{value}</p>
+            <p className="text-[12px]">{title}</p>
         </div>
     );
 };
@@ -21,7 +21,7 @@ const PlayDenStats: React.FC = () => {
     return (
         <div
             className="bg-playden-primary rounded-lg p-5 flex flex-col items-center"
-            style={{ minWidth: '400px', height: '242px' }}
+            style={{  height: '242px' }}
         >
             {/* Header Section */}
             <div className="flex justify-between w-full">
