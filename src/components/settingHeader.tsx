@@ -41,6 +41,7 @@ const SettingHeader: React.FC<SettingHeaderProps> = ({ activeTab, setActiveTab }
         </div>
         <img src={profileImage} alt="Profile" className="w-[150px] h-[150px] mt-5" />
       </div>
+      <div className="border-b border-gray-300 w-[845px] mb-5 mt-[-100px]"></div>
     </div>
   );
 };

@@ -16,7 +16,7 @@ const AdminDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
 
   return (
-    <div className="bg-white rounded-lg shadow-md relative ml-72 p-8 mt-24">
+    <div className="bg-white relative ml-72 p-8 mt-24">
       <div className="flex flex-row justify-between w-full">
         <h2 className="text-2xl text-[#01031A] font-bold mb-6">Admin Details</h2>
         <select
@@ -33,45 +33,47 @@ const AdminDetails: React.FC = () => {
         <p className="text-gray-500">{adminDetails.id}</p>
       </div>
 
-      <div className="mt-[-20px] flex flex-row ml-24">
+      <div className="flex flex-row ml-24">
         <div>
-          <h2 className="ml-60 mt-14 font-bold">Admin Details</h2>
+          <h2 className="ml-60 mt-20 font-bold">Admin Details</h2>
           <img
             src={bookingImg}
             alt={`${adminDetails.name}'s profile`}
-            className="mt-[-18px]"
+            className="mt-[-5px]"
           />
         </div>
 
-        <div className="text-[#333543] text-xs mt-24 gap-4 ml-[-90px] flex flex-col">
-          <div className="flex gap-32">
-            <span className="font-semibold">Date Joined:</span>
-            <span>{adminDetails.dateJoined}</span>
+        <div className="text-[#333543] text-xs mt-28 ml-[-95px]">
+             <table className="w-full">
+                <tbody>
+                    <tr className="border-none">
+                        <td className="font-semibold">Date Joined:</td>
+                        <td className='pl-5 py-2'>{adminDetails.dateJoined}</td>
+                    </tr>
+                    <tr className="border-none">
+                        <td className="font-semibold">Mobile Number:</td>
+                        <td className='pl-5 py-2'>{adminDetails.mobileNumber}</td>
+                    </tr>
+                    <tr className="border-none">
+                        <td className="font-semibold">Email Address:</td>
+                        <td className='pl-5 py-2'>{adminDetails.email}</td>
+                    </tr>
+                    <tr className="border-none">
+                        <td className="font-semibold">Pitch Owned:</td>
+                        <td className='pl-5 py-2'>{adminDetails.pitchOwned}</td>
+                    </tr>
+                    <tr className="border-none">
+                        <td className="font-semibold">Bank Name:</td>
+                        <td className='pl-5 py-2'>{adminDetails.bankName}</td>
+                    </tr>
+                    <tr>
+                        <td className="font-semibold">Bank Details:</td>
+                        <td className='pl-5 py-2'>{adminDetails.bankDetails}</td>
+                    </tr>
+                </tbody>
+            </table>
           </div>
-          <div className="flex gap-32">
-            <span className="font-semibold">Mobile Number:</span>
-            <span>{adminDetails.mobileNumber}</span>
-          </div>
-          <div className="flex gap-28">
-            <span className="font-semibold">Email Address:</span>
-            <span>{adminDetails.email}</span>
-          </div>
-          <div className="flex gap-32">
-            <span className="font-semibold">Pitch Owned:</span>
-            <span>{adminDetails.pitchOwned}</span>
-          </div>
-          <div className="flex gap-36">
-            <span className="font-semibold">Bank Name:</span>
-            <span>{adminDetails.bankName}</span>
-          </div>
-          <div className="flex gap-36">
-            <span className="font-semibold">Bank Details:</span>
-            <span>{adminDetails.bankDetails}</span>
-          </div>
-        </div>
-      </div>
-
-      <div className='mt-5 ml-80 flex flex-row gap-3'>
+      <div className='mt-[330px] flex flex-row gap-3 ml-[-280px]'>
         <button className="h-[38px] w-[140px] text-xs px-4 py-2 bg-playden-primary text-white rounded-lg cursor-pointer">
           Edit Admin
         </button>
@@ -80,6 +82,7 @@ const AdminDetails: React.FC = () => {
         </button>
       </div>
     </div>
+  </div>
   );
 };
 

@@ -1,5 +1,6 @@
 import { Home7, Ellipse, plus } from "../../assets/images"
 import { useNavigate } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 // Sample Data for Admin Summary Cards
 const adminSummary = [
@@ -24,7 +25,7 @@ const adminRecords = [
 const PitchAdminManagement: React.FC = () => {
     const navigate = useNavigate();
   return (
-    <div className="bg-white rounded-lg shadow-md relative ml-64 p-8 mt-20 overflow-auto">
+    <div className="bg-white relative ml-64 p-8 mt-20">
       
       {/* Header Section */}
       <div className='flex flex-row justify-between'>
@@ -42,7 +43,7 @@ const PitchAdminManagement: React.FC = () => {
                 </div>
                 <button onClick={() => navigate('/add-new-admin')} className='flex flex-row gap-2 bg-playden-primary text-white font-semibold p-3 rounded-lg'>
                     <img src={plus} alt="" className='text-white font-bold mt-1' />
-                    <p>Add New Pitch</p>
+                    <p>Add New Admin</p>
                 </button>
             </div>
       {/* Summary Cards */}
@@ -87,7 +88,9 @@ const PitchAdminManagement: React.FC = () => {
               <td className="border-b p-4 text-xs text-[#01031A]">{record.pitchName}</td>
               <td className="border-b p-4 text-xs text-[#01031A]">{record.bankName}</td>
               <td className="border-b p-4 text-xs text-[#01031A]">{record.bankDetails}</td>
-              <td className="border-b p-4 text-sm text-playden-primary cursor-pointer">View Details</td>
+              <td className="border-b p-4 text-sm text-playden-primary cursor-pointer">
+              <Link to={`/pitch-admin-management/:id${record.id}`} className="text-black font-semibold">View details</Link>
+              </td>
             </tr>
           ))}
         </tbody>

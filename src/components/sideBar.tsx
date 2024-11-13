@@ -47,7 +47,12 @@ const Sidebar: React.FC = () => {
                         style={{ filter: activeLink === 'Dashboard' ? 'brightness(0) invert(1)' : 'brightness(0) invert(0.2)' }}
                     />
                     <span>Dashboard</span>
-                    {activeLink === 'Dashboard' && <span className="absolute right-2 top-4 transform -translate-y-1/2 text-xs font-bold">&gt;</span>}
+                    {activeLink === 'Dashboard' && 
+                    <span className="absolute right-2 top-4 transform -translate-y-1/2 text-xs font-bold">
+                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" className="size-5">
+                           <path fill-rule="evenodd" d="M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z" clip-rule="evenodd" />
+                        </svg>
+                    </span>}
                 </a>
             </div>
 
@@ -77,7 +82,12 @@ const Sidebar: React.FC = () => {
                             style={{ filter: activeLink === item.name ? 'brightness(0) invert(1)' : '' }}
                         />
                         <span>{item.name}</span>
-                        {activeLink === item.name && <span className="absolute right-2 text-xs font-bold">&gt;</span>}
+                        {activeLink === item.name && 
+                        <span className="absolute right-2 text-xs font-bold">
+                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" className="size-5">
+                                 <path fill-rule="evenodd" d="M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z" clip-rule="evenodd" />
+                             </svg>
+                        </span>}
                     </Link>
                 ))}
             </div>
@@ -106,7 +116,12 @@ const Sidebar: React.FC = () => {
                             style={{ filter: activeLink === item.name ? 'brightness(0) invert(1)' : '' }}
                         />
                         <span>{item.name}</span>
-                        {activeLink === item.name && <span className="absolute right-2 text-xs font-bold">&gt;</span>}
+                        {activeLink === item.name && 
+                        <span className="absolute right-2 text-xs font-bold">
+                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" className="size-5">
+                                <path fill-rule="evenodd" d="M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z" clip-rule="evenodd" />
+                            </svg>
+                        </span>}
                     </Link>
                 ))}
             </div>

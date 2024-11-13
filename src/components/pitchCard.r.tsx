@@ -18,7 +18,7 @@ const PitchCard: React.FC<PitchCardProps> = ({ sport, pitchSize, manager, contac
     };
 
     return (
-        <div className="bg-white rounded-lg shadow-md p-4 flex items-center gap-4">
+        <div className="bg-white p-4 flex items-center gap-4">
             <img src={pitchPic} alt="Pitch" className="rounded-md" />
             <div className="flex-1">
                 <p className="text-sm font-bold">SPORT: {sport}</p>

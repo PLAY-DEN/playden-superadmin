@@ -18,7 +18,7 @@ const summary = {
 
 const CancellationManagement: React.FC = () => {
   return (
-    <div className="bg-white rounded-lg shadow-md relative ml-72 p-8 mt-20 overflow-auto">
+    <div className="bg-white relative ml-72 p-8 mt-20 overflow-auto">
       {/* Header and Filter */}
       <div className="flex flex-row justify-between mb-6">
         <h2 className="text-2xl text-[#01031A] font-bold">Cancellation</h2>

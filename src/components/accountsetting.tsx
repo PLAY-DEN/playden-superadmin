@@ -2,63 +2,82 @@ import React from 'react';
 
 const AccountSettings: React.FC = () => {
   return (
-    <div className="bg-white rounded-lg shadow-md mt-[-50px]">
+    <div className="bg-white mt-8">
       {/* User Information Section */}
-      <div className="flex gap-6 mb-8">
-        <div className="flex flex-col gap-4">
-          <div className="flex gap-4">
-            <span className="font-semibold text-[20px] text-[#000000]">Name:</span>
-            <span className="text-sm text-[#000000]">Sophie Super Admin</span>
-          </div>
-          <div className="flex gap-4">
-            <span className="font-semibold text-[20px] text-[#000000]">Email address:</span>
-            <span className="text-sm text-[#000000]">sophiesuperad@gmail.com</span>
-          </div>
-          <div className="flex gap-4">
-            <span className="font-semibold text-[20px] text-[#000000]">Phone number:</span>
-            <span className="text-sm text-[#000000]">+234 8043035200</span>
-          </div>
-          <div className="flex gap-4">
-            <span className="font-semibold text-[20px] text-[#000000]">Role:</span>
-            <span className="text-sm text-[#000000]">Super Admin</span>
-          </div>
-          <div className="flex gap-4">
-            <span className="font-semibold text-[20px] text-[#000000]">Change password:</span>
-            <span className="text-sm text-[#000000]">****SuperAdmin****</span>
-          </div>
-        </div>
+      <div className="mb-10">
+          <table className="max-w-[500px] border border-none">
+             <tbody>
+                 <tr className="border-none">
+                    <td className="font-semibold text-[20px] text-[#000000] py-2">Name:</td>
+                    <td className="text-sm text-[#000000] py-2">Sophie Super Admin</td>
+                </tr>
+                <tr className="border-none">
+                    <td className="font-semibold text-[20px] text-[#000000] py-2">Email address:</td>
+                    <td className="text-sm text-[#000000] py-2">sophiesuperad@gmail.com</td>
+                </tr>
+                <tr className="border-none">
+                    <td className="font-semibold text-[20px] text-[#000000] py-2">Phone number:</td>
+                    <td className="text-sm text-[#000000] py-2">+234 8043035200</td>
+                </tr>
+                <tr className="border-none">
+                    <td className="font-semibold text-[20px] text-[#000000] py-2">Role:</td>
+                    <td className="text-sm text-[#000000] py-2">Super Admin</td>
+                </tr>
+                <tr className='border-none'>
+                    <td className="font-semibold text-[20px] text-[#000000] py-2">Change password:</td>
+                    <td className="text-sm text-[#000000] py-2">****SuperAdmin****</td>
+                </tr>
+             </tbody>
+          </table>
       </div>
 
+
       {/* Manage Admins Section */}
-      <div className="border-t border-gray-200 pt-6">
+      <div className="">
         <h3 className="text-[20px] font-semibold text-[#000000] mb-4">Manage admins</h3>
         <div className="space-y-4 text-sm">
           <div className="flex gap-4">
             <span className="font-semibold">Sophie</span>
-            <span className="text-xl font-bold text-black mt-[-5px]">{'>'}</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-5">
+                    <path fill-rule="evenodd" d="M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z" clip-rule="evenodd" />
+                 </svg>
             <p>Remove</p>
-            <span className="text-xl font-bold text-black mt-[-5px]">{'>'}</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-5">
+                    <path fill-rule="evenodd" d="M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z" clip-rule="evenodd" />
+                 </svg>
             <p>Allocate new duties</p>
           </div>
           <div className="flex gap-4">
             <span className="font-semibold">Zak</span>
-            <span className="text-xl font-bold text-black mt-[-5px]">{'>'}</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-5">
+                  <path fill-rule="evenodd" d="M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z" clip-rule="evenodd" />
+                </svg>
             <p>Remove</p>
-            <span className="text-xl font-bold text-black mt-[-5px]">{'>'}</span>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-5">
+                  <path fill-rule="evenodd" d="M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z" clip-rule="evenodd" />
+               </svg>
             <p>Allocate new duties</p>
           </div>
           <div className="flex gap-4">
             <span className="font-semibold">Oyinkansola</span>
-            <span className="text-xl font-bold text-black mt-[-5px]">{'>'}</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-5">
+                    <path fill-rule="evenodd" d="M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z" clip-rule="evenodd" />
+                 </svg>
             <p>Remove</p>
-            <span className="text-xl font-bold text-black mt-[-5px]">{'>'}</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-5">
+                    <path fill-rule="evenodd" d="M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z" clip-rule="evenodd" />
+                 </svg>
             <p>Allocate new duties</p>
           </div>
           <div className="flex gap-4">
             <span className="font-semibold">Tolu</span>
-            <span className="text-xl font-bold text-black mt-[-5px]">{'>'}</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-5">
+                    <path fill-rule="evenodd" d="M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z" clip-rule="evenodd" />
+                 </svg>
             <p>Remove</p>
-            <span className="text-xl font-bold text-black mt-[-5px]">{'>'}</span>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-5">
+                  <path fill-rule="evenodd" d="M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z" clip-rule="evenodd" />
+              </svg>
             <p>Allocate new duties</p>
           </div>
         </div>

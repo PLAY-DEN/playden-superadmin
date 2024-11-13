@@ -18,7 +18,7 @@ const userDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
 
   return (
-    <div className="bg-white rounded-lg shadow-md relative ml-72 p-8 mt-24">
+    <div className="bg-white relative ml-72 p-8 mt-24">
       <div className="flex flex-row justify-between w-full">
         <h2 className="text-2xl text-[#01031A] font-bold mb-6">User Details</h2>
         <select
@@ -30,58 +30,62 @@ const userDetails: React.FC = () => {
         </select>
       </div>
       
-      <div className="mt-12 ml-20">
+      <div className="mt-10  ml-20">
         <h2 className="text-xl font-semibold">{UserDetails.name}</h2>
         <p className="text-gray-500">{UserDetails.id}</p>
       </div>
       
-      <div className="mt-[-20px] flex flex-row ml-24">
+      <div className="flex flex-row ml-24">
         <div>
-          <h2 className="ml-60 mt-14 font-bold">User Details</h2>
+          <h2 className="ml-60 mt-20 font-bold">User Details</h2>
           <img
             src={bookingImg}
             alt={`${UserDetails.name}'s profile`}
-            className="mt-[-18px]"
+            className="mt-[-5px]"
           />
         </div>
         
-        <div className="text-[#333543] text-xs mt-24 gap-4 ml-[-90px] flex flex-col">
-          <div className="flex gap-32">
-            <span className="font-semibold">Date joined:</span>
-            <span>{UserDetails.dateJoined}</span>
-          </div>
-          <div className="flex gap-24">
-            <span className="font-semibold">Number of booking:</span>
-            <span>{UserDetails.numberOfBooking}</span>
-          </div>
-          <div className="flex gap-20">
-            <span className="font-semibold">Number of cancellation:</span>
-            <span>{UserDetails.numberOfCancellation}</span>
-          </div>
-          <div className="flex gap-32">
-            <span className="font-semibold">Last Booking:</span>
-            <span>{UserDetails.lastBooking}</span>
-          </div>
-          <div className="flex gap-28">
-            <span className="font-semibold">Last cancellation:</span>
-            <span>{UserDetails.lastCancellation}</span>
-          </div>
-          <div className="flex gap-28">
-            <span className="font-semibold">Email address:</span>
-            <span>{UserDetails.email}</span>
-          </div>
-          <div className="flex gap-24">
-            <span className="font-semibold">Mobile number:</span>
-            <span>{UserDetails.mobileNumber}</span>
-          </div>
-          <div className="flex gap-32">
-            <span className="font-semibold">Play points:</span>
-            <span>{UserDetails.playpoints}</span>
-          </div>
-        </div>
-      </div>
+      <div className='text-[#333543] text-xs mt-28 ml-[-85px]'>
+           <table className="w-full">
+              <tbody>
+                <tr className="border-none">
+                   <td className="font-semibold">Date joined:</td>
+                   <td className='pl-5 py-1'>{UserDetails.dateJoined}</td>
+                </tr>
+                <tr className="border-none">
+                  <td className="font-semibold">Number of booking:</td>
+                  <td className='pl-5 py-1'>{UserDetails.numberOfBooking}</td>
+               </tr>
+               <tr className="border-none">
+                  <td className="font-semibold">Number of cancellation:</td>
+                  <td className='pl-5 py-1'>{UserDetails.numberOfCancellation}</td>
+               </tr>
+               <tr className="border-none">
+                  <td className="font-semibold">Last Booking:</td>
+                  <td className='pl-5 py-1'>{UserDetails.lastBooking}</td>
+               </tr>
+               <tr className="border-none">
+                 <td className="font-semibold">Last cancellation:</td>
+                 <td className='pl-5 py-1'>{UserDetails.lastCancellation}</td>
+               </tr>
+               <tr className="border-none">
+                   <td className="font-semibold">Email address:</td>
+                   <td className='pl-5 py-1'>{UserDetails.email}</td>
+               </tr>
+               <tr className="border-none">
+                  <td className="font-semibold">Mobile number:</td>
+                  <td className='pl-5 py-1'>{UserDetails.mobileNumber}</td>
+               </tr>
+               <tr className="border-none">
+                  <td className="font-semibold">Play points:</td>
+                  <td className='pl-5 py-1'>{UserDetails.playpoints}</td>
+               </tr>
+             </tbody>
+          </table>
+       </div>
+
       
-      <div className='mt-5 ml-80 flex flex-row gap-3'>
+       <div className='mt-[330px] flex flex-row gap-3 ml-[-300px]'>
            <button className="h-[38px] w-[140px] text-xs px-4 py-2 bg-playden-primary text-white rounded-lg cursor-pointer">
                 Suspend
            </button>
@@ -90,6 +94,7 @@ const userDetails: React.FC = () => {
            </button>
       </div>
     </div>
+  </div>
   );
 };
 

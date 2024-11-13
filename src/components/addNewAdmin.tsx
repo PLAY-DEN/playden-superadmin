@@ -14,7 +14,7 @@ const AddNewAdmin: React.FC = () => {
   const { id } = useParams<{ id: string }>();
 
   return (
-    <div className="bg-white rounded-lg shadow-md relative ml-72 p-8 mt-24">
+    <div className="bg-white relative ml-72 p-8 mt-24">
       
       {/* Header Section */}
       <div className='flex flex-row justify-between'>
@@ -40,7 +40,7 @@ const AddNewAdmin: React.FC = () => {
 
       <div className="mt-[-20px] flex flex-row ml-24">
         <div>
-          <h2 className="ml-60 mt-14 font-bold">Admin Details</h2>
+          <h2 className="ml-60 mt-14 font-bold">Name: Oyinkansola Soleye</h2>
           <img
             src={bookingImg}
             alt={`${adminDetails.name}'s profile`}
@@ -48,30 +48,35 @@ const AddNewAdmin: React.FC = () => {
           />
         </div>
 
-        <div className="text-[#333543] text-xs mt-24 gap-4 ml-[-120px] flex flex-col">
-          <div className="flex gap-32">
-            <span className="font-semibold">Mobile Number:</span>
-            <span>{adminDetails.mobileNumber}</span>
-          </div>
-          <div className="flex gap-32">
-            <span className="font-semibold">Email Address:</span>
-            <span>{adminDetails.email}</span>
-          </div>
-          <div className="flex gap-40">
-            <span className="font-semibold">Bank Name:</span>
-            <span>{adminDetails.bankName}</span>
-          </div>
-          <div className="flex gap-36">
-            <span className="font-semibold">Bank Details:</span>
-            <span>{adminDetails.bankDetails}</span>
-          </div>
-        </div>
+        <div className="text-[#333543] text-xs mt-24 ml-[-180px]">
+            <table className="w-full text-left border-separate border-spacing-y-2">
+                <tbody>
+                  <tr>
+                      <td className="font-semibold">Mobile Number:</td>
+                      <td className='pl-5 py-2'>{adminDetails.mobileNumber}</td>
+                  </tr>
+                  <tr>
+                      <td className="font-semibold">Email Address:</td>
+                      <td className='pl-5 py-2'>{adminDetails.email}</td>
+                  </tr>
+                  <tr>
+                      <td className="font-semibold">Bank Name:</td>
+                      <td className='pl-5 py-2'>{adminDetails.bankName}</td>
+                  </tr>
+                  <tr>
+                      <td className="font-semibold">Bank Details:</td>
+                      <td className='pl-5 py-2'>{adminDetails.bankDetails}</td>
+                  </tr>
+              </tbody>
+          </table>
       </div>
 
-      <button className="ml-96 mt-[-40px] h-[38px] w-[140px] text-xs px-4 py-2 bg-playden-primary text-white rounded-lg hover:bg-purple-900">
+
+      <button className="mt-72 ml-[-240px] h-[38px] w-[140px] text-xs px-4 py-2 bg-playden-primary text-white rounded-lg hover:bg-purple-900">
         Save
       </button>
     </div>
+  </div>
   );
 };
 

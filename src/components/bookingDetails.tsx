@@ -17,7 +17,7 @@ const BookingDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
 
   return (
-    <div className="bg-white rounded-lg shadow-md relative ml-72 p-8 mt-24">
+    <div className="bg-white relative ml-72 p-8 mt-24">
         <div className='flex flex-row justify-between w-full'>
             <h2 className="text-2xl text-[#01031A] font-bold mb-6">Booking Confirmation </h2>
             <select
@@ -41,32 +41,37 @@ const BookingDetails: React.FC = () => {
              className="mt-[-18px]"
            />
         </div>
-        <div className='text-[#333543] text-xs mt-24 gap-4 ml-[-120px] flex flex-col'>
-        <div className="flex gap-32">
-          <span className="font-semibold">Date of Booking:</span>
-          <span>{bookingDetails.dateOfBooking}</span>
-        </div>
-        <div className="flex gap-32">
-          <span className="font-semibold">Mobile Number:</span>
-          <span>{bookingDetails.mobileNumber}</span>
-        </div>
-        <div className="flex gap-36">
-          <span className="font-semibold">Email Address:</span>
-          <span>{bookingDetails.email}</span>
-        </div>
-        <div className="flex gap-40">
-          <span className="font-semibold">Sport Choice:</span>
-          <span>{bookingDetails.sportChoice}</span>
-        </div>
-        <div className="flex gap-52">
-          <span className="font-semibold">Pitch:</span>
-          <span>{bookingDetails.pitch}</span>
-        </div>
-        <div className="flex gap-40">
-          <span className="font-semibold">Amount Paid:</span>
-          <span className='font-bold'>{bookingDetails.amountPaid}</span>
-        </div>
-        </div>
+        <div className='text-[#333543] text-xs mt-24 ml-[-120px]'>
+  <table className="w-full">
+    <tbody>
+      <tr className="border-none">
+        <td className="font-semibold pr-8 py-2">Date of Booking:</td>
+        <td>{bookingDetails.dateOfBooking}</td>
+      </tr>
+      <tr className="border-none">
+        <td className="font-semibold pr-8 py-2">Mobile Number:</td>
+        <td>{bookingDetails.mobileNumber}</td>
+      </tr>
+      <tr className="border-none">
+        <td className="font-semibold pr-8 py-2">Email Address:</td>
+        <td>{bookingDetails.email}</td>
+      </tr>
+      <tr className="border-none">
+        <td className="font-semibold pr-8 py-2">Sport Choice:</td>
+        <td>{bookingDetails.sportChoice}</td>
+      </tr>
+      <tr className="border-none">
+        <td className="font-semibold pr-8 py-2">Pitch:</td>
+        <td>{bookingDetails.pitch}</td>
+      </tr>
+      <tr className="border-none">
+        <td className="font-semibold pr-8 py-2">Amount Paid:</td>
+        <td className="font-bold">{bookingDetails.amountPaid}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
      </div>
 
       <button className="mt-6 ml-72 h-[38px] w-[140px] text-xs px-4 py-2 bg-playden-primary text-white rounded-lg hover:bg-purple-900">

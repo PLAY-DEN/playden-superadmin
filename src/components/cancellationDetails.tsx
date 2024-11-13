@@ -17,7 +17,7 @@ const CancellationDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
 
   return (
-    <div className="bg-white rounded-lg shadow-md relative ml-72 p-8 mt-24">
+    <div className="bg-white relative ml-72 p-8 mt-24">
       <div className="flex flex-row justify-between w-full">
         <h2 className="text-2xl text-[#01031A] font-bold mb-6">Cancellation Details</h2>
         <select
@@ -44,29 +44,33 @@ const CancellationDetails: React.FC = () => {
           />
         </div>
         
-        <div className="text-[#333543] text-xs mt-24 gap-4 ml-[-120px] flex flex-col">
-          <div className="flex gap-32">
-            <span className="font-semibold">Date Cancelled:</span>
-            <span>{cancellationDetails.dateCancelled}</span>
-          </div>
-          <div className="flex gap-24">
-            <span className="font-semibold">Playpoints Refunded:</span>
-            <span>{cancellationDetails.playpointsRefunded}</span>
-          </div>
-          <div className="flex gap-32">
-            <span className="font-semibold">Mobile Number:</span>
-            <span>{cancellationDetails.mobileNumber}</span>
-          </div>
-          <div className="flex gap-36">
-            <span className="font-semibold">Email Address:</span>
-            <span>{cancellationDetails.email}</span>
-          </div>
-          <div className="flex gap-36">
-            <span className="font-semibold">Pitch Booked:</span>
-            <span>{cancellationDetails.pitch}</span>
-          </div>
+        <div className='text-[#333543] text-xs mt-24 ml-[-120px]'>
+            <table className="w-full">
+                <tbody>
+                   <tr className="border-none">
+                      <td className="font-semibold pr-8 py-2">Date Cancelled:</td>
+                      <td>{cancellationDetails.dateCancelled}</td>
+                   </tr>
+                  <tr className="border-none">
+                     <td className="font-semibold pr-8 py-2">Playpoints Refunded:</td>
+                     <td>{cancellationDetails.playpointsRefunded}</td>
+                  </tr>
+                  <tr className="border-none">
+                     <td className="font-semibold pr-8 py-2">Mobile Number:</td>
+                     <td>{cancellationDetails.mobileNumber}</td>
+                  </tr>
+                  <tr className="border-none">
+                     <td className="font-semibold pr-8 py-2">Email Address:</td>
+                     <td>{cancellationDetails.email}</td>
+                  </tr>
+                  <tr className="border-none">
+                      <td className="font-semibold pr-8 py-2">Pitch Booked:</td>
+                      <td>{cancellationDetails.pitch}</td>
+                  </tr>
+               </tbody>
+            </table>
         </div>
-      </div>
+     </div>
       
       <button className="mt-[-30px] ml-80 h-[38px] w-[140px] text-xs px-4 py-2 bg-playden-primary text-white rounded-lg cursor-pointer">
         {cancellationDetails.status}

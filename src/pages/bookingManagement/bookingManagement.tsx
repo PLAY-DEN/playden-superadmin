@@ -26,7 +26,7 @@ const bookings = [
 
 const BookingManagement: React.FC = () => {
   return (
-    <div className="bg-white rounded-lg shadow-md relative ml-72 p-8 mt-20 overflow-auto">
+    <div className="bg-white relative ml-72 p-8 mt-20 overflow-auto">
       <div className="flex flex-row justify-between">
         <h2 className="text-2xl text-[#01031A] font-bold mb-6">Booking Confirmation </h2>
         <select
@@ -66,7 +66,7 @@ const BookingManagement: React.FC = () => {
               <td className="border-b p-4 text-sm">{booking.date}</td>
               <td className="border-b p-4 text-sm">{booking.pitch}</td>
               <td className="border-b p-4 text-sm">
-                <Link to={`/booking-management/${booking.id}`} className="text-black font-semibold">View details</Link>
+                 <Link to={`/booking-management/${booking.id}`} className="text-black font-semibold">View details</Link>
               </td>
             </tr>
           ))}
