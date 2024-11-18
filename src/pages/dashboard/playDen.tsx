@@ -8,7 +8,7 @@ interface StatCardProps {
 
 const StatCard: React.FC<StatCardProps> = ({ title, value, icon }) => {
     return (
-        <div className="bg-white text-end rounded-lg p-4 w-52 h-24 shadow-sm relative">
+        <div className="bg-white text-end rounded-lg p-4 min-w-32 min-h-24 shadow-sm relative">
             {/* Display icon at top-right of the card */}
             {icon && <img src={icon} alt={`${title} icon`} className="absolute top-2 left-2 w-6 h-6" />}
             <p  className="text-[#41244B] text-xs font-bold">{value}</p>

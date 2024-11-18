@@ -38,7 +38,7 @@ const MyRoutes = () => (
       <Route path="/play-point" element={<PlaypointUsage />} />
       <Route path="/finances" element={<Financials />} />
       <Route path="/user-management" element={<UserManagement />} />
-      <Route path="/user-management/User-details" element={<UserDetails />} />
+      <Route path="/user-management/User-details/:id" element={<UserDetails />} />
       <Route path="/pitch-admin-management" element={<PitchAdminManagement />} />
       <Route path="/pitch-admin-management/:id" element={<AdminDetails />} />
       <Route path="/add-new-admin" element={<AddNewAdmin />} />

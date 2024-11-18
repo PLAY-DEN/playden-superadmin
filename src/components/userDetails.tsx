@@ -30,14 +30,14 @@ const userDetails: React.FC = () => {
         </select>
       </div>
       
-      <div className="mt-10  ml-20">
+      <div className="mt-10">
         <h2 className="text-xl font-semibold">{UserDetails.name}</h2>
         <p className="text-gray-500">{UserDetails.id}</p>
       </div>
       
-      <div className="flex flex-row ml-24">
+      <div className="flex flex-row">
         <div>
-          <h2 className="ml-60 mt-20 font-bold">User Details</h2>
+          <h2 className="ml-60 mt-5 font-bold">User Details</h2>
           <img
             src={bookingImg}
             alt={`${UserDetails.name}'s profile`}
@@ -45,7 +45,7 @@ const userDetails: React.FC = () => {
           />
         </div>
         
-      <div className='text-[#333543] text-xs mt-28 ml-[-85px]'>
+      <div className='text-[#333543] text-xs mt-12 ml-[-85px]'>
            <table className="w-full">
               <tbody>
                 <tr className="border-none">
@@ -85,7 +85,7 @@ const userDetails: React.FC = () => {
        </div>
 
       
-       <div className='mt-[330px] flex flex-row gap-3 ml-[-300px]'>
+       <div className='mt-[280px] flex flex-row gap-3 ml-[-300px]'>
            <button className="h-[38px] w-[140px] text-xs px-4 py-2 bg-playden-primary text-white rounded-lg cursor-pointer">
                 Suspend
            </button>

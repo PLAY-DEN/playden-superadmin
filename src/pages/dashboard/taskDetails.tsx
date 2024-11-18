@@ -2,7 +2,7 @@ import { page } from "../../assets/images";
 
 const TaskDetails: React.FC = () => {
     return (
-        <div className="h-[159px] min-w-[400px] bg-[#D097B7] rounded-xl text-playden-primary font-bold">
+        <div className="h-[159px] min-w-[300px] bg-[#D097B7] rounded-xl text-playden-primary font-bold">
             <div className="flex flex-row justify-between items-center p-5">
                 <p className="text-sm">Task not finished</p>
                 <img src={page} alt="page" className="h-10 w-8" />

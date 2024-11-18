@@ -82,15 +82,15 @@ const PitchAdminManagement: React.FC = () => {
         <tbody>
           {adminRecords.map((record, index) => (
             <tr key={record.id}>
-              <td className="border-b p-4 text-[#01031A]">{index + 1}</td>
-              <td className="border-b p-4 text-[#01031A]">{record.name}</td>
-              <td className="border-b p-4 text-[#01031A]">{record.email}</td>
-              <td className="border-b p-4 text-[#01031A]">{record.phoneNumber}</td>
-              <td className="border-b p-4 text-[#01031A]">{record.pitchName}</td>
-              <td className="border-b p-4 text-[#01031A]">{record.bankName}</td>
-              <td className="border-b p-4 text-[#01031A]">{record.bankDetails}</td>
+              <td className="border-b p-4 text-sm">{index + 1}</td>
+              <td className="border-b p-4 text-sm">{record.name}</td>
+              <td className="border-b p-4 text-sm">{record.email}</td>
+              <td className="border-b p-4 text-sm">{record.phoneNumber}</td>
+              <td className="border-b p-4 text-sm">{record.pitchName}</td>
+              <td className="border-b p-4 text-sm">{record.bankName}</td>
+              <td className="border-b p-4 text-sm">{record.bankDetails}</td>
               <td className="border-b p-4 text-sm text-playden-primary cursor-pointer">
-                <Link to={`/pitch-admin-management/:id${record.id}`} className="text-black font-semibold">View details</Link>
+                <Link to={`/pitch-admin-management/:id${record.id}`} className="font-bold">View details</Link>
               </td>
             </tr>
           ))}

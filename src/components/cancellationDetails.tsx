@@ -29,42 +29,42 @@ const CancellationDetails: React.FC = () => {
         </select>
       </div>
       
-      <div className="mt-20 ml-20">
+      <div className="mt-10">
         <h2 className="text-xl font-semibold">{cancellationDetails.name}</h2>
         <p className="text-gray-500">{cancellationDetails.id}</p>
       </div>
       
-      <div className="mt-[-20px] flex flex-row ml-24">
+      <div className="mt-[-20px] flex flex-row">
         <div>
-          <h2 className="ml-60 mt-14 font-bold">Cancellation Details</h2>
+          <h2 className="ml-60 mt-5 font-bold">Cancellation Details</h2>
           <img
             src={bookingImg}
             alt={`${cancellationDetails.name}'s profile`}
-            className="mt-[-18px]"
+            className="mt-[-5px] "
           />
         </div>
         
-        <div className='text-[#333543] text-xs mt-24 ml-[-120px]'>
+        <div className='text-[#333543] text-xs mt-12 ml-[-150px]'>
             <table className="w-full">
                 <tbody>
                    <tr className="border-none">
-                      <td className="font-semibold pr-8 py-2">Date Cancelled:</td>
+                      <td className="font-semibold pr-8 py-3">Date Cancelled:</td>
                       <td>{cancellationDetails.dateCancelled}</td>
                    </tr>
                   <tr className="border-none">
-                     <td className="font-semibold pr-8 py-2">Playpoints Refunded:</td>
+                     <td className="font-semibold pr-8 py-3">Playpoints Refunded:</td>
                      <td>{cancellationDetails.playpointsRefunded}</td>
                   </tr>
                   <tr className="border-none">
-                     <td className="font-semibold pr-8 py-2">Mobile Number:</td>
+                     <td className="font-semibold pr-8 py-3">Mobile Number:</td>
                      <td>{cancellationDetails.mobileNumber}</td>
                   </tr>
                   <tr className="border-none">
-                     <td className="font-semibold pr-8 py-2">Email Address:</td>
+                     <td className="font-semibold pr-8 py-3">Email Address:</td>
                      <td>{cancellationDetails.email}</td>
                   </tr>
                   <tr className="border-none">
-                      <td className="font-semibold pr-8 py-2">Pitch Booked:</td>
+                      <td className="font-semibold pr-8 py-3">Pitch Booked:</td>
                       <td>{cancellationDetails.pitch}</td>
                   </tr>
                </tbody>
@@ -72,7 +72,7 @@ const CancellationDetails: React.FC = () => {
         </div>
      </div>
       
-      <button className="mt-[-30px] ml-80 h-[38px] w-[140px] text-xs px-4 py-2 bg-playden-primary text-white rounded-lg cursor-pointer">
+      <button className=" ml-64 h-[38px] w-[140px] text-xs px-4 py-2 bg-playden-primary text-white rounded-lg cursor-pointer">
         {cancellationDetails.status}
       </button>
     </div>

@@ -28,11 +28,11 @@ const BookingDetails: React.FC = () => {
               <option value="days">last 30 days</option>
            </select>
         </div>
-        <div className='mt-20 ml-20'>
+        <div className='mt-10'>
           <h2 className="text-xl font-semibold">{bookingDetails.name}</h2>
           <p className="text-gray-500">{bookingDetails.id}</p>
         </div>
-      <div className="mt-[-20px] flex flex-row ml-24">
+      <div className="mt-[-20px] flex flex-row">
         <div>
            <h2 className='ml-60 mt-14 font-bold'>Booking Details</h2>
           <img
@@ -74,7 +74,7 @@ const BookingDetails: React.FC = () => {
 
      </div>
 
-      <button className="mt-6 ml-72 h-[38px] w-[140px] text-xs px-4 py-2 bg-playden-primary text-white rounded-lg hover:bg-purple-900">
+      <button className="mt-6 ml-60 h-[38px] w-[140px] text-xs px-4 py-2 bg-playden-primary text-white rounded-lg hover:bg-purple-900">
         Confirm Booking
       </button>
     </div>
