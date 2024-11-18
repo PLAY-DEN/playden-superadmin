@@ -1,4 +1,5 @@
 import { Home7,Ellipse } from "../../assets/images";
+import Pagination from "../../components/pagination";
 
 const UserManagement: React.FC = () => {
   return (
@@ -14,7 +15,7 @@ const UserManagement: React.FC = () => {
         </select>
       </div>
       <div className="grid grid-cols-3 gap-4 mb-6">
-      <div className="w-[320px] h-[180px] bg-[#D29AB8] rounded-md flex justify-between items-center">
+      <div className="min-w-[320px] h-[180px] bg-[#D29AB8] rounded-md flex justify-between items-center">
           <div className="flex flex-col ml-5 text-white">
             <img src={Home7} alt="" className="w-[52px] h-[52px]" />
             <p>500</p>
@@ -22,7 +23,7 @@ const UserManagement: React.FC = () => {
           </div>
           <img src={Ellipse} alt="" className="object-cover mt-[-68px] w-[110px] h-[110px]" />
         </div>
-        <div className="w-[320px] h-[180px] bg-playden-primary rounded-md flex justify-between items-center">
+        <div className="min-w-[320px] h-[180px] bg-playden-primary rounded-md flex justify-between items-center">
           <div className="flex flex-col ml-5 text-white">
             <img src={Home7} alt="" className="w-[52px] h-[52px]" />
             <p>10</p>
@@ -30,7 +31,7 @@ const UserManagement: React.FC = () => {
           </div>
           <img src={Ellipse} alt="" className="object-cover mt-[-68px] w-[110px] h-[110px]" />
         </div>
-        <div className="w-[320px] h-[180px] bg-[#01031A] rounded-md flex justify-between items-center">
+        <div className="min-w-[320px] h-[180px] bg-[#01031A] rounded-md flex justify-between items-center">
           <div className="flex flex-col ml-5 text-white">
             <img src={Home7} alt="" className="w-[52px] h-[52px]" />
             <p>20</p>
@@ -54,18 +55,20 @@ const UserManagement: React.FC = () => {
         <tbody>
           {/* Sample data; replace with actual data */}
           {Array.from({ length: 10 }).map((_, index) => (
-            <tr key={index} className="hover:bg-gray-100 text-[#01031A] text-sm">
-              <td className="border border-gray-300 p-2 text-center text-[#01031A] text-xs">{index + 1}</td>
-              <td className="border border-gray-300 p-2 text-[#01031A] text-xs">oyinkansola@gmail.com</td>
-              <td className="border border-gray-300 p-2 text-center text-[#01031A] text-xs">07060648468</td>
-              <td className="border border-gray-300 p-2 text-center text-[#01031A] text-xs">30</td>
-              <td className="border border-gray-300 p-2 text-center text-[#01031A] text-xs"><span className="bg-[#4F772D] text-white px-6 py-1 rounded-lg">3</span></td>
-              <td className="border border-gray-300 p-2 text-center text-[#01031A] text-xs">20</td>
-              <td className="border border-gray-300 p-2 text-center text-[#01031A] text-xs">Suspended</td>
+            <tr key={index} className="hover:bg-gray-100">
+              <td className="border border-gray-300 p-2 text-center">{index + 1}</td>
+              <td className="border border-gray-300 p-2">oyinkansola@gmail.com</td>
+              <td className="border border-gray-300 p-2 text-center">07060648468</td>
+              <td className="border border-gray-300 p-2 text-center">30</td>
+              <td className="border border-gray-300 p-2 text-center"><span className="bg-[#4F772D] text-white px-6 py-1 rounded-lg">3</span></td>
+              <td className="border border-gray-300 p-2 text-center">20</td>
+              <td className="border border-gray-300 p-2 text-center">Suspended</td>
             </tr>
           ))}
         </tbody>
       </table> 
+
+      <Pagination />
     </div>
   );
 };

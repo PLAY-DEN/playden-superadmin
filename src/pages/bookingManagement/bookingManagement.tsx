@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Pagination from '../../components/pagination';
 
 const bookings = [
   { id: 1, name: "Oyinkansola Salaye", bookingId: "#445064", phoneNumber: "07060496488", status: "Confirmed", date: "8/8/2024", pitch: "PLUTO" },
@@ -72,6 +73,7 @@ const BookingManagement: React.FC = () => {
           ))}
         </tbody>
       </table>
+      <Pagination />
     </div>
   );
 };

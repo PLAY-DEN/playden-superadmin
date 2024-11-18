@@ -1,4 +1,5 @@
 import { Home7, Ellipse } from "../../assets/images";
+import Pagination from "../../components/pagination";
 
 // Data for summary cards and table
 const playpointSummary = {
@@ -19,7 +20,7 @@ const playpointUsageData = [
 
 const PlaypointUsage: React.FC = () => {
   return (
-    <div className="bg-white rounded-lg shadow-md relative ml-72 p-8 mt-20 overflow-auto">
+    <div className=" relative ml-72 p-8 mt-20 overflow-auto">
       {/* Header and Filter */}
       <div className="flex flex-row justify-between mb-6">
         <h2 className="text-2xl text-[#01031A] font-bold">Playpoint Usage</h2>
@@ -34,7 +35,7 @@ const PlaypointUsage: React.FC = () => {
 
       {/* Summary Cards */}
       <div className="grid grid-cols-3 gap-6 mb-8">
-        <div className="w-[320px] h-[180px] bg-[#D29AB8] rounded-md flex justify-between items-center">
+        <div className="min-w-[320px] h-[180px] bg-[#D29AB8] rounded-md flex justify-between items-center">
           <div className="flex flex-col ml-5 text-white">
             <img src={Home7} alt="" className="w-[52px] h-[52px]" />
             <p>{playpointSummary.todayRedeemed}</p>
@@ -42,7 +43,7 @@ const PlaypointUsage: React.FC = () => {
           </div>
           <img src={Ellipse} alt="" className="object-cover mt-[-68px] w-[110px] h-[110px]" />
         </div>
-        <div className="w-[320px] h-[180px] bg-playden-primary rounded-md flex justify-between items-center">
+        <div className="min-w-[320px] h-[180px] bg-playden-primary rounded-md flex justify-between items-center">
           <div className="flex flex-col ml-5 text-white">
             <img src={Home7} alt="" className="w-[52px] h-[52px]" />
             <p>{playpointSummary.totalRedeemed}</p>
@@ -50,7 +51,7 @@ const PlaypointUsage: React.FC = () => {
           </div>
           <img src={Ellipse} alt="" className="object-cover mt-[-68px] w-[110px] h-[110px]" />
         </div>
-        <div className="w-[320px] h-[180px] bg-[#01031A] rounded-md flex justify-between items-center">
+        <div className="min-w-[320px] h-[180px] bg-[#01031A] rounded-md flex justify-between items-center">
           <div className="flex flex-col ml-5 text-white">
             <img src={Home7} alt="" className="w-[52px] h-[52px]" />
             <p>{playpointSummary.totalRefunded}</p>
@@ -83,6 +84,7 @@ const PlaypointUsage: React.FC = () => {
           ))}
         </tbody>
       </table>
+      <Pagination />
     </div>
   );
 };

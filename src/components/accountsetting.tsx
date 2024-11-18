@@ -8,24 +8,24 @@ const AccountSettings: React.FC = () => {
           <table className="max-w-[500px] border border-none">
              <tbody>
                  <tr className="border-none">
-                    <td className="font-semibold text-[20px] text-[#000000] py-2">Name:</td>
-                    <td className="text-sm text-[#000000] py-2">Sophie Super Admin</td>
+                    <td className="font-semibold py-2">Name:</td>
+                    <td className="text-sm py-2">Sophie Super Admin</td>
                 </tr>
                 <tr className="border-none">
-                    <td className="font-semibold text-[20px] text-[#000000] py-2">Email address:</td>
-                    <td className="text-sm text-[#000000] py-2">sophiesuperad@gmail.com</td>
+                    <td className="font-semibold py-2">Email address:</td>
+                    <td className="text-sm py-2">sophiesuperad@gmail.com</td>
                 </tr>
                 <tr className="border-none">
-                    <td className="font-semibold text-[20px] text-[#000000] py-2">Phone number:</td>
-                    <td className="text-sm text-[#000000] py-2">+234 8043035200</td>
+                    <td className="font-semibold py-2">Phone number:</td>
+                    <td className="text-sm py-2">+234 8043035200</td>
                 </tr>
                 <tr className="border-none">
-                    <td className="font-semibold text-[20px] text-[#000000] py-2">Role:</td>
-                    <td className="text-sm text-[#000000] py-2">Super Admin</td>
+                    <td className="font-semibold py-2">Role:</td>
+                    <td className="text-sm py-2">Super Admin</td>
                 </tr>
                 <tr className='border-none'>
-                    <td className="font-semibold text-[20px] text-[#000000] py-2">Change password:</td>
-                    <td className="text-sm text-[#000000] py-2">****SuperAdmin****</td>
+                    <td className="font-semibold py-2">Change password:</td>
+                    <td className="text-sm py-2">****SuperAdmin****</td>
                 </tr>
              </tbody>
           </table>
@@ -34,7 +34,7 @@ const AccountSettings: React.FC = () => {
 
       {/* Manage Admins Section */}
       <div className="">
-        <h3 className="text-[20px] font-semibold text-[#000000] mb-4">Manage admins</h3>
+        <h3 className= "font-semibold mb-4">Manage admins</h3>
         <div className="space-y-4 text-sm">
           <div className="flex gap-4">
             <span className="font-semibold">Sophie</span>

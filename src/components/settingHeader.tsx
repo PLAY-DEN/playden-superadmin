@@ -20,7 +20,7 @@ const SettingHeader: React.FC<SettingHeaderProps> = ({ activeTab, setActiveTab }
       </div>
 
       {/* Tabs for Account Settings and System Settings */}
-      <div className="flex flex-row justify-between mt-20">
+      <div className="flex flex-row justify-between mt-5">
         <div className="flex gap-4">
           <button
             onClick={() => setActiveTab('account')}
@@ -39,9 +39,9 @@ const SettingHeader: React.FC<SettingHeaderProps> = ({ activeTab, setActiveTab }
             System Settings
           </button>
         </div>
-        <img src={profileImage} alt="Profile" className="w-[150px] h-[150px] mt-5" />
+        {/* <img src={profileImage} alt="Profile" className="w-[150px] h-[150px] mt-5" /> */}
       </div>
-      <div className="border-b border-gray-300 w-[845px] mb-5 mt-[-100px]"></div>
+      {/* <div className="border-b border-gray-300 w-[845px] mb-5 mt-[-100px]"></div> */}
     </div>
   );
 };

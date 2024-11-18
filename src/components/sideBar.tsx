@@ -18,7 +18,7 @@ const Sidebar: React.FC = () => {
     const [activeLink, setActiveLink] = useState('Dashboard');
 
     return (
-        <div className="h-screen w-64 shadow-2xl mt-16 font-poppins p-6 fixed flex flex-col text-playden-primary bg-[#8F55A21A] transition-all duration-300">
+        <div className="h-screen w-[275px] shadow-2xl mt-16 font-poppins p-6 fixed flex flex-col text-playden-primary bg-[#8F55A21A] transition-all duration-300">
             {/* Top Section: Profile */}
             <div className="pt-5 flex items-center gap-2">
                 <img 

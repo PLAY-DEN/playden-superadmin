@@ -7,12 +7,14 @@ const Settings: React.FC = () => {
   const [activeTab, setActiveTab] = useState('account');
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-8 mt-20 ml-72">
+    <div className="p-8 mt-20 ml-72">
       {/* SettingHeader component with toggle functionality */}
       <SettingHeader activeTab={activeTab} setActiveTab={setActiveTab} />
 
       {/* Conditional rendering based on active tab */}
-      {activeTab === 'account' ? <AccountSetting /> : <SystemSettings />}
+      <div className="pt-5">
+        {activeTab === 'account' ? <AccountSetting /> : <SystemSettings />}
+      </div>
     </div>
   );
 };
