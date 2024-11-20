@@ -3,7 +3,7 @@ import axios from "axios";
 const BASE_URL = "https://api.playdenapp.com/api/v1";
 
 export const apiClient = async (endpoint: string, method: string, data?: any) => {
-  const token = localStorage.getItem("token");  // Fetch the token from localStorage
+  const token = localStorage.getItem("token");  // Fetch token from localStorage
 
   const headers: any = {
     Accept: "application/json",
@@ -11,7 +11,9 @@ export const apiClient = async (endpoint: string, method: string, data?: any) =>
   };
 
   if (token) {
-    headers["Authorization"] = `Bearer ${token}`;  // Attach token in header if it exists
+    headers["Authorization"] = `Bearer ${token}`;  
+} else {
+  console.error("Token is missing. Cannot set Authorization header.");
   }
 
   try {
@@ -22,9 +24,10 @@ export const apiClient = async (endpoint: string, method: string, data?: any) =>
       data,
     });
 
+    // console.log("API Response:", response.data);
     return response.data;
   } catch (error: any) {
     console.error("API error: ", error.response?.data || error.message);
-    throw error;  // Re-throw error to be caught by the caller
+    throw error;  // Re-throw error to be caught 
   }
 };

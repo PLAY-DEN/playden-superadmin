@@ -4,13 +4,13 @@ import { pitchPic, coloredStar, star } from "../assets/images";
 interface PitchCardProps {
     sport: string;
     pitchSize: string;
-    manager: string;
+    name: string;
     contact: string;
     price: string;
     id: string; 
 }
 
-const PitchCard: React.FC<PitchCardProps> = ({ sport, pitchSize, manager, contact, price, id }) => {
+const PitchCard: React.FC<PitchCardProps> = ({ sport, pitchSize, name, contact, price, id }) => {
     const navigate = useNavigate();
 
     const handleViewDetails = () => {
@@ -23,7 +23,7 @@ const PitchCard: React.FC<PitchCardProps> = ({ sport, pitchSize, manager, contac
             <div className="flex-1">
                 <p className="text-sm font-bold">SPORT: {sport}</p>
                 <p className="text-sm">PITCH SIZE: {pitchSize}</p>
-                <p className="text-sm">PITCH MANAGER: {manager}</p>
+                <p className="text-sm">PITCH Name: {name}</p>
                 <p className="text-sm">MOBILE NUMBER: {contact}</p>
                 <p className="text-sm">PRICE: {price}</p>
             </div>

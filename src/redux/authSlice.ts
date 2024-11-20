@@ -17,17 +17,29 @@ const initialState: AuthState = {
 
 // Async thunk for login
 export const loginUser = createAsyncThunk(
-  "auth/login",
-  async (credentials: { user_id: string; password: string }, thunkAPI) => {
-    try {
-      const response = await apiClient("auth/login", "POST", credentials);
-      return response;  // { user, token }
-    } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.message);
+    "auth/login",
+    async (credentials: { user_id: string; password: string }, thunkAPI) => {
+      try {
+        const response = await apiClient("auth/login", "POST", credentials);
+        
+        // Extract token and user from the nested `data` field
+        const token = response.data?.user?.token; 
+        const user = response.data?.user;
+        
+        if (!token) {
+          throw new Error("Token not found in API response");
+        }
+  
+        // Return both user and token
+        return { user, token };
+      } catch (error: any) {
+        console.error("Login Error:", error);
+        return thunkAPI.rejectWithValue(error.response?.data || error.message);
+      }
     }
-  }
-);
-
+  );
+  
+  
 const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -49,6 +61,7 @@ const authSlice = createSlice({
         state.user = action.payload.user;
         state.token = action.payload.token;
         localStorage.setItem("token", action.payload.token);  // Store token in localStorage
+
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;

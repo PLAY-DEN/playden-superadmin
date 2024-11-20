@@ -55,7 +55,7 @@ const LoginValidationSchema = Yup.object({
 
       } catch (error) {
         console.error("Login error:", error);
-        // Error handling (show error message, etc.)
+        // Error handling 
       }
     };
   
