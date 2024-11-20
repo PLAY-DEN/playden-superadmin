@@ -43,6 +43,7 @@ const MyRoutes = () => (
       <Route path="/pitch-admin-management/:id" element={<AdminDetails />} />
       <Route path="/add-new-admin" element={<AddNewAdmin />} />
       <Route path="/account-settings" element={<SettingsPage />} />
+      <Route path="/login" element={<LoginPage />} />
       {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
     </Route>
   </Routes>

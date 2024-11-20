@@ -18,8 +18,8 @@ const AddNewPitch: React.FC = () => {
     }
 
 
-    const baseUrl = process.env.REACT_APP_BASE_URL;
-    const bearerToken = process.env.REACT_APP_BEARER_TOKEN;
+    const baseUrl = import.meta.env.VITE_BASE_URL;
+    const bearerToken = import.meta.env.VITE_BEARER_TOKEN;
 
     const myHeaders = new Headers();
     myHeaders.append("Accept", "application/json");
