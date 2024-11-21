@@ -12,9 +12,9 @@ import "react-toastify/dist/ReactToastify.css";
 const PitchListing: React.FC = () => {
   const navigate = useNavigate();
   const token = useSelector((state: RootState) => state.auth.token); // Fetch token from Redux state
-  const [pitches, setPitches] = useState([]);
+  const [pitches, setPitches] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  
+  const [dataFetched, setDataFetched] = useState(false); // Flag to check if data is already fetched
 
   useEffect(() => {
     const fetchPitches = async () => {
@@ -22,29 +22,33 @@ const PitchListing: React.FC = () => {
         toast.error("No Bearer token provided. Please log in.", { position: "top-right" });
         return;
       }
-  
+
+      // Prevent refetching if data has already been fetched
+      if (dataFetched) {
+        return;
+      }
+
       try {
         setLoading(true);
-        const response = await apiClient("admin/pitches", "GET"); // Using apiClient
-        
+        const response = await apiClient("admin/pitches", "GET");
+
         const fetchedPitches = response.data.pitches || [];
-  
+
         if (fetchedPitches.length === 0) {
-          // Trigger SweetAlert for no pitches
           Swal.fire({
             title: "No Pitches Found",
             text: "There are currently no pitches in the database.",
             icon: "info",
             confirmButtonText: "OK",
           });
-  
           toast.info("No pitch found", { position: "top-right" });
         } else {
           toast.success("Pitches loaded successfully!", { position: "top-right" });
         }
-  
-        // Update state with fetched pitches
+
+        // Update state with fetched pitches and set dataFetched flag to true
         setPitches(fetchedPitches);
+        setDataFetched(true); // Mark as fetched
       } catch (error: any) {
         console.error("Fetch Error:", error);
         const errorMessage = error.response?.data?.message || "Failed to fetch pitches.";
@@ -53,10 +57,9 @@ const PitchListing: React.FC = () => {
         setLoading(false);
       }
     };
-  
+
     fetchPitches();
-  }, [token]);
-  
+  }, [token, dataFetched]); // Run only if token changes or data hasn't been fetched yet
 
   return (
     <div className="relative ml-72 p-8 mt-20 overflow-auto">

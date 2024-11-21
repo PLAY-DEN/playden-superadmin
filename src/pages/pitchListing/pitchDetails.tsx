@@ -1,147 +1,79 @@
-import { pitchPic } from '../../assets/images';
+// src/components/PitchDetails.tsx
+import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Ellipse, Home7 } from '../../assets/images';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchBookingHistory } from '../../redux/bookingSlice';
+import { RootState } from '../../redux/store';
+import { pitchPic } from '../../assets/images';
 
 const PitchDetails: React.FC = () => {
-    const { pitchId } = useParams<{ pitchId: string }>(); // Get the pitch ID from the URL
+    const { pitchId } = useParams<{ pitchId: string }>();
+    const dispatch = useDispatch();
 
-    // Mock data for demonstration purposes. Replace with actual API data in a real app.
-    const pitchData = {
-        name: "Plutous Clubhouse Field",
-        sport: "Football",
-        size: "5X5",
-        manager: "Ahmed Salisu",
-        price: "₦10,000/hr",
-        owner: "Jim Ioude",
-        phone: "+234 8154035668",
-        address: "Plutous club house U/Rimi Kaduna",
-        image: "path/to/pitch-image.jpg", // Replace with actual image path
-    };
+    const { bookings, loading, error } = useSelector((state: RootState) => state.bookings);
+
+    useEffect(() => {
+        if (pitchId) {
+            dispatch(fetchBookingHistory(pitchId)); // Fetch booking history on mount
+        }
+    }, [pitchId, dispatch]);
 
     return (
-        <div className="relative ml-72 p-8 mt-20 overflow-auto"> {/* Full width with padding */}
-            <div className='flex flex-row justify-between'>
-                <h2 className="text-2xl text-[#01031A] font-bold mb-4">Pitch Listing</h2>
-                <select
-                    name="days"
-                    id="options"
-                    className="text-[14px] font-bold text-[#141B34] w-36 h-9 border border-[#8F55A224] bg-[#8F55A224] rounded-md"
-                    defaultValue={12}
-                >
-                    <option value="days">Last 30 Days</option>
-                </select>
+        <div className="relative ml-72 p-8 mt-20 overflow-auto">
+            {/* Pitch Details */}
+            <div className="flex gap-6 mt-6 w-[680px]">
+                <img src={pitchPic} alt="Pitch" className="min-w-[300px] h-[189px] rounded-md" />
+                <div className="text-sm mt-3">
+                    <p><strong className="text-[#01031A]">PITCH NAME:</strong> Plutous Clubhouse Field</p>
+                    <p><strong className="text-[#01031A]">SPORT:</strong> Football</p>
+                    <p><strong className="text-[#01031A]">PITCH SIZE:</strong> 5X5</p>
+                    <p><strong className="text-[#01031A]">PITCH MANAGER:</strong> Ahmed Salisu</p>
+                    <p><strong className="text-[#01031A]">PRICE:</strong> ₦10,000/hr</p>
+                    <p><strong className="text-[#01031A]">PITCH OWNER:</strong> Jim Ioude</p>
+                    <p><strong className="text-[#01031A]">PITCH OWNER PHONE NUMBER:</strong> +234 8154035668</p>
+                    <p><strong className="text-[#01031A]">PITCH ADDRESS:</strong> Plutous club house U/Rimi Kaduna</p>
+                </div>
             </div>
-            <div className='flex flex-row gap-5 justify-between'>
-                <div className='w-full'>
-                    {/* Pitch Information */}
-                    <div className="flex gap-6 mt-6 w[680px]">
-                        <img src={pitchPic} alt="Pitch" className="min-w-[300px] h-[189px] rounded-md" />
-                        <div className="text-sm mt-3">
-                            <p><strong className=''>PITCH NAME:</strong> {pitchData.name}</p>
-                            <p><strong className=''>SPORT:</strong> {pitchData.sport}</p>
-                            <p><strong className=''>PITCH SIZE:</strong> {pitchData.size}</p>
-                            <p><strong className=''>PITCH MANAGER:</strong> {pitchData.manager}</p>
-                            <p><strong className=''>PRICE:</strong> {pitchData.price}</p>
-                            <p><strong className=''>PITCH OWNER:</strong> {pitchData.owner}</p>
-                            <p><strong className=''>PITCH OWNER PHONE NUMBER:</strong> {pitchData.phone}</p>
-                            <p><strong className=''>PITCH ADDRESS:</strong> {pitchData.address}</p>
-                        </div>
-                    </div>
 
-                    {/* Booking History */}
-                    <div className="mt-8">
-                        <h2 className="font-bold text-lg mb-4 text-[#808B9B]">Booking History</h2>
-                        <table className="w-full border">
-                            <thead className="bg-transparent text-[#808B9B] text-left">
-                                <tr>
-                                    <th className="p-2">Name</th>
-                                    <th className="p-2">Date/Time</th>
-                                    <th className="p-2">Amount</th>
-                                    <th className="p-2">Pitch Name</th>
-                                    <th className="p-2">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {/* Example booking data */}
-                                <tr className='text-[14px] text-[#01031A] font-semibold'>
-                                    <td className="p-2">Hassan Abdul <br /> <span className='text-[#808B9B] text-[12px]'>Ref# 1203948384</span></td>
-                                    <td className="p-2">June 4, 2020<br /><span className='text-[#808B9B] text-[12px]'> 5:03:45 AM</span></td>
-                                    <td className="p-1 ">₦10,000</td>
-                                    <td className="p-1 ">Plutous Clubhouse Field</td>
-                                    <td className="p-1 cursor-pointer"><u>View Transaction Details</u></td>
-                                </tr>
-                                <tr className='text-[14px] text-[#01031A] font-semibold'>
-                                    <td className="p-2">Hassan Abdul <br /> <span className='text-[#808B9B] text-[12px]'>Ref# 1203948384</span></td>
-                                    <td className="p-2">June 4, 2020<br /><span className='text-[#808B9B] text-[12px]'> 5:03:45 AM</span></td>
-                                    <td className="p-1 ">₦10,000</td>
-                                    <td className="p-1 ">Plutous Clubhouse Field</td>
-                                    <td className="p-1 cursor-pointer"><u>View Transaction Details</u></td>
-                                </tr>
-                                <tr className='text-[14px] text-[#01031A] font-semibold'>
-                                    <td className="p-2">Hassan Abdul <br /> <span className='text-[#808B9B] text-[12px]'>Ref# 1203948384</span></td>
-                                    <td className="p-2">June 4, 2020<br /><span className='text-[#808B9B] text-[12px]'> 5:03:45 AM</span></td>
-                                    <td className="p-1 ">₦10,000</td>
-                                    <td className="p-1 ">Plutous Clubhouse Field</td>
-                                    <td className="p-1 cursor-pointer"><u>View Transaction Details</u></td>
-                                </tr>
-                                <tr className='text-[14px] text-[#01031A] font-semibold'>
-                                    <td className="p-2">Hassan Abdul <br /> <span className='text-[#808B9B] text-[12px]'>Ref# 1203948384</span></td>
-                                    <td className="p-2">June 4, 2020<br /><span className='text-[#808B9B] text-[12px]'> 5:03:45 AM</span></td>
-                                    <td className="p-1 ">₦10,000</td>
-                                    <td className="p-1 ">Plutous Clubhouse Field</td>
-                                    <td className="p-1 cursor-pointer"><u>View Transaction Details</u></td>
-                                </tr>
-                                <tr className='text-[14px] text-[#01031A] font-semibold'>
-                                    <td className="p-2">Hassan Abdul <br /> <span className='text-[#808B9B] text-[12px]'>Ref# 1203948384</span></td>
-                                    <td className="p-2">June 4, 2020<br /><span className='text-[#808B9B] text-[12px]'> 5:03:45 AM</span></td>
-                                    <td className="p-1 ">₦10,000</td>
-                                    <td className="p-1 ">Plutous Clubhouse Field</td>
-                                    <td className="p-1 cursor-pointer"><u>View Transaction Details</u></td>
-                                </tr>
-                                {/* Repeat for additional bookings */}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+            {/* Booking History */}
+            <div className="mt-8">
+                <h2 className="font-bold text-lg mb-4 text-[#808B9B]">Booking History</h2>
+                {loading ? (
+                    <p>Loading bookings...</p>
+                ) : error ? (
+                    <p className="text-red-500">{error}</p>
+                ) : (
+                    <table className="w-full border">
+                        <thead className="bg-transparent text-[#808B9B] text-left">
+                            <tr>
+                                <th className="p-2">ID</th>
+                                <th className="p-2">Date/Time</th>
+                                <th className="p-2">Amount</th>
+                                <th className="p-2">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+    {Array.isArray(bookings) && bookings.length > 0 ? (
+        bookings.map((booking, index) => (
+            <tr key={index} className="text-[14px] text-[#01031A] font-semibold">
+                <td className="p-2">{booking.booking_code}</td>
+                <td className="p-2">{booking.date}</td>
+                <td className="p-1">{booking.total_cost}</td>
+                {/* <td className="p-1">{booking.pitchName}</td> */}
+                <td className="p-1 cursor-pointer"><u>View Transaction Details</u></td>
+            </tr>
+        ))
+    ) : (
+        <tr>
+            <td colSpan={5} className="text-center text-gray-500 p-4">
+                No bookings available
+            </td>
+        </tr>
+    )}
+</tbody>
 
-                <div>
-                    {/* Statistics Panel */}
-                    <div className="flex flex-col ml[680px] gap-4 mt[-600px] text-white text-[12px]">
-                        <div className="w-[320px] h-[180px] bg-[#D29AB8] rounded-md flex justify-between items-center">
-                            <div className="flex flex-col ml-5">
-                                <img src={Home7} alt="" className='w-[52px] h-[52px]' />
-                                <p>10</p>
-                                <p>Today Booking</p>
-                            </div>
-                            <img src={Ellipse} alt="" className='object-cover mt-[-68px] w-[110px] h-[110px]' />
-                        </div>
-                        <div className="w-[320px] h-[180px] bg-[#41244B] rounded-md flex justify-between items-center">
-                            <div className="flex flex-col ml-5">
-                                <img src={Home7} alt="" className='w-[52px] h-[52px]' />
-                                <p>10</p>
-                                <p>Today Booking</p>
-                            </div>
-                            <img src={Ellipse} alt="" className='object-cover mt-[-38px] overflow-hidden' />
-                        </div>
-                        <div className="w-[320px] h-[180px] bg-[#01031A] rounded-md flex justify-between items-center">
-                            <div className="flex flex-col ml-5">
-                                <img src={Home7} alt="" className='w-[52px] h-[52px]' />
-                                <p>10</p>
-                                <p>Today Booking</p>
-                            </div>
-                            <img src={Ellipse} alt="" className='object-cover mt-[-68px] w-[110px] h-[110px]' />
-                        </div>
-                        <div className="w-[320px] h-[180px] bg-[#D29AB8] rounded-md flex justify-between items-center">
-                            <div className="flex flex-col ml-5">
-                                <img src={Home7} alt="" className='w-[52px] h-[52px]' />
-                                <p>10</p>
-                                <p>Today Booking</p>
-                            </div>
-                            <img src={Ellipse} alt="" className='object-cover mt-[-68px] w-[110px] h-[110px]' />
-                        </div>
-
-                    </div>
-                </div>
+                    </table>
+                )}
             </div>
         </div>
     );

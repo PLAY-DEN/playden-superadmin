@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "https://api.playdenapp.com/api/v1";
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export const apiClient = async (endpoint: string, method: string, data?: any) => {
   const token = localStorage.getItem("token");  // Fetch token from localStorage
