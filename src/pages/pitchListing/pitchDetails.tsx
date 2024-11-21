@@ -1,6 +1,5 @@
-// src/components/PitchDetails.tsx
 import React, { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBookingHistory } from "../../redux/bookingSlice";
 import { RootState } from "../../redux/store";
@@ -8,6 +7,7 @@ import { pitchPic } from "../../assets/images";
 
 const PitchDetails: React.FC = () => {
   const { pitchId } = useParams<{ pitchId: string }>();
+  const { state } = useLocation(); // Access state from navigation
   const dispatch = useDispatch();
 
   const { bookings, loading, error } = useSelector(
@@ -20,6 +20,14 @@ const PitchDetails: React.FC = () => {
     }
   }, [pitchId, dispatch]);
 
+  const {
+    sport = "N/A",
+    pitchSize = "N/A",
+    name = "N/A",
+    contact = "N/A",
+    price = "N/A",
+  } = state || {}; // Destructure state with default values
+
   return (
     <div className="relative ml-72 p-8 mt-20 overflow-auto">
       {/* Pitch Details */}
@@ -31,34 +39,19 @@ const PitchDetails: React.FC = () => {
         />
         <div className="text-sm mt-3">
           <p>
-            <strong className="text-[#01031A]">PITCH NAME:</strong> Plutous
-            Clubhouse Field
+            <strong className="text-[#01031A]">PITCH NAME:</strong> {name}
           </p>
           <p>
-            <strong className="text-[#01031A]">SPORT:</strong> Football
+            <strong className="text-[#01031A]">SPORT:</strong> {sport}
           </p>
           <p>
-            <strong className="text-[#01031A]">PITCH SIZE:</strong> 5X5
+            <strong className="text-[#01031A]">PITCH SIZE:</strong> {pitchSize}
           </p>
           <p>
-            <strong className="text-[#01031A]">PITCH MANAGER:</strong> Ahmed
-            Salisu
+            <strong className="text-[#01031A]">CONTACT:</strong> {contact}
           </p>
           <p>
-            <strong className="text-[#01031A]">PRICE:</strong> ₦10,000/hr
-          </p>
-          <p>
-            <strong className="text-[#01031A]">PITCH OWNER:</strong> Jim Ioude
-          </p>
-          <p>
-            <strong className="text-[#01031A]">
-              PITCH OWNER PHONE NUMBER:
-            </strong>{" "}
-            +234 8154035668
-          </p>
-          <p>
-            <strong className="text-[#01031A]">PITCH ADDRESS:</strong> Plutous
-            club house U/Rimi Kaduna
+            <strong className="text-[#01031A]">PRICE:</strong> {price}
           </p>
         </div>
       </div>
@@ -92,7 +85,6 @@ const PitchDetails: React.FC = () => {
                     <td className="p-2">{booking.booking_code}</td>
                     <td className="p-2">{booking.date}</td>
                     <td className="p-1">{booking.total_cost}</td>
-                    {/* <td className="p-1">{booking.pitchName}</td> */}
                     <td className="p-1 cursor-pointer">
                       <u>View Transaction Details</u>
                     </td>

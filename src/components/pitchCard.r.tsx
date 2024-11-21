@@ -14,7 +14,15 @@ const PitchCard: React.FC<PitchCardProps> = ({ sport, pitchSize, name, contact, 
     const navigate = useNavigate();
 
     const handleViewDetails = () => {
-        navigate(`/pitch-listing/${id}`); // Redirect to PitchDetails with the pitch ID
+        navigate(`/pitch-listing/${id}`, {
+            state: {
+                sport,
+                pitchSize,
+                name,
+                contact,
+                price,
+            },
+        });
     };
 
     return (
