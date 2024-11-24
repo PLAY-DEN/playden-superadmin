@@ -21,7 +21,7 @@ export const fetchBookingHistory = createAsyncThunk(
     try {
       const response = await apiClient(`admin/pitches/bookings/${pitchId}`);
       console.log(response.data.pitch);
-      const pitchData = response.data?.pitch?.[0]; // Safely access the pitch object
+      const pitchData = response.data?.pitch?.[0]; 
       return pitchData?.bookings || []; // Return the bookings array
     } catch (error) {
       return rejectWithValue("Failed to fetch booking history");

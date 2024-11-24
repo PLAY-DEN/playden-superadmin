@@ -1,20 +1,26 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Home7, Ellipse } from "../../assets/images";
 import Pagination from "../../components/pagination";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUsers } from "../../redux/userSlice";
+import { RootState } from "../../redux/store";
 
 const UserManagement: React.FC = () => {
-  // Sample data for demonstration
-  const userData = Array.from({ length: 10 }).map((_, index) => ({
-    id: index + 1,
-    name: `User ${index + 1}`,
-    email: `user${index + 1}@gmail.com`,
-    phone: `07060648${468 + index}`,
-    bookings: 30 + index,
-    cancellations: 3,
-    playpoints: 20,
-    status: index % 2 === 0 ? "Active" : "Suspended",
-  }));
+  const dispatch = useDispatch();
+
+  // Get data from Redux state
+  const { data: users, loading, error } = useSelector((state: RootState) => state.users);
+
+  // Fetch users on component mount
+  useEffect(() => {
+    dispatch(fetchUsers());
+  }, [dispatch]);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+
+
 
   return (
     <div className="relative ml-72 p-8 mt-20">
@@ -68,7 +74,7 @@ const UserManagement: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          {userData.map((user) => (
+        {(users || []).map((user) => (
             <tr key={user.id} className="hover:bg-gray-100">
               <td className="border border-gray-300 py-2 px-1">{user.name}</td>
               <td className="border border-gray-300 py-2 px-1">{user.email}</td>
