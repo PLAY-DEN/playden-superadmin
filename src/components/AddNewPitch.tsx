@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -13,7 +12,7 @@ const AddNewPitch: React.FC = () => {
     amountPerHour: "",
     discount: "",
     ratings: "",
-    category_id: [],
+    category_id: "",
     contact: "",
     openingHours: "",
     closingHours: "",
@@ -24,65 +23,61 @@ const AddNewPitch: React.FC = () => {
     location: { latitude: "", longitude: "" },
     amenities: [],
     facilities: [],
-    image: null as File | null,
+    image: null,
   });
-  
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSelectChange = (name: string, selectedOptions: Array<{ value: string; label: string }>) => {
+  const handleSelectChange = (
+    name: string,
+    selectedOption: { value: string; label: string } | null
+  ) => {
     setFormData((prev) => ({
       ...prev,
-      [name]: selectedOptions.map(option => option.value),
+      [name]: selectedOption ? selectedOption.value : "",
     }));
   };
 
   const handleFileUpload = (image: File) => {
     setFileInput(image);
-    setFormData(prev => ({ ...prev, image }));
-  };
-
-  const validateForm = () => {
-    const requiredFields = {
-      name: "Pitch name",
-      amountPerHour: "Amount per hour",
-      size: "Pitch size",
-      contact: "Contact information",
-      openingHours: "Opening hours",
-      closingHours: "Closing hours",
-      ownerId: "Owner ID",
-      "location.latitude": "Latitude",
-      "location.longitude": "Longitude",
-    };
-
-    for (const [field, label] of Object.entries(requiredFields)) {
-      const value = field.includes(".")
-        ? field.split(".").reduce((obj, key) => obj[key], formData)
-        : formData[field];
-      
-      if (!value) {
-        toast.error(`${label} is required`);
-        return false;
-      }
-    }
-
-    if (!fileInput) {
-      toast.error("Please upload an image file");
-      return false;
-    }
-
-    if (!formData.category_id.length) {
-      toast.error("Please select at least one category");
-      return false;
-    }
-
-    return true;
   };
 
   const handleSave = async () => {
-    if (!validateForm()) return;
+    if (!fileInput) {
+      toast.error("Please upload an image file.");
+      return;
+    }
+
+    if (!fileInput.type.startsWith("image/")) {
+      toast.error("Please upload a valid image file (e.g., JPEG or PNG).");
+      return;
+    }
+
+    if (!formData.category_id) {
+      console.log("Category ID is missing:", formData.category_id);
+      toast.error("Please select a category ID.");
+      return;
+    }
+
+    if (!formData.contact) {
+      toast.error("Please provide a contact.");
+      return;
+    }
+
+    if (!formData.image) {
+      toast.error("Please upload an image.");
+      return;
+    }
+
+    if (!formData.location.latitude || !formData.location.longitude) {
+      toast.error("Please provide both latitude and longitude.");
+      return;
+    }
 
     const baseUrl = import.meta.env.VITE_BASE_URL;
     const bearerToken = localStorage.getItem("token");
@@ -92,20 +87,34 @@ const AddNewPitch: React.FC = () => {
     formdata.append("amount_per_hour", formData.amountPerHour);
     formdata.append("discount", formData.discount || "0");
     formdata.append("ratings", formData.ratings || "0");
-    formdata.append("category_id", JSON.stringify(formData.category_id));
+    formdata.append("category_id", formData.category_id);
     formdata.append("contact", formData.contact);
-    formdata.append("opening_hours", `${formData.openingHours} - ${formData.closingHours}`);
+    formdata.append(
+      "opening_hours",
+      `${formData.openingHours} - ${formData.closingHours}`
+    );
     formdata.append("size", formData.size);
-    formdata.append("image", fileInput);
+    formdata.append("image", formData.image);
     formdata.append("owner_id", formData.ownerId);
-    formdata.append("location", JSON.stringify({
-      latitude: formData.location.latitude,
-      longitude: formData.location.longitude
-    }));
-    formdata.append("amenities", JSON.stringify(formData.amenities));
-    formdata.append("facilities", JSON.stringify(formData.facilities));
+    formdata.append(
+      "location",
+      JSON.stringify({ latitude: "40.712776", longitude: "-74.005974" })
+    );
+    formdata.append(
+      "amenities",
+      JSON.stringify(["Combo", "Walk way", "Water pool"])
+    );
+    formdata.append(
+      "facilities",
+      JSON.stringify(["Restrooms", "Gim", "Swimming pool", "Eatery"])
+    );
 
     try {
+      console.log("FormData content:", formdata);
+      formdata.forEach((value, key) => {
+        console.log(key, value);
+      });
+
       const response = await fetch(`${baseUrl}/admin/pitches`, {
         method: "POST",
         headers: {
@@ -116,34 +125,18 @@ const AddNewPitch: React.FC = () => {
 
       if (!response.ok) {
         const errorResponse = await response.json();
-        throw new Error(errorResponse.message || "Failed to create pitch");
+        console.error("Server error response:", errorResponse);
+        toast.error(
+          `Error creating pitch: ${
+            errorResponse.message || response.statusText
+          }`
+        );
+        return;
       }
 
       const result = await response.json();
       toast.success("Pitch created successfully!");
       console.log("Pitch created successfully:", result);
-      
-      // Reset form after successful submission
-      setFormData({
-        name: "",
-        amountPerHour: "",
-        discount: "",
-        ratings: "",
-        category_id: [],
-        contact: "",
-        openingHours: "",
-        closingHours: "",
-        size: "",
-        pitchManager: "",
-        managerContact: "",
-        ownerId: "",
-        location: { latitude: "", longitude: "" },
-        amenities: [],
-        facilities: [],
-        image: null,
-      });
-      setFileInput(null);
-      
     } catch (error) {
       toast.error(`Error creating pitch: ${error.message}`);
       console.error("Error creating pitch:", error);
@@ -153,6 +146,7 @@ const AddNewPitch: React.FC = () => {
   return (
     <div className="mt-20 relative ml-72 p-8">
       <ToastContainer />
+      {/* Header Section */}
       <div className="flex flex-row justify-between mb-6">
         <h2 className="text-2xl text-[#01031A] font-bold">Pitch Listing</h2>
         <select
@@ -164,6 +158,7 @@ const AddNewPitch: React.FC = () => {
         </select>
       </div>
 
+      {/* Main Content Section */}
       <div className="p-6">
         <h1 className="text-lg mb-4">Create New Pitch</h1>
         <div className="flex flex-col">
@@ -172,7 +167,9 @@ const AddNewPitch: React.FC = () => {
             <table className="w-1/2 text-left text-[#333543] border-separate border-spacing-y-2">
               <thead>
                 <tr>
-                  <th colSpan={2} className="text-lg text-left pb-2 pt-5">Pitch Details</th>
+                  <th colSpan={2} className="text-lg text-left pb-2 pt-5">
+                    Pitch Details
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -255,7 +252,9 @@ const AddNewPitch: React.FC = () => {
             <table className="w-1/2 text-left text-[#333543] border-separate border-spacing-y-2 ml-8">
               <thead>
                 <tr>
-                  <th colSpan={2} className="text-lg text-left pb-2 pt-5">Additional Details</th>
+                  <th colSpan={2} className="text-lg text-left pb-2 pt-5">
+                    Additional Details
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -300,14 +299,23 @@ const AddNewPitch: React.FC = () => {
                   <td>
                     <Select
                       options={[
-                        { value: "1", label: "WiFi" },
-                        { value: "2", label: "Parking" },
-                        { value: "3", label: "Restrooms" },
+                        { value: "1", label: "Football" },
+                        { value: "2", label: "Basketball" },
+                        { value: "3", label: "Tennis" },
                       ]}
-                      isMulti
-                      name="category_id"
-                      onChange={(selected) => handleSelectChange("category_id", selected)}
-                      className="!py-1"
+                      value={
+                        formData.category_id
+                          ? {
+                              value: formData.category_id,
+                              label: options.find(
+                                (opt) => opt.value === formData.category_id
+                              )?.label,
+                            }
+                          : null
+                      }
+                      onChange={(selected) =>
+                        handleSelectChange("category_id", selected)
+                      }
                     />
                   </td>
                 </tr>
@@ -322,7 +330,12 @@ const AddNewPitch: React.FC = () => {
                       ]}
                       isMulti
                       name="amenities"
-                      onChange={(selected) => handleSelectChange("amenities", selected)}
+                      onChange={(selected) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          amenities: selected.map((s) => s.value),
+                        }))
+                      }
                       className="!py-1"
                     />
                   </td>
@@ -337,7 +350,12 @@ const AddNewPitch: React.FC = () => {
                       ]}
                       isMulti
                       name="facilities"
-                      onChange={(selected) => handleSelectChange("facilities", selected)}
+                      onChange={(selected) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          facilities: selected.map((s) => s.value),
+                        }))
+                      }
                       className="!py-1"
                     />
                   </td>
@@ -354,12 +372,16 @@ const AddNewPitch: React.FC = () => {
                       onChange={(e) =>
                         setFormData((prev) => ({
                           ...prev,
-                          location: { ...prev.location, latitude: e.target.value },
+                          location: {
+                            ...prev.location,
+                            latitude: e.target.value,
+                          },
                         }))
                       }
                     />
                   </td>
                 </tr>
+
                 <tr>
                   <td>Longitude:</td>
                   <td>
@@ -372,7 +394,10 @@ const AddNewPitch: React.FC = () => {
                       onChange={(e) =>
                         setFormData((prev) => ({
                           ...prev,
-                          location: { ...prev.location, longitude: e.target.value },
+                          location: {
+                            ...prev.location,
+                            longitude: e.target.value,
+                          },
                         }))
                       }
                     />
