@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import FileUploadComponent from "./FileUploadComponent";
@@ -7,16 +7,8 @@ import CreateCategoryModal from "./Modal";
 
 const AddNewPitch: React.FC = () => {
   const [fileInput, setFileInput] = useState<File | null>(null);
-
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const [categories, setCategories] = useState([
-    { value: "1", label: "Football" },
-    { value: "2", label: "Basketball" },
-    { value: "3", label: "Tennis" },
-  ]);
-
-
+  const [categories, setCategories] = useState<{ value: string; label: string }[]>([]);
   const [formData, setFormData] = useState({
     name: "",
     amountPerHour: "",
@@ -37,6 +29,51 @@ const AddNewPitch: React.FC = () => {
     gallery: [],
   });
 
+  // Fetch categories from the API
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const baseUrl = import.meta.env.VITE_BASE_URL;
+      const bearerToken = localStorage.getItem("token");
+
+      try {
+        const response = await fetch(`${baseUrl}/admin/categories`, {
+          headers: {
+            Authorization: `Bearer ${bearerToken}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch categories");
+        }
+
+        const result = await response.json();
+        console.log("Fetched categories data:", result);
+
+        if (result.success && Array.isArray(result.data)) {
+          const formattedCategories = result.data.map((category: any) => ({
+            value: category.id.toString(),
+            label: category.name,
+          }));
+          setCategories(formattedCategories);
+
+          //  default category if not selected
+          if (formattedCategories.length > 0 && !formData.category_id) {
+            setFormData((prev) => ({
+              ...prev,
+              category_id: formattedCategories[0].value,
+            }));
+          }
+        } else {
+          throw new Error("Unexpected response format");
+        }
+      } catch (error) {
+        toast.error("Error fetching categories.");
+        console.error("Error:", error);
+      }
+    };
+
+    fetchCategories();
+  }, [formData.category_id]);
 
   const handleCategoryCreated = (newCategory: { id: string; name: string }) => {
     const newOption = { value: newCategory.id, label: newCategory.name };
@@ -44,8 +81,6 @@ const AddNewPitch: React.FC = () => {
     setFormData((prev) => ({ ...prev, category_id: newCategory.id }));
     toast.success("New category added and selected!");
   };
-  
-
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -64,100 +99,78 @@ const AddNewPitch: React.FC = () => {
     }));
   };
 
-  const handleFileUpload = (image: File) => {
-    setFileInput(image);
-  };
+  const handleFileUpload = (image: File) => setFileInput(image);
 
   const handleSave = async () => {
+    //  all required fields
+    const requiredFields = [
+      { name: "name", label: "Pitch Name" },
+      { name: "amountPerHour", label: "Pitch Price" },
+      { name: "discount", label: "Discount" },
+      { name: "category_id", label: "Category" },
+      { name: "contact", label: "Contact" },
+      { name: "openingHours", label: "Opening Hours" },
+      { name: "closingHours", label: "Closing Hours" },
+      { name: "size", label: "Pitch Size" },
+      { name: "pitchManager", label: "Pitch Manager" },
+      { name: "ownerId", label: "Owner ID" },
+      { name: "location.latitude", label: "Latitude" },
+      { name: "location.longitude", label: "Longitude" },
+    ];
+  
+    //  for missing values
+    for (const field of requiredFields) {
+      const value = field.name.includes(".")
+        ? field.name.split(".").reduce((acc, key) => acc[key], formData)
+        : formData[field.name];
+      if (!value || value.trim() === "") {
+        toast.error(`Please provide a value for ${field.label}.`);
+        return;
+      }
+    }
+  
+    // Validate file input
     if (!fileInput) {
-      toast.error("Please upload an image file.");
+      toast.error("Please upload an image.");
       return;
     }
   
-    if (!fileInput.type.startsWith("image/")) {
-      toast.error("Please upload a valid image file (e.g., JPEG or PNG).");
-      return;
-    }
-  
-    if (!formData.category_id) {
-      toast.error("Please select a category ID.");
-      return;
-    }
-  
-    if (!formData.contact) {
-      toast.error("Please provide a contact.");
-      return;
-    }
-  
-    if (!formData.location.latitude || !formData.location.longitude) {
-      toast.error("Please provide both latitude and longitude.");
-      return;
-    }
-  
-    // Validate location is a valid number
-    const latitude = parseFloat(formData.location.latitude);
-    const longitude = parseFloat(formData.location.longitude);
-    if (isNaN(latitude) || isNaN(longitude)) {
-      toast.error("Latitude and Longitude should be valid numbers.");
-      return;
-    }
-  
-    const baseUrl = import.meta.env.VITE_BASE_URL;
-    const bearerToken = localStorage.getItem("token");
-  
+    // Proceed if all validations pass
     const formdata = new FormData();
     formdata.append("name", formData.name);
     formdata.append("amount_per_hour", formData.amountPerHour);
-    formdata.append("discount", formData.discount || "0");
+    formdata.append("discount", formData.discount);
     formdata.append("ratings", formData.ratings || "0");
-    formdata.append("category_id", formData.category_id); 
+    formdata.append("category_id", formData.category_id);
     formdata.append("contact", formData.contact);
-    formdata.append("opening_hours", formData.openingHours); 
+    formdata.append("opening_hours", formData.openingHours);
+    formdata.append("closing_hours", formData.closingHours);
     formdata.append("size", formData.size);
     formdata.append("image", fileInput);
     formdata.append("owner_id", formData.ownerId);
-  
-    formdata.append("location", JSON.stringify({
-      latitude: latitude,
-      longitude: longitude,
-    }));
-  
-    //  amenities and facilities passed  as arrays
     formdata.append("amenities", JSON.stringify(formData.amenities));
     formdata.append("facilities", JSON.stringify(formData.facilities));
-
-    if (Array.isArray(formData.gallery) && formData.gallery.length > 0) {
-      formData.gallery.forEach((image, index) => {
-        formdata.append(`gallery[${index}]`, image);
-      });
-    }
+    formdata.append("location", JSON.stringify(formData.location));
   
+    const baseUrl = import.meta.env.VITE_BASE_URL;
+    const bearerToken = localStorage.getItem("token");
     try {
       const response = await fetch(`${baseUrl}/admin/pitches`, {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${bearerToken}`,
-        },
+        headers: { Authorization: `Bearer ${bearerToken}` },
         body: formdata,
       });
-      
-  
-      if (!response.ok) {
-        const errorResponse = await response.json();
-        console.error("Server error response:", errorResponse);
-        toast.error(`Error creating pitch: ${errorResponse.message || response.statusText}`);
-        return;
-      }
-  
+      if (!response.ok) throw new Error("Failed to create pitch.");
       const result = await response.json();
       toast.success("Pitch created successfully!");
-      console.log("Pitch created successfully:", result);
+      console.log("Result:", result);
     } catch (error) {
-      toast.error(`Error creating pitch: ${error.message}`);
-      console.error("Error creating pitch:", error);
+      toast.error("Error creating pitch.");
+      console.error("Error:", error);
     }
   };
   
+
 
   return (
     <div className="mt-20 relative ml-72 p-8">
@@ -326,14 +339,14 @@ const AddNewPitch: React.FC = () => {
                   <td>Category ID:</td>
                   <td>
                   <Select
-                  options={categories}
-                  value={categories.find(
-                    (opt) => opt.value === formData.category_id
-                  )}
-                  onChange={(selected) =>
-                    handleSelectChange("category_id", selected)
-                  }
-                />
+                    options={categories}
+                    value={categories.find(
+                      (opt) => opt.value === formData.category_id
+                    )}
+                    onChange={(selected) =>
+                      handleSelectChange("category_id", selected)
+                    }
+                  />
                   </td>
                 </tr>
                 <tr>
