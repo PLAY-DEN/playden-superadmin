@@ -74,30 +74,39 @@ const UserManagement: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-        {(users || []).map((user) => (
-            <tr key={user.id} className="hover:bg-gray-100">
-              <td className="border border-gray-300 py-2 px-1">{user.name}</td>
-              <td className="border border-gray-300 py-2 px-1">{user.email}</td>
-              <td className="border border-gray-300 py-2 px-1 text-center">{user.phone}</td>
-              <td className="border border-gray-300py-2 px-1 p-2 text-center">{user.bookings}</td>
-              <td className="border border-gray-300 p-2 text-center">
-                <span className="bg-[#4F772D] text-white px-6 py-1 rounded-lg">
-                  {user.cancellations}
-                </span>
-              </td>
-              <td className="border border-gray-300 py-2 px-1 text-center">{user.playpoints}</td>
-              <td className="border border-gray-300 py-2 px-1 text-center">{user.status}</td>
-              <td className="border border-gray-300 py-2 px-1 text-center">
-                <Link
-                  to={`/user-management/User-details/${user.id}`} 
-                  className="text-sm font-bold cursor-pointer"
-                >
-                  View Details
-                </Link>
-              </td>
-            </tr>
-          ))}
-        </tbody>
+  {users && Array.isArray(users) && users.length > 0 ? (
+    users.map((user) => (
+      <tr key={user.id} className="hover:bg-gray-100">
+        <td className="border border-gray-300 py-2 px-1">{user.name}</td>
+        <td className="border border-gray-300 py-2 px-1">{user.email}</td>
+        <td className="border border-gray-300 py-2 px-1 text-center">{user.phone}</td>
+        <td className="border border-gray-300 py-2 px-1 text-center">{user.bookings}</td>
+        <td className="border border-gray-300 p-2 text-center">
+          <span className="bg-[#4F772D] text-white px-6 py-1 rounded-lg">
+            {user.cancellations}
+          </span>
+        </td>
+        <td className="border border-gray-300 py-2 px-1 text-center">{user.playpoints}</td>
+        <td className="border border-gray-300 py-2 px-1 text-center">{user.status}</td>
+        <td className="border border-gray-300 py-2 px-1 text-center">
+          <Link
+            to={`/user-management/User-details/${user.id}`}
+            className="text-sm font-bold cursor-pointer"
+          >
+            View Details
+          </Link>
+        </td>
+      </tr>
+    ))
+  ) : (
+    <tr>
+      <td colSpan={8} className="text-center py-4">
+        No users found.
+      </td>
+    </tr>
+  )}
+</tbody>
+
       </table>
       <Pagination />
     </div>

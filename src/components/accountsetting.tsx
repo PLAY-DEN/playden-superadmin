@@ -2,26 +2,26 @@ import React, { useState, useEffect } from "react";
 import { apiClient } from "../utils/apiClient";
 
 const AccountSettings: React.FC = () => {
-  const [settings, setSettings] = useState<any>(null); // State to hold settings data
-  const [loading, setLoading] = useState<boolean>(true); // State to handle loading
-  const [error, setError] = useState<string | null>(null); // State to handle errors
+  const [settings, setSettings] = useState<any>(null); //to hold settings data
+  const [loading, setLoading] = useState<boolean>(true); // to handle loading
+  const [error, setError] = useState<string | null>(null); //  to handle errors
 
   useEffect(() => {
     const fetchSettings = async () => {
       try {
         setLoading(true); // Start loading
-        const response = await apiClient("1/settings", "GET"); // Call API
-        console.log("API Response:", response); // Debug API response
+        const response = await apiClient("1/settings", "GET"); 
+        // console.log("API Response:", response); 
         setSettings(response); // Update state with API data
       } catch (err: any) {
         console.error("Error fetching settings:", err); // Log error
-        setError(err.message || "An error occurred"); // Update error state
+        setError(err.message || "An error occurred"); 
       } finally {
-        setLoading(false); // Stop loading
+        setLoading(false); 
       }
     };
 
-    fetchSettings(); // Trigger fetch on component mount
+    fetchSettings(); 
   }, []);
 
   // Render loading state
@@ -48,7 +48,7 @@ const AccountSettings: React.FC = () => {
             <tbody>
               <tr className="border-none">
                 <td className="font-semibold py-2">Name:</td>
-                <td className="text-sm py-2">{settings.name || "N/A"}</td>
+                <td className="text-sm py-2">{settings.data.name || "N/A"}</td>
               </tr>
               <tr className="border-none">
                 <td className="font-semibold py-2">Email address:</td>
@@ -60,7 +60,7 @@ const AccountSettings: React.FC = () => {
               </tr>
               <tr className="border-none">
                 <td className="font-semibold py-2">Role:</td>
-                <td className="text-sm py-2">{settings.role || "N/A"}</td>
+                <td className="text-sm py-2">{settings.data.role || "N/A"}</td>
               </tr>
               <tr className="border-none">
                 <td className="font-semibold py-2">Change password:</td>

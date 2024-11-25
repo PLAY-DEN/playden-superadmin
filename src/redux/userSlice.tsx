@@ -14,18 +14,19 @@ const initialState: UserState = {
   error: null,
 };
 
-// Async thunk to fetch users
 export const fetchUsers = createAsyncThunk(
-  "users/fetchUsers",
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await apiClient("admin/users/", "GET");
-      return response; // Response data 
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data || error.message);
+    "users/fetchUsers",
+    async (_, { rejectWithValue }) => {
+      try {
+        const response = await apiClient("admin/users", "GET");
+        console.log("API Response:", response);
+        return response; 
+      } catch (error: any) {
+        return rejectWithValue(error.response?.data || error.message);
+      }
     }
-  }
-);
+  );
+  
 
 const userSlice = createSlice({
   name: "users",
@@ -39,8 +40,8 @@ const userSlice = createSlice({
       })
       .addCase(fetchUsers.fulfilled, (state, action) => {
         state.loading = false;
-        state.data = action.payload;
-      })
+        state.data = Array.isArray(action.payload) ? action.payload : [];
+      })      
       .addCase(fetchUsers.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
