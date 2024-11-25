@@ -15,18 +15,16 @@ const initialState: UserState = {
 };
 
 export const fetchUsers = createAsyncThunk(
-    "users/fetchUsers",
-    async (_, { rejectWithValue }) => {
-      try {
-        const response = await apiClient("admin/users", "GET");
-        console.log("API Response:", response);
-        return response; 
-      } catch (error: any) {
-        return rejectWithValue(error.response?.data || error.message);
-      }
+  "users/fetchUsers",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await apiClient("admin/users/", "GET");
+      return response; // Response data 
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data || error.message);
     }
-  );
-  
+  }
+);
 
 const userSlice = createSlice({
   name: "users",
