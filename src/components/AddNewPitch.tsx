@@ -112,18 +112,17 @@ const AddNewPitch: React.FC = () => {
     formdata.append("ratings", formData.ratings || "0");
     formdata.append("category_id", formData.category_id); 
     formdata.append("contact", formData.contact);
-    formdata.append("opening_hours", formData.openingHours); // Opening hours field as a string
+    formdata.append("opening_hours", formData.openingHours); 
     formdata.append("size", formData.size);
     formdata.append("image", fileInput);
     formdata.append("owner_id", formData.ownerId);
   
-    // Pass latitude and longitude as a valid location object
     formdata.append("location", JSON.stringify({
       latitude: latitude,
       longitude: longitude,
     }));
   
-    // Pass amenities and facilities as arrays
+    //  amenities and facilities passed  as arrays
     formdata.append("amenities", JSON.stringify(formData.amenities));
     formdata.append("facilities", JSON.stringify(formData.facilities));
 
