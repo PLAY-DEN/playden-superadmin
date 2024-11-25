@@ -101,6 +101,16 @@ const AddNewPitch: React.FC = () => {
 
   const handleFileUpload = (image: File) => setFileInput(image);
 
+  const getCategories = () => {
+    // get the categories from the server
+    // pass it to the select menu for the catgories,
+    // your value shohuld be the id of the category and the label shohuld be thhe name
+
+  }
+
+  // facilities /ammenities should be like thhis
+  // ['gmy','swiing ppol','bar'] 
+
   const handleSave = async () => {
     //  all required fields
     const requiredFields = [
@@ -155,6 +165,9 @@ const AddNewPitch: React.FC = () => {
     const baseUrl = import.meta.env.VITE_BASE_URL;
     const bearerToken = localStorage.getItem("token");
     try {
+
+     
+
       const response = await fetch(`${baseUrl}/admin/pitches`, {
         method: "POST",
         headers: { Authorization: `Bearer ${bearerToken}` },
