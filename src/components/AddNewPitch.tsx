@@ -68,6 +68,16 @@ const AddNewPitch: React.FC = () => {
     setFileInput(image);
   };
 
+  const getCategories = () => {
+    // get the categories from the server
+    // pass it to the select menu for the catgories,
+    // your value shohuld be the id of the category and the label shohuld be thhe name
+
+  }
+
+  // facilities /ammenities should be like thhis
+  // ['gmy','swiing ppol','bar'] 
+
   const handleSave = async () => {
     if (!fileInput) {
       toast.error("Please upload an image file.");
@@ -133,6 +143,9 @@ const AddNewPitch: React.FC = () => {
     }
   
     try {
+
+     
+
       const response = await fetch(`${baseUrl}/admin/pitches`, {
         method: "POST",
         headers: {

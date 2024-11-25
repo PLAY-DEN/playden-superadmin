@@ -4,13 +4,14 @@ import { pitchPic, coloredStar, star } from "../assets/images";
 interface PitchCardProps {
     sport: string;
     pitchSize: string;
+    imageSrc: string;
     name: string;
     contact: string;
     price: string;
     id: string; 
 }
 
-const PitchCard: React.FC<PitchCardProps> = ({ sport, pitchSize, name, contact, price, id }) => {
+const PitchCard: React.FC<PitchCardProps> = ({ sport, pitchSize, imageSrc, name, contact, price, id }) => {
     const navigate = useNavigate();
 
     const handleViewDetails = () => {
@@ -27,7 +28,7 @@ const PitchCard: React.FC<PitchCardProps> = ({ sport, pitchSize, name, contact, 
 
     return (
         <div className="bg-white p-4 flex items-center gap-4">
-            <img src={pitchPic} alt="Pitch" className="rounded-md" />
+            <img src={imageSrc} alt="Pitch" className="rounded-md w-80 h-36" />
             <div className="flex-1">
                 <p className="text-sm font-bold">SPORT: {sport}</p>
                 <p className="text-sm">PITCH SIZE: {pitchSize}</p>
