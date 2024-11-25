@@ -11,7 +11,7 @@ const AccountSettings: React.FC = () => {
       try {
         setLoading(true); // Start loading
         const response = await apiClient("1/settings", "GET"); 
-        // console.log("API Response:", response); 
+        console.log("API Response:", response); 
         setSettings(response); // Update state with API data
       } catch (err: any) {
         console.error("Error fetching settings:", err); // Log error

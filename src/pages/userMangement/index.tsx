@@ -107,6 +107,7 @@ const UserManagement: React.FC = () => {
   )}
 </tbody>
 
+
       </table>
       <Pagination />
     </div>

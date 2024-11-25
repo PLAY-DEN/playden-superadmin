@@ -3,9 +3,19 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import FileUploadComponent from "./FileUploadComponent";
 import Select from "./forms/select";
+import CreateCategoryModal from "./Modal";
 
 const AddNewPitch: React.FC = () => {
   const [fileInput, setFileInput] = useState<File | null>(null);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [categories, setCategories] = useState([
+    { value: "1", label: "Football" },
+    { value: "2", label: "Basketball" },
+    { value: "3", label: "Tennis" },
+  ]);
+
 
   const [formData, setFormData] = useState({
     name: "",
@@ -24,7 +34,18 @@ const AddNewPitch: React.FC = () => {
     amenities: [],
     facilities: [],
     image: null,
+    gallery: [],
   });
+
+
+  const handleCategoryCreated = (newCategory: { id: string; name: string }) => {
+    const newOption = { value: newCategory.id, label: newCategory.name };
+    setCategories((prev) => [...prev, newOption]);
+    setFormData((prev) => ({ ...prev, category_id: newCategory.id }));
+    toast.success("New category added and selected!");
+  };
+  
+
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -52,69 +73,67 @@ const AddNewPitch: React.FC = () => {
       toast.error("Please upload an image file.");
       return;
     }
-
+  
     if (!fileInput.type.startsWith("image/")) {
       toast.error("Please upload a valid image file (e.g., JPEG or PNG).");
       return;
     }
-
+  
     if (!formData.category_id) {
-      console.log("Category ID is missing:", formData.category_id);
       toast.error("Please select a category ID.");
       return;
     }
-
+  
     if (!formData.contact) {
       toast.error("Please provide a contact.");
       return;
     }
-
-    if (!formData.image) {
-      toast.error("Please upload an image.");
-      return;
-    }
-
+  
     if (!formData.location.latitude || !formData.location.longitude) {
       toast.error("Please provide both latitude and longitude.");
       return;
     }
-
+  
+    // Validate location is a valid number
+    const latitude = parseFloat(formData.location.latitude);
+    const longitude = parseFloat(formData.location.longitude);
+    if (isNaN(latitude) || isNaN(longitude)) {
+      toast.error("Latitude and Longitude should be valid numbers.");
+      return;
+    }
+  
     const baseUrl = import.meta.env.VITE_BASE_URL;
     const bearerToken = localStorage.getItem("token");
-
+  
     const formdata = new FormData();
     formdata.append("name", formData.name);
     formdata.append("amount_per_hour", formData.amountPerHour);
     formdata.append("discount", formData.discount || "0");
     formdata.append("ratings", formData.ratings || "0");
-    formdata.append("category_id", formData.category_id);
+    formdata.append("category_id", formData.category_id); 
     formdata.append("contact", formData.contact);
-    formdata.append(
-      "opening_hours",
-      `${formData.openingHours} - ${formData.closingHours}`
-    );
+    formdata.append("opening_hours", formData.openingHours); // Opening hours field as a string
     formdata.append("size", formData.size);
-    formdata.append("image", formData.image);
+    formdata.append("image", fileInput);
     formdata.append("owner_id", formData.ownerId);
-    formdata.append(
-      "location",
-      JSON.stringify({ latitude: "40.712776", longitude: "-74.005974" })
-    );
-    formdata.append(
-      "amenities",
-      JSON.stringify(["Combo", "Walk way", "Water pool"])
-    );
-    formdata.append(
-      "facilities",
-      JSON.stringify(["Restrooms", "Gim", "Swimming pool", "Eatery"])
-    );
+  
+    // Pass latitude and longitude as a valid location object
+    formdata.append("location", JSON.stringify({
+      latitude: latitude,
+      longitude: longitude,
+    }));
+  
+    // Pass amenities and facilities as arrays
+    formdata.append("amenities", JSON.stringify(formData.amenities));
+    formdata.append("facilities", JSON.stringify(formData.facilities));
 
-    try {
-      console.log("FormData content:", formdata);
-      formdata.forEach((value, key) => {
-        console.log(key, value);
+    if (Array.isArray(formData.gallery) && formData.gallery.length > 0) {
+      formData.gallery.forEach((image, index) => {
+        formdata.append(`gallery[${index}]`, image);
       });
-
+    }
+  
+    try {
       const response = await fetch(`${baseUrl}/admin/pitches`, {
         method: "POST",
         headers: {
@@ -122,18 +141,15 @@ const AddNewPitch: React.FC = () => {
         },
         body: formdata,
       });
-
+      
+  
       if (!response.ok) {
         const errorResponse = await response.json();
         console.error("Server error response:", errorResponse);
-        toast.error(
-          `Error creating pitch: ${
-            errorResponse.message || response.statusText
-          }`
-        );
+        toast.error(`Error creating pitch: ${errorResponse.message || response.statusText}`);
         return;
       }
-
+  
       const result = await response.json();
       toast.success("Pitch created successfully!");
       console.log("Pitch created successfully:", result);
@@ -142,6 +158,7 @@ const AddNewPitch: React.FC = () => {
       console.error("Error creating pitch:", error);
     }
   };
+  
 
   return (
     <div className="mt-20 relative ml-72 p-8">
@@ -161,6 +178,18 @@ const AddNewPitch: React.FC = () => {
       {/* Main Content Section */}
       <div className="p-6">
         <h1 className="text-lg mb-4">Create New Pitch</h1>
+        <button
+        className="bg-purple-900 text-white px-4 py-2 rounded mb-4"
+        onClick={() => setIsModalOpen(true)}
+      >
+        Create New Category
+      </button>
+      
+      <CreateCategoryModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onCategoryCreated={handleCategoryCreated}
+      />
         <div className="flex flex-col">
           <div className="flex w-full justify-between">
             {/* Left Section */}
@@ -297,26 +326,15 @@ const AddNewPitch: React.FC = () => {
                 <tr>
                   <td>Category ID:</td>
                   <td>
-                    <Select
-                      options={[
-                        { value: "1", label: "Football" },
-                        { value: "2", label: "Basketball" },
-                        { value: "3", label: "Tennis" },
-                      ]}
-                      value={
-                        formData.category_id
-                          ? {
-                              value: formData.category_id,
-                              label: options.find(
-                                (opt) => opt.value === formData.category_id
-                              )?.label,
-                            }
-                          : null
-                      }
-                      onChange={(selected) =>
-                        handleSelectChange("category_id", selected)
-                      }
-                    />
+                  <Select
+                  options={categories}
+                  value={categories.find(
+                    (opt) => opt.value === formData.category_id
+                  )}
+                  onChange={(selected) =>
+                    handleSelectChange("category_id", selected)
+                  }
+                />
                   </td>
                 </tr>
                 <tr>
