@@ -54,7 +54,7 @@ const CreateCategoryModal: React.FC<CreateCategoryModalProps> = ({
       });
 
       const result = await response.json();
-      console.log(result);
+      // console.log(result);
       if (!response.ok) {
         throw new Error(result.message || "Error creating category");
       }
@@ -64,7 +64,7 @@ const CreateCategoryModal: React.FC<CreateCategoryModalProps> = ({
         name: result.data.name, 
       };
 
-      console.log(newCategory);
+      // console.log(newCategory);
 
       toast.success("Category created successfully!");
       setName("");

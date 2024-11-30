@@ -23,8 +23,8 @@ const AddNewPitch: React.FC = () => {
     managerContact: "",
     ownerId: "",
     location: { latitude: "", longitude: "" },
-    amenities: [],
-    facilities: [],
+    amenities: ['gmy','swiing ppol','bar'] ,
+    facilities: ['gmy','swiing ppol','bar'] ,
     image: null,
     gallery: [],
   });
@@ -47,7 +47,7 @@ const AddNewPitch: React.FC = () => {
         }
 
         const result = await response.json();
-        console.log("Fetched categories data:", result);
+        //console.log("Fetched categories data:", result);
 
         if (result.success && Array.isArray(result.data)) {
           const formattedCategories = result.data.map((category: any) => ({
@@ -112,23 +112,16 @@ const AddNewPitch: React.FC = () => {
   // ['gmy','swiing ppol','bar'] 
 
   const handleSave = async () => {
-    //  all required fields
     const requiredFields = [
       { name: "name", label: "Pitch Name" },
       { name: "amountPerHour", label: "Pitch Price" },
-      { name: "discount", label: "Discount" },
       { name: "category_id", label: "Category" },
       { name: "contact", label: "Contact" },
       { name: "openingHours", label: "Opening Hours" },
       { name: "closingHours", label: "Closing Hours" },
       { name: "size", label: "Pitch Size" },
-      { name: "pitchManager", label: "Pitch Manager" },
-      { name: "ownerId", label: "Owner ID" },
-      { name: "location.latitude", label: "Latitude" },
-      { name: "location.longitude", label: "Longitude" },
     ];
   
-    //  for missing values
     for (const field of requiredFields) {
       const value = field.name.includes(".")
         ? field.name.split(".").reduce((acc, key) => acc[key], formData)
@@ -139,17 +132,16 @@ const AddNewPitch: React.FC = () => {
       }
     }
   
-    // Validate file input
     if (!fileInput) {
       toast.error("Please upload an image.");
       return;
     }
   
-    // Proceed if all validations pass
+    // Prepare FormData
     const formdata = new FormData();
     formdata.append("name", formData.name);
     formdata.append("amount_per_hour", formData.amountPerHour);
-    formdata.append("discount", formData.discount);
+    formdata.append("discount", formData.discount || "0");
     formdata.append("ratings", formData.ratings || "0");
     formdata.append("category_id", formData.category_id);
     formdata.append("contact", formData.contact);
@@ -157,31 +149,45 @@ const AddNewPitch: React.FC = () => {
     formdata.append("closing_hours", formData.closingHours);
     formdata.append("size", formData.size);
     formdata.append("image", fileInput);
-    formdata.append("owner_id", formData.ownerId);
-    formdata.append("amenities", JSON.stringify(formData.amenities));
-    formdata.append("facilities", JSON.stringify(formData.facilities));
-    formdata.append("location", JSON.stringify(formData.location));
+    formdata.append("owner_id", formData.ownerId || null); // Optional field
+  
+    // Ensure amenities and facilities are arrays
+    formdata.append("amenities", JSON.stringify(formData.amenities || []));
+    formdata.append("facilities", JSON.stringify(formData.facilities || []));
+  
+    // Ensure location is an array
+    const location = formData.location.latitude && formData.location.longitude
+      ? [formData.location.latitude, formData.location.longitude]
+      : [];
+    formdata.append("location", JSON.stringify(location));
   
     const baseUrl = import.meta.env.VITE_BASE_URL;
     const bearerToken = localStorage.getItem("token");
+  
     try {
-
-     
-
       const response = await fetch(`${baseUrl}/admin/pitches`, {
         method: "POST",
         headers: { Authorization: `Bearer ${bearerToken}` },
         body: formdata,
       });
-      if (!response.ok) throw new Error("Failed to create pitch.");
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Error Response Data:", errorData);
+        console.log(formData.amenities);
+        throw new Error(errorData.message || "Failed to create pitch.");
+      }
+  
       const result = await response.json();
       toast.success("Pitch created successfully!");
       console.log("Result:", result);
     } catch (error) {
-      toast.error("Error creating pitch.");
+      toast.error(`Error creating pitch: ${error.message}`);
       console.error("Error:", error);
     }
   };
+  
+  
   
 
 
