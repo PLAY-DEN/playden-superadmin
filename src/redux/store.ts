@@ -4,6 +4,7 @@ import bookingReducer from './bookingSlice';
 import settingsReducer from './settingsSlice';
 import userReducer from './userSlice';
 import bookingMgtReducer from './bookingManagementSlice';
+import playpointsReducer from './playPointSlice';
 
 
 export const store = configureStore({
@@ -13,6 +14,7 @@ export const store = configureStore({
         settings: settingsReducer,
         users: userReducer,
         bookingMgt: bookingMgtReducer,
+        playpoints: playpointsReducer,
     },
 });
 

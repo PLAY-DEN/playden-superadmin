@@ -1,26 +1,25 @@
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState, AppDispatch } from '../../redux/store';
+import { fetchActivePlaypoints } from '../../redux/playPointSlice';
 import { Home7, Ellipse } from "../../assets/images";
 import Pagination from "../../components/pagination";
 
-// Data for summary cards and table
-const playpointSummary = {
-  todayRedeemed: 8,
-  totalRedeemed: 20,
-  totalRefunded: 30,
-};
-
-const playpointUsageData = [
-  { id: 1, name: "Oyinkansola Soleye", bookingId: "#445564", playpointsRedeemed: 5, date: "8/8/2024" },
-  { id: 2, name: "Oyinkansola Soleye", bookingId: "#445564", playpointsRedeemed: 5, date: "8/8/2024" },
-  { id: 3, name: "Oyinkansola Soleye", bookingId: "#445564", playpointsRedeemed: 5, date: "8/8/2024" },
-  { id: 4, name: "Oyinkansola Soleye", bookingId: "#445564", playpointsRedeemed: 5, date: "8/8/2024" },
-  { id: 5, name: "Oyinkansola Soleye", bookingId: "#445564", playpointsRedeemed: 5, date: "8/8/2024" },
-  { id: 6, name: "Oyinkansola Soleye", bookingId: "#445564", playpointsRedeemed: 5, date: "8/8/2024" },
-  { id: 7, name: "Oyinkansola Soleye", bookingId: "#445564", playpointsRedeemed: 5, date: "8/8/2024" },
-];
-
 const PlaypointUsage: React.FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
+
+  const { playpoints, loading, error } = useSelector((state: RootState) => state.playpoints);
+
+  useEffect(() => {
+    dispatch(fetchActivePlaypoints());
+  }, [dispatch]);
+
+  if (loading) return <p>Loading playpoints...</p>;
+  if (error) return <p className="text-red-500">Error: {error}</p>;
+  if (!playpoints || playpoints.length === 0) return <p>No playpoints found.</p>; // Handle empty state
+
   return (
-    <div className=" relative ml-72 p-8 mt-20 overflow-auto">
+    <div className="relative ml-72 p-8 mt-20 overflow-auto">
       {/* Header and Filter */}
       <div className="flex flex-row justify-between mb-6">
         <h2 className="text-2xl text-[#01031A] font-bold">Playpoint Usage</h2>
@@ -38,27 +37,12 @@ const PlaypointUsage: React.FC = () => {
         <div className="min-w-[320px] h-[180px] bg-[#D29AB8] rounded-md flex justify-between items-center">
           <div className="flex flex-col ml-5 text-white">
             <img src={Home7} alt="" className="w-[52px] h-[52px]" />
-            <p>{playpointSummary.todayRedeemed}</p>
+            <p>{/* Add dynamic data if applicable */}</p>
             <p>Today Redeemed</p>
           </div>
           <img src={Ellipse} alt="" className="object-cover mt-[-68px] w-[110px] h-[110px]" />
         </div>
-        <div className="min-w-[320px] h-[180px] bg-playden-primary rounded-md flex justify-between items-center">
-          <div className="flex flex-col ml-5 text-white">
-            <img src={Home7} alt="" className="w-[52px] h-[52px]" />
-            <p>{playpointSummary.totalRedeemed}</p>
-            <p>Total Redeemed</p>
-          </div>
-          <img src={Ellipse} alt="" className="object-cover mt-[-68px] w-[110px] h-[110px]" />
-        </div>
-        <div className="min-w-[320px] h-[180px] bg-[#01031A] rounded-md flex justify-between items-center">
-          <div className="flex flex-col ml-5 text-white">
-            <img src={Home7} alt="" className="w-[52px] h-[52px]" />
-            <p>{playpointSummary.totalRefunded}</p>
-            <p>Total Refunded</p>
-          </div>
-          <img src={Ellipse} alt="" className="object-cover mt-[-68px] w-[110px] h-[110px]" />
-        </div>
+        {/* Repeat for other summary cards */}
       </div>
 
       {/* Playpoint Usage Table */}
@@ -68,12 +52,12 @@ const PlaypointUsage: React.FC = () => {
             <th className="border-b p-4">S/N</th>
             <th className="border-b p-4">Name</th>
             <th className="border-b p-4">Booking ID</th>
-            <th className="border-b p-4">Playpoint Redeemed</th>
+            <th className="border-b p-4">Playpoints Redeemed</th>
             <th className="border-b p-4">Date</th>
           </tr>
         </thead>
         <tbody>
-          {playpointUsageData.map((usage, index) => (
+          {playpoints.map((usage, index) => (
             <tr key={usage.id}>
               <td className="border-b p-4 text-sm">{index + 1}</td>
               <td className="border-b p-4 text-sm">{usage.name}</td>
@@ -84,7 +68,11 @@ const PlaypointUsage: React.FC = () => {
           ))}
         </tbody>
       </table>
-      <Pagination />
+      {/* <Pagination
+        currentPage={currentPage}
+        totalPages={lastPage}
+        onPageChange={handlePageChange}
+      /> */}
     </div>
   );
 };
