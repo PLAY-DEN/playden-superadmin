@@ -23,12 +23,12 @@ const BookingDetails: React.FC = () => {
   if (loading) return <p>Loading...</p>;
   if (error) return <p className="text-red-500">Error: {error}</p>;
 
-  // Handle case where booking data is not available
+  
   if (!bookingDetails) return <p>No booking details found.</p>;
 
 
   //Most of the required Datas are not in the API Data.
-   
+
   return (
     <div className="bg-white relative ml-72 p-8 mt-24">
       <div className="flex flex-row justify-between w-full">
