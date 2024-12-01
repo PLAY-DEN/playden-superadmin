@@ -4,6 +4,8 @@ import "react-toastify/dist/ReactToastify.css";
 import FileUploadComponent from "./FileUploadComponent";
 import Select from "./forms/select";
 import CreateCategoryModal from "./Modal";
+import { MultiSelect } from "rizzui";
+import pitchClient from "../api/client/pitch";
 
 const AddNewPitch: React.FC = () => {
   const [fileInput, setFileInput] = useState<File | null>(null);
@@ -21,7 +23,7 @@ const AddNewPitch: React.FC = () => {
     size: "",
     pitchManager: "",
     managerContact: "",
-    ownerId: "",
+    ownerId: "1",
     location: { latitude: "", longitude: "" },
     amenities: [],
     facilities: [],
@@ -29,22 +31,44 @@ const AddNewPitch: React.FC = () => {
     gallery: [],
   });
 
+  const [amenities, setAmenities] = useState<any[]>([]);
+  const [facilities, setFacilities] = useState<any[]>([]);
+
+  const amenitiesOptions = [
+    { label: 'Changing Room', value: 'Changing Room' },
+    { label: 'Capacity', value: 'Capacity' },
+    { label: 'Sitting Area', value: 'Sitting Area' },
+  ];
+
+  const facilitiesOptions = [
+    { label: 'Swimming Pool', value: 'Swimming Pool' },
+    { label: 'Garden', value: 'Garden' },
+    { label: 'Tennis Court', value: 'Tennis Court' },
+    { label: 'Gym', value: 'Gym' },
+    { label: 'Wifi', value: 'Wifi' },
+    { label: 'Spa', value: 'Spa' },
+    { label: 'Restaurant', value: 'Restaurant' },
+  ];
+
   // Fetch categories from the API
   useEffect(() => {
     const fetchCategories = async () => {
-      const baseUrl = import.meta.env.VITE_BASE_URL;
+      const baseUrl = 'http://localhost:8000' //import.meta.env.VITE_BASE_URL;
       const bearerToken = localStorage.getItem("token");
 
       try {
-        const response = await fetch(`${baseUrl}/admin/categories`, {
+        const response = await fetch(`${baseUrl}/api/v1/admin/categories`, {
           headers: {
             Authorization: `Bearer ${bearerToken}`,
+            // "Content-Type": "application/json",
+            Accept: "application/json",
           },
         });
 
         if (!response.ok) {
           throw new Error("Failed to fetch categories");
         }
+
 
         const result = await response.json();
         console.log("Fetched categories data:", result);
@@ -111,8 +135,93 @@ const AddNewPitch: React.FC = () => {
   // facilities /ammenities should be like thhis
   // ['gmy','swiing ppol','bar'] 
 
+  // const handleSave = async () => {
+  //   //  all required fields
+  //   const requiredFields = [
+  //     { name: "name", label: "Pitch Name" },
+  //     { name: "amountPerHour", label: "Pitch Price" },
+  //     { name: "discount", label: "Discount" },
+  //     { name: "category_id", label: "Category" },
+  //     { name: "contact", label: "Contact" },
+  //     { name: "openingHours", label: "Opening Hours" },
+  //     { name: "closingHours", label: "Closing Hours" },
+  //     { name: "size", label: "Pitch Size" },
+  //     { name: "pitchManager", label: "Pitch Manager" },
+  //     { name: "ownerId", label: "Owner ID" },
+  //     { name: "location.latitude", label: "Latitude" },
+  //     { name: "location.longitude", label: "Longitude" },
+  //   ];
+
+  //   //  for missing values
+  //   for (const field of requiredFields) {
+  //     const value = field.name.includes(".")
+  //       ? field.name.split(".").reduce((acc, key) => acc[key], formData)
+  //       : formData[field.name];
+  //     if (!value || value.trim() === "") {
+  //       toast.error(`Please provide a value for ${field.label}.`);
+  //       return;
+  //     }
+  //   }
+
+  //   // Validate file input
+  //   if (!fileInput) {
+  //     toast.error("Please upload an image.");
+  //     return;
+  //   }
+
+  //   // Proceed if all validations pass
+  //   const formdata = new FormData();
+  //   formdata.append("name", formData.name);
+  //   formdata.append("amount_per_hour", formData.amountPerHour);
+  //   formdata.append("discount", formData.discount);
+  //   formdata.append("ratings", formData.ratings || "0");
+  //   formdata.append("category_id", formData.category_id);
+  //   formdata.append("contact", formData.contact);
+  //   formdata.append("opening_hours", formData.openingHours);
+  //   formdata.append("closing_hours", formData.closingHours);
+  //   formdata.append("size", formData.size);
+  //   formdata.append("image", fileInput);
+  //   formdata.append("owner_id", formData.ownerId);
+  //   formdata.append("amenities", JSON.stringify(amenities));
+  //   formdata.append("facilities", JSON.stringify(facilities));
+  //   // formdata.append("location", JSON.stringify(formData.location));
+  //   formdata.append("location[latitude]", formData.location.latitude);
+  //   formdata.append("location[longitude]", formData.location.longitude);
+
+  //   const baseUrl = 'http://localhost:8000'//import.meta.env.VITE_BASE_URL;
+  //   const bearerToken = localStorage.getItem("token");
+  //   try {
+
+
+
+  //     const response = await fetch(`${baseUrl}/api/v1/admin/pitches`, {
+  //       method: "POST",
+  //       headers: { Authorization: `Bearer ${bearerToken}` },
+  //       body: formdata,
+  //     });
+  //     console.log(await response.json());
+
+  //     if (!response.ok) throw new Error("Failed to create pitch.");
+  //     const result = await response.json();
+  //     toast.success("Pitch created successfully!");
+  //     console.log("Result:", result);
+  //   } catch (error) {
+  //     toast.error("Error creating pitch.");
+  //     console.error("Error:", error);
+  //   }
+  // };
+
   const handleSave = async () => {
-    //  all required fields
+
+    // TODO
+    // Here you should add your proper validation logic and save the pitch to the server
+    // You should also return error messages to form inputs instead of toast, toast is for completed or failed operation
+    // add loading stage
+
+    // break your code is to large here
+    // i've started the api client creation process, you study and follow aslonh
+
+    // Validate required fields
     const requiredFields = [
       { name: "name", label: "Pitch Name" },
       { name: "amountPerHour", label: "Pitch Price" },
@@ -127,62 +236,53 @@ const AddNewPitch: React.FC = () => {
       { name: "location.latitude", label: "Latitude" },
       { name: "location.longitude", label: "Longitude" },
     ];
-  
-    //  for missing values
+
     for (const field of requiredFields) {
       const value = field.name.includes(".")
         ? field.name.split(".").reduce((acc, key) => acc[key], formData)
         : formData[field.name];
-      if (!value || value.trim() === "") {
+      if (!value || value.toString().trim() === "") {
         toast.error(`Please provide a value for ${field.label}.`);
         return;
       }
     }
-  
+
     // Validate file input
     if (!fileInput) {
       toast.error("Please upload an image.");
       return;
     }
-  
-    // Proceed if all validations pass
-    const formdata = new FormData();
-    formdata.append("name", formData.name);
-    formdata.append("amount_per_hour", formData.amountPerHour);
-    formdata.append("discount", formData.discount);
-    formdata.append("ratings", formData.ratings || "0");
-    formdata.append("category_id", formData.category_id);
-    formdata.append("contact", formData.contact);
-    formdata.append("opening_hours", formData.openingHours);
-    formdata.append("closing_hours", formData.closingHours);
-    formdata.append("size", formData.size);
-    formdata.append("image", fileInput);
-    formdata.append("owner_id", formData.ownerId);
-    formdata.append("amenities", JSON.stringify(formData.amenities));
-    formdata.append("facilities", JSON.stringify(formData.facilities));
-    formdata.append("location", JSON.stringify(formData.location));
-  
-    const baseUrl = import.meta.env.VITE_BASE_URL;
-    const bearerToken = localStorage.getItem("token");
+
+    // Ensure data types are correct
+    const validatedFormData = {
+      ...formData,
+      amount_per_hour: parseFloat(formData.amountPerHour),
+      discount: parseFloat(formData.discount),
+      "location[latitude]": parseFloat(formData.location.latitude),
+      "location[longitude]": parseFloat(formData.location.longitude),
+      amenities: JSON.stringify(amenities),
+      facilities: JSON.stringify(facilities),
+      image: fileInput,
+      opening_hours: formData.openingHours,
+      closing_hours: formData.closingHours,
+      size: formData.size,
+      // pitchManager: parseInt(formData.pitchManager),
+      owner_id: 21,
+    };
+    console.log(validatedFormData);
+
     try {
-
-     
-
-      const response = await fetch(`${baseUrl}/admin/pitches`, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${bearerToken}` },
-        body: formdata,
-      });
-      if (!response.ok) throw new Error("Failed to create pitch.");
-      const result = await response.json();
+      const result = await pitchClient.createPitch(validatedFormData);
       toast.success("Pitch created successfully!");
       console.log("Result:", result);
     } catch (error) {
       toast.error("Error creating pitch.");
-      console.error("Error:", error);
+      console.error("Error creating pitch:", error);
     }
+
   };
-  
+
+
 
 
   return (
@@ -204,17 +304,17 @@ const AddNewPitch: React.FC = () => {
       <div className="p-6">
         <h1 className="text-lg mb-4">Create New Pitch</h1>
         <button
-        className="bg-purple-900 text-white px-4 py-2 rounded mb-4"
-        onClick={() => setIsModalOpen(true)}
-      >
-        Create New Category
-      </button>
-      
-      <CreateCategoryModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onCategoryCreated={handleCategoryCreated}
-      />
+          className="bg-purple-900 text-white px-4 py-2 rounded mb-4"
+          onClick={() => setIsModalOpen(true)}
+        >
+          Create New Category
+        </button>
+
+        <CreateCategoryModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onCategoryCreated={handleCategoryCreated}
+        />
         <div className="flex flex-col">
           <div className="flex w-full justify-between">
             {/* Left Section */}
@@ -255,7 +355,7 @@ const AddNewPitch: React.FC = () => {
                   <td>Pitch Price:</td>
                   <td>
                     <input
-                      type="text"
+                      type="number"
                       name="amountPerHour"
                       className="border px-2 py-1"
                       value={formData.amountPerHour}
@@ -337,35 +437,47 @@ const AddNewPitch: React.FC = () => {
                   </td>
                 </tr>
                 <tr>
-                  <td>Owner ID:</td>
+                  <td>Owner:</td>
                   <td>
-                    <input
+                    You are to get the list of users with the role pitch other and pass it into a select form. NB the user id should be its value
+                    {/* <input
                       type="text"
                       name="ownerId"
                       className="border px-2 py-1"
                       value={formData.ownerId}
                       onChange={handleInputChange}
-                    />
+                    /> */}
                   </td>
                 </tr>
                 <tr>
-                  <td>Category ID:</td>
+                  <td>Category:</td>
                   <td>
-                  <Select
-                    options={categories}
-                    value={categories.find(
-                      (opt) => opt.value === formData.category_id
-                    )}
-                    onChange={(selected) =>
-                      handleSelectChange("category_id", selected)
-                    }
-                  />
+                    <Select
+                      options={categories}
+                      value={categories.find(
+                        (opt) => opt.value === formData.category_id
+                      )}
+                      onChange={(selected) =>
+                        handleSelectChange("category_id", selected)
+                      }
+                    />
                   </td>
                 </tr>
                 <tr>
                   <td>Amenities:</td>
                   <td>
-                    <Select
+                    <MultiSelect
+                      value={amenities}
+                      options={amenitiesOptions}
+                      onChange={setAmenities}
+                      // error={error?.message}
+                      className="w-full"
+                      clearable={true}
+                      onClear={() => setAmenities([])}
+                      selectClassName="!h-[56px] rounded-full border-[0.4px] border-primary"
+                      errorClassName="text-red-500"
+                    />
+                    {/* <Select
                       options={[
                         { value: "wifi", label: "WiFi" },
                         { value: "parking", label: "Parking" },
@@ -380,13 +492,28 @@ const AddNewPitch: React.FC = () => {
                         }))
                       }
                       className="!py-1"
-                    />
+                    /> */}
                   </td>
                 </tr>
                 <tr>
                   <td>Facilities:</td>
                   <td>
-                    <Select
+                    <div className="">
+
+                      <MultiSelect
+                        value={facilities}
+                        options={facilitiesOptions}
+                        onChange={setFacilities}
+                        // error={error?.message}
+                        className="w-full"
+                        clearable={true}
+                        onClear={() => setFacilities([])}
+                        selectClassName="!h-[56px] rounded-full border-[0.4px] border-primary"
+                        errorClassName="text-red-500"
+                      />
+
+                    </div>
+                    {/* <Select
                       options={[
                         { value: "gym", label: "Gym" },
                         { value: "swimming_pool", label: "Swimming Pool" },
@@ -400,14 +527,14 @@ const AddNewPitch: React.FC = () => {
                         }))
                       }
                       className="!py-1"
-                    />
+                    /> */}
                   </td>
                 </tr>
                 <tr>
                   <td>Latitude:</td>
                   <td>
                     <input
-                      type="text"
+                      type="number"
                       name="latitude"
                       placeholder="Latitude"
                       className="border px-2 py-1"
@@ -429,7 +556,7 @@ const AddNewPitch: React.FC = () => {
                   <td>Longitude:</td>
                   <td>
                     <input
-                      type="text"
+                      type="number"
                       name="longitude"
                       placeholder="Longitude"
                       className="border px-2 py-1"
