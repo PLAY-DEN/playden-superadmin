@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom"
+import ProtectedRoute from "./hooks/ProtectedRoute";
 import DashboardPage from "./pages/dashboard"
 import BaseLayout from "./layouts/base"
 import AuthLayout from "./layouts/auth"
@@ -27,7 +28,9 @@ const MyRoutes = () => (
     </Route>
 
     <Route element={<BaseLayout />}>
-      <Route path="/" element={<DashboardPage />} />
+      <Route path="/" element={<ProtectedRoute>
+        <DashboardPage />
+      </ProtectedRoute> } />
       <Route path="/pitch-listing" element={<PitchListing />} />
       <Route path="/pitch-listing/:pitchId" element={<PitchDetails />} />
       <Route path="/add-new-pitch" element={<AddNewPitch />} />
@@ -51,7 +54,7 @@ const MyRoutes = () => (
 
 const AppRoutes = () => {
   return (
-    <BrowserRouter>
+      <BrowserRouter>
       <MyRoutes />
     </BrowserRouter>
   );
