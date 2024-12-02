@@ -11,6 +11,7 @@ const AddNewPitch: React.FC = () => {
   const [fileInput, setFileInput] = useState<File | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [categories, setCategories] = useState<{ value: string; label: string }[]>([]);
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [formData, setFormData] = useState({
     name: "",
     amountPerHour: "",
@@ -25,8 +26,8 @@ const AddNewPitch: React.FC = () => {
     managerContact: "",
     ownerId: "1",
     location: { latitude: "", longitude: "" },
-    amenities: [],
-    facilities: [],
+    amenities: ['gmy','swiing ppol','bar'] ,
+    facilities: ['gmy','swiing ppol','bar'] ,
     image: null,
     gallery: [],
   });
@@ -72,7 +73,7 @@ const AddNewPitch: React.FC = () => {
 
 
         const result = await response.json();
-        console.log("Fetched categories data:", result);
+        //console.log("Fetched categories data:", result);
 
         if (result.success && Array.isArray(result.data)) {
           const formattedCategories = result.data.map((category: any) => ({
@@ -128,6 +129,7 @@ const AddNewPitch: React.FC = () => {
 
 
   const handleSave = async () => {
+<<<<<<< HEAD
 
     // TODO
     // Here you should add your proper validation logic and save the pitch to the server
@@ -138,25 +140,30 @@ const AddNewPitch: React.FC = () => {
     // i've started the api client creation process, you study and follow aslonh
 
     // Validate required fields
+=======
+>>>>>>> origin/main
     const requiredFields = [
       { name: "name", label: "Pitch Name" },
       { name: "amountPerHour", label: "Pitch Price" },
-      { name: "discount", label: "Discount" },
       { name: "category_id", label: "Category" },
       { name: "contact", label: "Contact" },
       { name: "openingHours", label: "Opening Hours" },
       { name: "closingHours", label: "Closing Hours" },
       { name: "size", label: "Pitch Size" },
-      { name: "pitchManager", label: "Pitch Manager" },
-      { name: "ownerId", label: "Owner ID" },
-      { name: "location.latitude", label: "Latitude" },
-      { name: "location.longitude", label: "Longitude" },
     ];
+<<<<<<< HEAD
 
+=======
+  
+    const newErrors: Record<string, string> = {};
+  
+    // Validate required fields
+>>>>>>> origin/main
     for (const field of requiredFields) {
       const value = field.name.includes(".")
         ? field.name.split(".").reduce((acc, key) => acc[key], formData)
         : formData[field.name];
+<<<<<<< HEAD
       if (!value || value.toString().trim() === "") {
         toast.error(`Please provide a value for ${field.label}.`);
         return;
@@ -164,10 +171,26 @@ const AddNewPitch: React.FC = () => {
     }
 
     // Validate file input
+=======
+  
+      if (!value || value.trim() === "") {
+        newErrors[field.name] = `${field.label} is required.`;
+      }
+    }
+  
+>>>>>>> origin/main
     if (!fileInput) {
-      toast.error("Please upload an image.");
+      newErrors["image"] = "Please upload an image.";
+    }
+  
+    //  errors in state
+    setErrors(newErrors);
+  
+    //
+    if (Object.keys(newErrors).length > 0) {
       return;
     }
+<<<<<<< HEAD
 
     // Ensure data types are correct
     const validatedFormData = {
@@ -195,12 +218,65 @@ const AddNewPitch: React.FC = () => {
     } catch (error) {
       toast.error("Error creating pitch.");
       console.error("Error creating pitch:", error);
+=======
+  
+    //  FormData
+    const formdata = new FormData();
+    formdata.append("name", formData.name);
+    formdata.append("amount_per_hour", formData.amountPerHour);
+    formdata.append("discount", formData.discount || "0");
+    formdata.append("ratings", formData.ratings || "0");
+    formdata.append("category_id", formData.category_id);
+    formdata.append("contact", formData.contact);
+    formdata.append("opening_hours", formData.openingHours);
+    formdata.append("closing_hours", formData.closingHours);
+    formdata.append("size", formData.size);
+    formdata.append("image", fileInput);
+    formdata.append("owner_id", formData.ownerId || null); // Optional field
+  
+
+    formdata.append("amenities", JSON.stringify(formData.amenities || []));
+    formdata.append("facilities", JSON.stringify(formData.facilities || []));
+  
+   
+    const location =
+      formData.location?.latitude && formData.location?.longitude
+        ? [formData.location.latitude, formData.location.longitude]
+        : [];
+    formdata.append("location", JSON.stringify(location));
+  
+    const baseUrl = import.meta.env.VITE_BASE_URL;
+    const bearerToken = localStorage.getItem("token");
+  
+    try {
+      const response = await fetch(`${baseUrl}/admin/pitches`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${bearerToken}` },
+        body: formdata,
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Error Response Data:", errorData);
+        throw new Error(errorData.message || "Failed to create pitch.");
+      }
+  
+      const result = await response.json();
+      toast.success("Pitch created successfully!");
+      console.log("Result:", result);
+    } catch (error: any) {
+      toast.error(`Error creating pitch: ${error.message}`);
+      console.error("Error:", error);
+>>>>>>> origin/main
     }
 
   };
+<<<<<<< HEAD
 
 
 
+=======
+>>>>>>> origin/main
 
   return (
     <div className="mt-20 relative ml-72 p-8">
@@ -250,10 +326,11 @@ const AddNewPitch: React.FC = () => {
                     <Input
                       type="text"
                       name="name"
-                      className="border px-2 py-1"
+                      className= {`border px-2 py-1 ${errors.name ? "border-red-500" : ""}`}
                       value={formData.name}
                       onChange={handleInputChange}
                     />
+                    {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
                   </td>
                 </tr>
                 <tr>
@@ -262,10 +339,11 @@ const AddNewPitch: React.FC = () => {
                     <Input
                       type="text"
                       name="size"
-                      className="border px-2 py-1"
+                      className={`border px-2 py-1 ${errors.size ? "border-red-500" : ""}`}
                       value={formData.size}
                       onChange={handleInputChange}
                     />
+                    {errors.size && <p className="text-red-500 text-sm">{errors.size}</p>}
                   </td>
                 </tr>
                 <tr>
@@ -274,10 +352,11 @@ const AddNewPitch: React.FC = () => {
                     <Input
                       type="number"
                       name="amountPerHour"
-                      className="border px-2 py-1"
+                      className={`border px-2 py-1 ${errors.amountPerHour ? "border-red-500" : ""}`}
                       value={formData.amountPerHour}
                       onChange={handleInputChange}
                     />
+                    {errors.amountPerHour && <p className="text-red-500 text-sm">{errors.amountPerHour}</p>}
                   </td>
                 </tr>
                 <tr>
@@ -290,6 +369,7 @@ const AddNewPitch: React.FC = () => {
                       value={formData.discount}
                       onChange={handleInputChange}
                     />
+                    {errors.discount && <p className="text-red-500 text-sm">{errors.discount}</p>}
                   </td>
                 </tr>
                 <tr>
@@ -297,12 +377,13 @@ const AddNewPitch: React.FC = () => {
                   <td>
                     <Input
                       type="time"
-                      name="openingHours"
+                      name={`border px-2 py-1 ${errors.openingHours ? "border-red-500" : ""}`}
                       className="border px-2 py-1"
                       value={formData.openingHours}
                       onChange={handleInputChange}
                     />
                   </td>
+                  {errors.openingHours && <p className="text-red-500 text-sm">{errors.openingHours}</p>}
                 </tr>
                 <tr>
                   <td>Closing Hours:</td>
@@ -314,6 +395,7 @@ const AddNewPitch: React.FC = () => {
                       value={formData.closingHours}
                       onChange={handleInputChange}
                     />
+                    {errors.closingHours && <p className="text-red-500 text-sm">{errors.closingHours}</p>}
                   </td>
                 </tr>
                 <tr>
@@ -351,6 +433,7 @@ const AddNewPitch: React.FC = () => {
                       value={formData.pitchManager}
                       onChange={handleInputChange}
                     />
+                    {errors.pitchManager && <p className="text-red-500 text-sm">{errors.pitchManager}</p>}
                   </td>
                 </tr>
                 <tr>
@@ -363,6 +446,7 @@ const AddNewPitch: React.FC = () => {
                       value={formData.contact}
                       onChange={handleInputChange}
                     />
+                    {errors.contact && <p className="text-red-500 text-sm">{errors.contact}</p>}
                   </td>
                 </tr>
                 <tr>
@@ -375,12 +459,18 @@ const AddNewPitch: React.FC = () => {
                       className="border px-2 py-1"
                       value={formData.ownerId}
                       onChange={handleInputChange}
+<<<<<<< HEAD
                     /> */}
+=======
+                    />
+                    {errors.ownerId && <p className="text-red-500 text-sm">{errors.ownerId}</p>}
+>>>>>>> origin/main
                   </td>
                 </tr>
                 <tr>
                   <td>Category:</td>
                   <td>
+<<<<<<< HEAD
                     <Select
                       options={categories}
                       value={categories.find(
@@ -391,6 +481,18 @@ const AddNewPitch: React.FC = () => {
                         handleSelectChange("category_id", selected)
                       }
                     />
+=======
+                  <Select
+                    options={categories}
+                    value={categories.find(
+                      (opt) => opt.value === formData.category_id
+                    )}
+                    onChange={(selected) =>
+                      handleSelectChange("category_id", selected)
+                    }
+                  />
+                  {errors.category_id && <p className="text-red-500 text-sm">{errors.category_id}</p>}
+>>>>>>> origin/main
                   </td>
                 </tr>
                 <tr>
@@ -407,11 +509,13 @@ const AddNewPitch: React.FC = () => {
                       selectClassName="!px-2 py-1 rounded-full border-[0.4px] border-primary"
                       errorClassName="text-red-500"
                     />
+                    {errors.amenities && <p className="text-red-500 text-sm">{errors.amenities}</p>}
                   </td>
                 </tr>
                 <tr>
                   <td>Facilities:</td>
                   <td>
+<<<<<<< HEAD
                     <div className="">
 
                       <MultiSelect
@@ -427,6 +531,24 @@ const AddNewPitch: React.FC = () => {
                       />
 
                     </div>
+=======
+                    <Select
+                      options={[
+                        { value: "gym", label: "Gym" },
+                        { value: "swimming_pool", label: "Swimming Pool" },
+                      ]}
+                      isMulti
+                      name="facilities"
+                      onChange={(selected) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          facilities: selected.map((s) => s.value),
+                        }))
+                      }
+                      className="!py-1"
+                    />
+                    {errors.facilities && <p className="text-red-500 text-sm">{errors.facilities}</p>}
+>>>>>>> origin/main
                   </td>
                 </tr>
                 <tr>
@@ -448,6 +570,7 @@ const AddNewPitch: React.FC = () => {
                         }))
                       }
                     />
+                    {errors.latitude && <p className="text-red-500 text-sm">{errors.latitude}</p>}
                   </td>
                 </tr>
 
@@ -470,6 +593,7 @@ const AddNewPitch: React.FC = () => {
                         }))
                       }
                     />
+                    {errors.longitude && <p className="text-red-500 text-sm">{errors.longitude}</p>}
                   </td>
                 </tr>
               </tbody>
