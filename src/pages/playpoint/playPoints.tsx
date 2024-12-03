@@ -14,9 +14,9 @@ const PlaypointUsage: React.FC = () => {
     dispatch(fetchActivePlaypoints());
   }, [dispatch]);
 
-  if (loading) return <p>Loading playpoints...</p>;
-  if (error) return <p className="text-red-500">Error: {error}</p>;
-  if (!playpoints || playpoints.length === 0) return <p>No playpoints found.</p>; // Handle empty state
+  if (loading) return <p className='ml-72 p-8 mt-20 '>Loading playpoints...</p>;
+  if (error) return <p className="text-red-500 ml-72 p-8 mt-20 ">Error: {error}</p>;
+  if (!playpoints || playpoints.length === 0) return <p  className="relative ml-72 p-8 mt-20 overflow-auto">No playpoints found.</p>; // Handle empty state
 
   return (
     <div className="relative ml-72 p-8 mt-20 overflow-auto">
