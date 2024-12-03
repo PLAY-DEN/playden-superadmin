@@ -39,7 +39,7 @@ const UserManagement: React.FC = () => {
         <div className="min-w-[320px] h-[180px] bg-[#D29AB8] rounded-md flex justify-between items-center">
           <div className="flex flex-col ml-5 text-white">
             <img src={Home7} alt="" className="w-[52px] h-[52px]" />
-            <p>500</p>
+            <p>{data.statistics.total_users}</p>
             <p>Total users</p>
           </div>
           <img src={Ellipse} alt="" className="object-cover mt-[-68px] w-[110px] h-[110px]" />
@@ -47,7 +47,7 @@ const UserManagement: React.FC = () => {
         <div className="min-w-[320px] h-[180px] bg-playden-primary rounded-md flex justify-between items-center">
           <div className="flex flex-col ml-5 text-white">
             <img src={Home7} alt="" className="w-[52px] h-[52px]" />
-            <p>10</p>
+            <p>{data.statistics.total_active_users}</p>
             <p>active user</p>
           </div>
           <img src={Ellipse} alt="" className="object-cover mt-[-68px] w-[110px] h-[110px]" />
@@ -55,7 +55,7 @@ const UserManagement: React.FC = () => {
         <div className="min-w-[320px] h-[180px] bg-[#01031A] rounded-md flex justify-between items-center">
           <div className="flex flex-col ml-5 text-white">
             <img src={Home7} alt="" className="w-[52px] h-[52px]" />
-            <p>20</p>
+            <p>{data.statistics.total_inactive_users}</p>
             <p>Ban/Suspended</p>
           </div>
           <img src={Ellipse} alt="" className="object-cover mt-[-68px] w-[110px] h-[110px]" />
