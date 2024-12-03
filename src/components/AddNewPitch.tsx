@@ -11,6 +11,7 @@ const AddNewPitch: React.FC = () => {
   const [fileInput, setFileInput] = useState<File | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [categories, setCategories] = useState<{ value: string; label: string }[]>([]);
+  const [owners, setOwners] = useState<{ value: string; label: string }[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [formData, setFormData] = useState({
     name: "",
@@ -51,15 +52,53 @@ const AddNewPitch: React.FC = () => {
     { label: 'Restaurant', value: 'Restaurant' },
   ];
 
+  useEffect(() => {
+    const fetchOwners = async () => {
+      const baseUrl = import.meta.env.VITE_BASE_URL;
+      const bearerToken = localStorage.getItem("token");
+
+      try {
+        const response = await fetch(`${baseUrl}/admin/users?user_role=pitch_owner`, {
+          headers: {
+            Authorization: `Bearer ${bearerToken}`,
+            Accept: "application/json",
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch users");
+        }
+
+        const result = await response.json();
+
+        // console.log("Fetched owners data:", result);
+        if (result.success && Array.isArray(result.data.users)) {
+          const formattedOwners = result.data.users.map((user: any) => ({
+            value: user.id.toString(),
+            label: user.full_name,
+          }));
+          setOwners(formattedOwners);
+        } else {
+          throw new Error("Unexpected response format");
+        }
+      } catch (error) {
+        toast.error("Error fetching users.");
+        console.error("Error:", error);
+      }
+    };
+
+    fetchOwners();
+  }, []);
+
 
   // Fetch categories from the API
   useEffect(() => {
     const fetchCategories = async () => {
-      const baseUrl = 'http://localhost:8000' //import.meta.env.VITE_BASE_URL;
+      const baseUrl = import.meta.env.VITE_BASE_URL;
       const bearerToken = localStorage.getItem("token");
 
       try {
-        const response = await fetch(`${baseUrl}/api/v1/admin/categories`, {
+        const response = await fetch(`${baseUrl}/admin/categories`, {
           headers: {
             Authorization: `Bearer ${bearerToken}`,
             // "Content-Type": "application/json",
@@ -378,14 +417,12 @@ const AddNewPitch: React.FC = () => {
                 <tr>
                   <td>Owner:</td>
                   <td>
-                    You are to get the list of users with the role pitch other and pass it into a select form. NB the user id should be its value
-                    {/* <Input
-                      type="text"
-                      name="ownerId"
-                      className="border px-2 py-1"
-                      value={formData.ownerId}
-                      onChange={handleInputChange}
-                    /> */}
+                    {/* You are to get the list of users with the role pitch other and pass it into a select form. NB the user id should be its value */}
+                    <Select
+                options={owners}
+                value={owners.find((opt) => opt.value === formData.ownerId)}
+                onChange={(selected) => handleSelectChange("ownerId", selected)}
+              />
                      {errors.ownerId && <p className="text-red-500 text-sm">{errors.ownerId}</p>}
                   </td>
                 </tr>
