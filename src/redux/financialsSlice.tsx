@@ -7,7 +7,7 @@ export const fetchPendingPayouts = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       const response = await apiClient("admin/pitch-owners/pending-payouts", "GET");
-      console.log(response);
+      // console.log(response);
       return response; // Expecting an array of records
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data || error.message);
