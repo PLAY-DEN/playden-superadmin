@@ -6,6 +6,7 @@ import settingsReducer from './settingsSlice';
 import userReducer from './userSlice';
 import bookingMgtReducer from './bookingManagementSlice';
 import playpointsReducer from './playPointSlice';
+import financialsReducer from './financialsSlice';
 
 
 export const store = configureStore({
@@ -13,6 +14,7 @@ export const store = configureStore({
         auth: authReducer,
         admin: adminReducer,
         bookings: bookingReducer,
+        financials: financialsReducer,
         settings: settingsReducer,
         users: userReducer,
         bookingMgt: bookingMgtReducer,

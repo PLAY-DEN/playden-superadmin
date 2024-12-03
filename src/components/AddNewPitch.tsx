@@ -25,7 +25,7 @@ const AddNewPitch: React.FC = () => {
     size: "",
     pitchManager: "",
     managerContact: "",
-    ownerId: "1",
+    owner_id: "",
     location: { latitude: "", longitude: "" },
     amenities: ['gmy','swiing ppol','bar'] ,
     facilities: ['gmy','swiing ppol','bar'] ,
@@ -71,11 +71,11 @@ const AddNewPitch: React.FC = () => {
 
         const result = await response.json();
 
-        // console.log("Fetched owners data:", result);
+        console.log("Fetched owners data:", result);
         if (result.success && Array.isArray(result.data.users)) {
           const formattedOwners = result.data.users.map((user: any) => ({
             value: user.id.toString(),
-            label: user.full_name,
+            label: user.id.toString(),
           }));
           setOwners(formattedOwners);
         } else {
@@ -186,6 +186,7 @@ const AddNewPitch: React.FC = () => {
       { name: "openingHours", label: "Opening Hours" },
       { name: "closingHours", label: "Closing Hours" },
       { name: "size", label: "Pitch Size" },
+      { name: "owner_id", label: "Owner Id"},
     ];
   
     const newErrors: Record<string, string> = {};
@@ -193,8 +194,9 @@ const AddNewPitch: React.FC = () => {
     // Validate required fields
     for (const field of requiredFields) {
       const value = field.name.includes(".")
-        ? field.name.split(".").reduce((acc, key) => acc[key], formData)
-        : formData[field.name];
+  ? field.name.split(".").reduce((acc, key) => (acc && acc[key] !== undefined ? acc[key] : null), formData)
+  : formData[field.name];
+
   
       if (!value || value.trim() === "") {
         newErrors[field.name] = `${field.label} is required.`;
@@ -226,8 +228,8 @@ const AddNewPitch: React.FC = () => {
       opening_hours: formData.openingHours,
       closing_hours: formData.closingHours,
       size: formData.size,
+      owner_id: formData.owner_id,
       // pitchManager: parseInt(formData.pitchManager),
-      owner_id: 21,
       // gallery: JSON.stringify(gallery)
     };
     // console.log(gallery);
@@ -420,10 +422,10 @@ const AddNewPitch: React.FC = () => {
                     {/* You are to get the list of users with the role pitch other and pass it into a select form. NB the user id should be its value */}
                     <Select
                 options={owners}
-                value={owners.find((opt) => opt.value === formData.ownerId)}
+                value={owners.find((opt) => opt.value === formData.owner_id)}
                 onChange={(selected) => handleSelectChange("ownerId", selected)}
               />
-                     {errors.ownerId && <p className="text-red-500 text-sm">{errors.ownerId}</p>}
+                     {errors.ownerId && <p className="text-red-500 text-sm">{errors.owner_id}</p>}
                   </td>
                 </tr>
                 <tr>

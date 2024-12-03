@@ -1,32 +1,23 @@
-import { Home7, Ellipse } from "../../assets/images"; // Importing icons or placeholder images for card visuals
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchPendingPayouts, markAsPaid } from "../../redux/financialsSlice";
+import { Home7, Ellipse } from "../../assets/images";
 import Pagination from "../../components/pagination";
 
-// Sample Data
-const financialSummary = [
-  { title: "Today Revenue", amount: "10,000,000", color: "#D29AB8" },
-  { title: "Total Revenue", amount: "30,000,000", color: "#5A2C76" },
-  { title: "Commissioned Playpoints", amount: "30", color: "#01031A" },
-  { title: "Refunded Playpoints", amount: "10,000", color: "#D29AB8" },
-  //   { title: "Amount to Pitch Owners", amount: "50,000", color: "#5A2C76" },
-  //   { title: "Net Revenue", amount: "30,000,000", color: "#01031A" },
-];
+const Financials = () => {
+  const dispatch = useDispatch();
+  const { records, loading, error } = useSelector((state) => state.financials);
 
-const financialRecords = [
-  { id: 1, name: "Oyinkansola Salaye", accountNo: "#445564", amount: "₦50,000", status: "Pending", date: "8/8/2024" },
-  { id: 2, name: "Oyinkansola Salaye", accountNo: "#445564", amount: "₦50,000", status: "Completed", date: "8/8/2024" },
-  { id: 3, name: "Oyinkansola Salaye", accountNo: "#445564", amount: "₦50,000", status: "Completed", date: "8/8/2024" },
-  { id: 4, name: "Oyinkansola Salaye", accountNo: "#445564", amount: "₦50,000", status: "Completed", date: "8/8/2024" },
-  { id: 5, name: "Oyinkansola Salaye", accountNo: "#445564", amount: "₦50,000", status: "Completed", date: "8/8/2024" },
-  { id: 6, name: "Oyinkansola Salaye", accountNo: "#445564", amount: "₦50,000", status: "Completed", date: "8/8/2024" },
-  { id: 7, name: "Oyinkansola Salaye", accountNo: "#445564", amount: "₦50,000", status: "Completed", date: "8/8/2024" },
-  { id: 8, name: "Oyinkansola Salaye", accountNo: "#445564", amount: "₦50,000", status: "Completed", date: "8/8/2024" },
-];
+  useEffect(() => {
+    dispatch(fetchPendingPayouts());
+  }, [dispatch]);
 
-const Financials: React.FC = () => {
+  const handleMarkAsPaid = (id) => {
+    dispatch(markAsPaid(id));
+  };
+
   return (
-    <div className="relative ml-64 p-8 mt-20 overflow-">
-
-      {/* Header Section */}
+    <div className="relative ml-64 p-8 mt-20 overflow-auto">
       <div className="flex flex-row justify-between mb-6">
         <h2 className="text-2xl text-[#01031A] font-bold">Financial</h2>
         <select
@@ -38,81 +29,74 @@ const Financials: React.FC = () => {
         </select>
       </div>
 
-      {/* Summary Cards */}
       <div className="grid grid-cols-4 gap-6 mb-8">
-        {financialSummary.map((item, index) => (
-          <div
-            key={index}
-            className="min-w-[251px] h-[134px] rounded-md flex justify-between items-center"
-            style={{ backgroundColor: item.color }}
-          >
-            <div className="flex flex-col ml-5 text-xs text-white">
-              <img src={Home7} alt="" className="w-[52px] h-[52px]" />
-              <p>{item.amount}</p>
-              <p>{item.title}</p>
-            </div>
-            <img src={Ellipse} alt="" className="object-cover mt-[-50px] w-[80px] h-[80px]" />
+        {/* Summary Cards */}
+        <div
+          className="min-w-[251px] h-[134px] rounded-md flex justify-between items-center"
+          style={{ backgroundColor: "#D29AB8" }}
+        >
+          <div className="flex flex-col ml-5 text-xs text-white">
+            <img src={Home7} alt="" className="w-[52px] h-[52px]" />
+            <p>10,000,000</p>
+            <p>Today Revenue</p>
           </div>
-        ))}
+          <img src={Ellipse} alt="" className="object-cover mt-[-50px] w-[80px] h-[80px]" />
+        </div>
       </div>
 
       <div className="flex gap-5">
-        {/* Financial Records Table */}
         <div className="w-full">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr>
-                <th className="border-b p-4">S/N</th>
-                <th className="border-b p-4">Name</th>
-                <th className="border-b p-4">Account No</th>
-                <th className="border-b p-4">Amount</th>
-                <th className="border-b p-4">Status</th>
-                <th className="border-b p-4">Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              {financialRecords.map((record, index) => (
-                <tr key={record.id}>
-                  <td className="border-b p-4 text-sm">{index + 1}</td>
-                  <td className="border-b p-4 text-sm">{record.name}</td>
-                  <td className="border-b p-4 text-sm">{record.accountNo}</td>
-                  <td className="border-b p-4 text-sm">{record.amount}</td>
-                  <td className="border-b p-4 text-sm">
-                    <span
-                      className={`px-3 py-1 rounded-lg text-xs font-medium ${record.status === "Pending"
-                        ? "bg-yellow-500 text-white"
-                        : "bg-green-500 text-white"
-                        }`}
-                    >
-                      {record.status}
-                    </span>
-                  </td>
-                  <td className="border-b p-4 text-sm">{record.date}</td>
+          {loading ? (
+            <p>Loading...</p>
+          ) : error ? (
+            <p className="text-red-500">{error}</p>
+          ) : (
+            <table className="w-full text-left border-collapse">
+              {/* Table Headings */}
+              <thead>
+                <tr>
+                  <th className="border-b p-4">S/N</th>
+                  <th className="border-b p-4">Name</th>
+                  <th className="border-b p-4">Account No</th>
+                  <th className="border-b p-4">Amount</th>
+                  <th className="border-b p-4">Status</th>
+                  <th className="border-b p-4">Date</th>
+                  <th className="border-b p-4">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
 
+              {/* Table Body */}
+              <tbody>
+                {records.length > 0 ? (
+                  records.map((record, index) => (
+                    <tr key={record.id}>
+                      <td className="border-b p-4 text-sm">{index + 1}</td>
+                      <td className="border-b p-4 text-sm">{record.name}</td>
+                      <td className="border-b p-4 text-sm">{record.accountNo}</td>
+                      <td className="border-b p-4 text-sm">{record.amount}</td>
+                      <td className="border-b p-4 text-sm">{record.status}</td>
+                      <td className="border-b p-4 text-sm">{record.date}</td>
+                      <td className="border-b p-4 text-sm">
+                        <button
+                          onClick={() => handleMarkAsPaid(record.id)}
+                          className="px-3 py-1 bg-blue-500 text-white rounded-md text-xs"
+                        >
+                          Mark as Paid
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="7" className="p-4 text-center text-sm">
+                      No records found.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          )}
           <Pagination />
-        </div>
-
-        <div className="flex flex-col gap-5 mt-490px] -[790px] text-white text-[12px]">
-          <div className="w-[251px] h-[134px] bg-[#D29AB8] rounded-md flex justify-between items-center">
-            <div className="flex flex-col ml-5">
-              <img src={Home7} alt="" className='w-[52px] h-[52px]' />
-              <p>10</p>
-              <p>Today Booking</p>
-            </div>
-            <img src={Ellipse} alt="" className='object-cover mt-[-52px] w-[80px] h-[80px]' />
-          </div>
-          <div className="w-[251px] h-[134px] bg-[#41244B] rounded-md flex justify-between items-center">
-            <div className="flex flex-col ml-5">
-              <img src={Home7} alt="" className='w-[52px] h-[52px]' />
-              <p>10</p>
-              <p>Today Booking</p>
-            </div>
-            <img src={Ellipse} alt="" className='object-cover mt-[-50px] w-[80px] h-[80px]' />
-          </div>
         </div>
       </div>
     </div>
