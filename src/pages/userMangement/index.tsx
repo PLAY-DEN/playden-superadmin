@@ -81,10 +81,10 @@ const UserManagement: React.FC = () => {
                 <td className="border border-gray-300 py-2 px-1">{user.full_name}</td>
                 <td className="border border-gray-300 py-2 px-1">{user.email}</td>
                 <td className="border border-gray-300 py-2 px-1 text-center">{user.phone_number}</td>
-                <td className="border border-gray-300 py-2 px-1 text-center">{user.bookings}</td>
+                <td className="border border-gray-300 py-2 px-1 text-center">{user.bookings_count}</td>
                 <td className="border border-gray-300 p-2 text-center">
                   <span className="bg-[#4F772D] text-white px-6 py-1 rounded-lg">
-                    {user.cancellations}
+                    {user.cancelled_bookings_count}
                   </span>
                 </td>
                 <td className="border border-gray-300 py-2 px-1 text-center">{user.playpoints}</td>
