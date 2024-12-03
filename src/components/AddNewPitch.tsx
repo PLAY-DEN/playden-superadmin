@@ -297,8 +297,8 @@ const AddNewPitch: React.FC = () => {
                   <td>
                     <input
                       type="time"
-                      name={`border px-2 py-1 ${errors.openingHours ? "border-red-500" : ""}`}
-                      className="border px-2 py-1"
+                      name="openingHours"
+                      className={`border px-2 py-1 ${errors.openingHours ? "border-red-500" : ""}`}
                       value={formData.openingHours}
                       onChange={handleInputChange}
                     />
