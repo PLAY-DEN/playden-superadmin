@@ -10,15 +10,16 @@ const UserManagement: React.FC = () => {
   const dispatch = useDispatch();
 
   // Get data from Redux state
-  const { data: users, loading, error } = useSelector((state: RootState) => state.users);
+  const { data, loading, error } = useSelector((state: RootState) => state.users);
 
   // Fetch users on component mount
   useEffect(() => {
     dispatch(fetchUsers());
   }, [dispatch]);
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (loading) return <div className="ml-72 p-8 mt-20 ">Loading...</div>;
+  if (error) return <div className="ml-72 p-8 mt-20 ">Error: {error}</div>;
+// console.log(users.users);
 
 
 
@@ -74,42 +75,44 @@ const UserManagement: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-  {users && Array.isArray(users) && users.length > 0 ? (
-    users.map((user) => (
-      <tr key={user.id} className="hover:bg-gray-100">
-        <td className="border border-gray-300 py-2 px-1">{user.name}</td>
-        <td className="border border-gray-300 py-2 px-1">{user.email}</td>
-        <td className="border border-gray-300 py-2 px-1 text-center">{user.phone}</td>
-        <td className="border border-gray-300 py-2 px-1 text-center">{user.bookings}</td>
-        <td className="border border-gray-300 p-2 text-center">
-          <span className="bg-[#4F772D] text-white px-6 py-1 rounded-lg">
-            {user.cancellations}
-          </span>
-        </td>
-        <td className="border border-gray-300 py-2 px-1 text-center">{user.playpoints}</td>
-        <td className="border border-gray-300 py-2 px-1 text-center">{user.status}</td>
-        <td className="border border-gray-300 py-2 px-1 text-center">
-          <Link
-            to={`/user-management/User-details/${user.id}`}
-            className="text-sm font-bold cursor-pointer"
-          >
-            View Details
-          </Link>
-        </td>
-      </tr>
-    ))
-  ) : (
-    <tr>
-      <td colSpan={8} className="text-center py-4">
-        No users found.
-      </td>
-    </tr>
-  )}
-</tbody>
+          {data.users && Array.isArray(data.users) && data.users.length > 0 ? (
+            data.users.map((user) => (
+              <tr key={user.id} className="hover:bg-gray-100">
+                <td className="border border-gray-300 py-2 px-1">{user.full_name}</td>
+                <td className="border border-gray-300 py-2 px-1">{user.email}</td>
+                <td className="border border-gray-300 py-2 px-1 text-center">{user.phone_number}</td>
+                <td className="border border-gray-300 py-2 px-1 text-center">{user.bookings}</td>
+                <td className="border border-gray-300 p-2 text-center">
+                  <span className="bg-[#4F772D] text-white px-6 py-1 rounded-lg">
+                    {user.cancellations}
+                  </span>
+                </td>
+                <td className="border border-gray-300 py-2 px-1 text-center">{user.playpoints}</td>
+                <td className="border border-gray-300 py-2 px-1 text-center">{'Active'}</td>
+                <td className="border border-gray-300 py-2 px-1 text-center">
+                  <Link
+                    to={`/user-management/User-details/${user.id}`}
+                    className="text-sm font-bold cursor-pointer"
+                  >
+                    View Details
+                  </Link>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan={8} className="text-center py-4">
+                No users found.
+              </td>
+            </tr>
+          )}
+        </tbody>
 
 
       </table>
-      <Pagination />
+      <Pagination currentPage={0} totalPages={0} onPageChange={function (page: number): void {
+        throw new Error("Function not implemented.");
+      }} />
     </div>
   );
 };
