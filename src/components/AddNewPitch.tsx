@@ -129,8 +129,6 @@ const AddNewPitch: React.FC = () => {
 
 
   const handleSave = async () => {
-<<<<<<< HEAD
-=======
 
     // TODO
     // Here you should add your proper validation logic and save the pitch to the server
@@ -141,7 +139,6 @@ const AddNewPitch: React.FC = () => {
     // i've started the api client creation process, you study and follow aslonh
 
     // Validate required fields
->>>>>>> origin/dev
     const requiredFields = [
       { name: "name", label: "Pitch Name" },
       { name: "amountPerHour", label: "Pitch Price" },
@@ -176,56 +173,6 @@ const AddNewPitch: React.FC = () => {
     if (Object.keys(newErrors).length > 0) {
       return;
     }
-<<<<<<< HEAD
-  
-    //  FormData
-    const formdata = new FormData();
-    formdata.append("name", formData.name);
-    formdata.append("amount_per_hour", formData.amountPerHour);
-    formdata.append("discount", formData.discount || "0");
-    formdata.append("ratings", formData.ratings || "0");
-    formdata.append("category_id", formData.category_id);
-    formdata.append("contact", formData.contact);
-    formdata.append("opening_hours", formData.openingHours);
-    formdata.append("closing_hours", formData.closingHours);
-    formdata.append("size", formData.size);
-    formdata.append("image", fileInput);
-    formdata.append("owner_id", formData.ownerId || null); // Optional field
-  
-
-    formdata.append("amenities", JSON.stringify(formData.amenities || []));
-    formdata.append("facilities", JSON.stringify(formData.facilities || []));
-  
-   
-    const location =
-      formData.location?.latitude && formData.location?.longitude
-        ? [formData.location.latitude, formData.location.longitude]
-        : [];
-    formdata.append("location", JSON.stringify(location));
-  
-    const baseUrl = import.meta.env.VITE_BASE_URL;
-    const bearerToken = localStorage.getItem("token");
-  
-    try {
-      const response = await fetch(`${baseUrl}/admin/pitches`, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${bearerToken}` },
-        body: formdata,
-      });
-  
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error("Error Response Data:", errorData);
-        throw new Error(errorData.message || "Failed to create pitch.");
-      }
-  
-      const result = await response.json();
-      toast.success("Pitch created successfully!");
-      console.log("Result:", result);
-    } catch (error: any) {
-      toast.error(`Error creating pitch: ${error.message}`);
-      console.error("Error:", error);
-=======
 
     // Ensure data types are correct
     const validatedFormData = {
@@ -253,7 +200,6 @@ const AddNewPitch: React.FC = () => {
     } catch (error) {
       toast.error("Error creating pitch.");
       console.error("Error creating pitch:", error);
->>>>>>> origin/dev
     }
 
   };
@@ -439,13 +385,8 @@ const AddNewPitch: React.FC = () => {
                       className="border px-2 py-1"
                       value={formData.ownerId}
                       onChange={handleInputChange}
-<<<<<<< HEAD
-                    />
-                    {errors.ownerId && <p className="text-red-500 text-sm">{errors.ownerId}</p>}
-=======
                     /> */}
                      {errors.ownerId && <p className="text-red-500 text-sm">{errors.ownerId}</p>}
->>>>>>> origin/dev
                   </td>
                 </tr>
                 <tr>
@@ -477,25 +418,6 @@ const AddNewPitch: React.FC = () => {
                       selectClassName="!px-2 py-1 rounded-full border-[0.4px] border-primary"
                       errorClassName="text-red-500"
                     />
-<<<<<<< HEAD
-                    {/* <Select
-                      options={[
-                        { value: "wifi", label: "WiFi" },
-                        { value: "parking", label: "Parking" },
-                        { value: "restrooms", label: "Restrooms" },
-                      ]}
-                      isMulti
-                      name="amenities"
-                      onChange={(selected) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          amenities: selected.map((s) => s.value),
-                        }))
-                      }
-                      className="!py-1"
-                    />
-=======
->>>>>>> origin/dev
                     {errors.amenities && <p className="text-red-500 text-sm">{errors.amenities}</p>}
                   </td>
                 </tr>
@@ -517,25 +439,6 @@ const AddNewPitch: React.FC = () => {
                       />
  {errors.facilities && <p className="text-red-500 text-sm">{errors.facilities}</p>}
                     </div>
-<<<<<<< HEAD
-                    {/* <Select
-                      options={[
-                        { value: "gym", label: "Gym" },
-                        { value: "swimming_pool", label: "Swimming Pool" },
-                      ]}
-                      isMulti
-                      name="facilities"
-                      onChange={(selected) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          facilities: selected.map((s) => s.value),
-                        }))
-                      }
-                      className="!py-1"
-                    />
-                    {errors.facilities && <p className="text-red-500 text-sm">{errors.facilities}</p>}
-=======
->>>>>>> origin/dev
                   </td>
                 </tr>
                 <tr>
