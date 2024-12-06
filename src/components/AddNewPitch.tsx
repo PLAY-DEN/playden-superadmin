@@ -27,8 +27,8 @@ const AddNewPitch: React.FC = () => {
     managerContact: "",
     owner_id: "",
     location: { latitude: "", longitude: "" },
-    amenities: ['gmy','swiing ppol','bar'] ,
-    facilities: ['gmy','swiing ppol','bar'] ,
+    amenities: ['gmy', 'swiing ppol', 'bar'],
+    facilities: ['gmy', 'swiing ppol', 'bar'],
     image: null,
     gallery: [],
   });
@@ -186,30 +186,31 @@ const AddNewPitch: React.FC = () => {
       { name: "openingHours", label: "Opening Hours" },
       { name: "closingHours", label: "Closing Hours" },
       { name: "size", label: "Pitch Size" },
-      { name: "owner_id", label: "Owner Id"},
+      { name: "ownerd", label: "Owner Id" },
     ];
-  
+
     const newErrors: Record<string, string> = {};
-  
+
     // Validate required fields
     for (const field of requiredFields) {
       const value = field.name.includes(".")
-  ? field.name.split(".").reduce((acc, key) => (acc && acc[key] !== undefined ? acc[key] : null), formData)
-  : formData[field.name];
+        ? field.name.split(".").reduce((acc, key) => (acc && acc[key] !== undefined ? acc[key] : null), formData)
+        : formData[field.name];
 
-  
+
       if (!value || value.trim() === "") {
         newErrors[field.name] = `${field.label} is required.`;
       }
     }
-  
+
     if (!fileInput) {
       newErrors["image"] = "Please upload an image.";
     }
-  
+
     //  errors in state
     setErrors(newErrors);
-  
+console.log( Object.keys(newErrors));
+
     //
     if (Object.keys(newErrors).length > 0) {
       return;
@@ -293,7 +294,7 @@ const AddNewPitch: React.FC = () => {
                     <Input
                       type="text"
                       name="name"
-                      className= {`border px-2 py-1 ${errors.name ? "border-red-500" : ""}`}
+                      className={`border px-2 py-1 ${errors.name ? "border-red-500" : ""}`}
                       value={formData.name}
                       onChange={handleInputChange}
                     />
@@ -421,26 +422,26 @@ const AddNewPitch: React.FC = () => {
                   <td>
                     {/* You are to get the list of users with the role pitch other and pass it into a select form. NB the user id should be its value */}
                     <Select
-                options={owners}
-                value={owners.find((opt) => opt.value === formData.owner_id)}
-                onChange={(selected) => handleSelectChange("ownerId", selected)}
-              />
-                     {errors.ownerId && <p className="text-red-500 text-sm">{errors.owner_id}</p>}
+                      options={owners}
+                      value={owners.find((opt) => opt.value === formData.owner_id)}
+                      onChange={(selected) => handleSelectChange("ownerId", selected)}
+                    />
+                    {errors.ownerId && <p className="text-red-500 text-sm">{errors.owner_id}</p>}
                   </td>
                 </tr>
                 <tr>
                   <td>Category:</td>
                   <td>
-                  <Select
-                    options={categories}
-                    value={categories.find(
-                      (opt) => opt.value === formData.category_id
-                    )}
-                    onChange={(selected) =>
-                      handleSelectChange("category_id", selected)
-                    }
-                  />
-                  {errors.category_id && <p className="text-red-500 text-sm">{errors.category_id}</p>}
+                    <Select
+                      options={categories}
+                      value={categories.find(
+                        (opt) => opt.value === formData.category_id
+                      )}
+                      onChange={(selected) =>
+                        handleSelectChange("category_id", selected)
+                      }
+                    />
+                    {errors.category_id && <p className="text-red-500 text-sm">{errors.category_id}</p>}
                   </td>
                 </tr>
                 <tr>
@@ -476,7 +477,7 @@ const AddNewPitch: React.FC = () => {
                         selectClassName="!px-2 py-1 rounded-full border-[0.4px] border-primary"
                         errorClassName="text-red-500"
                       />
- {errors.facilities && <p className="text-red-500 text-sm">{errors.facilities}</p>}
+                      {errors.facilities && <p className="text-red-500 text-sm">{errors.facilities}</p>}
                     </div>
                   </td>
                 </tr>
