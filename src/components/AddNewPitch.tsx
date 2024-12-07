@@ -78,6 +78,13 @@ const AddNewPitch: React.FC = () => {
             label: user.id.toString(),
           }));
           setOwners(formattedOwners);
+           //  default id if not selected
+           if (formattedOwners.length > 0 && !formData.owner_id) {
+            setFormData((prev) => ({
+              ...prev,
+              owner_id: formattedOwners[0].value,
+            }));
+          }
         } else {
           throw new Error("Unexpected response format");
         }
@@ -158,10 +165,20 @@ const AddNewPitch: React.FC = () => {
     name: string,
     selectedOption: { value: string; label: string } | null
   ) => {
-    setFormData((prev) => ({
-      ...prev,
-      [name]: selectedOption ? selectedOption.value : "",
-    }));
+    console.log(`Updating ${name} with value:`, selectedOption?.value);
+    
+    // Specifically handle pitch_owner_id
+    if (name === 'pitch_owner_id') {
+      setFormData((prev) => ({
+        ...prev,
+        id: selectedOption ? selectedOption.value : "", // Set the ID directly
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: selectedOption ? selectedOption.value : "",
+      }));
+    }
   };
 
   const handleFileUpload = (image: File) => setFileInput(image);
@@ -178,6 +195,8 @@ const AddNewPitch: React.FC = () => {
     // i've started the api client creation process, you study and follow aslonh
 
     // Validate required fields
+    console.log("Form Data on Save:", formData);
+
     const requiredFields = [
       { name: "name", label: "Pitch Name" },
       { name: "amountPerHour", label: "Pitch Price" },
@@ -186,7 +205,7 @@ const AddNewPitch: React.FC = () => {
       { name: "openingHours", label: "Opening Hours" },
       { name: "closingHours", label: "Closing Hours" },
       { name: "size", label: "Pitch Size" },
-      { name: "ownerd", label: "Owner Id" },
+      { name: "owner_id", label: "Owner" },
     ];
 
     const newErrors: Record<string, string> = {};
@@ -229,7 +248,7 @@ console.log( Object.keys(newErrors));
       opening_hours: formData.openingHours,
       closing_hours: formData.closingHours,
       size: formData.size,
-      owner_id: formData.owner_id,
+      // pitch_owner_id: formData.owner_id,
       // pitchManager: parseInt(formData.pitchManager),
       // gallery: JSON.stringify(gallery)
     };
@@ -422,11 +441,14 @@ console.log( Object.keys(newErrors));
                   <td>
                     {/* You are to get the list of users with the role pitch other and pass it into a select form. NB the user id should be its value */}
                     <Select
-                      options={owners}
-                      value={owners.find((opt) => opt.value === formData.owner_id)}
-                      onChange={(selected) => handleSelectChange("ownerId", selected)}
-                    />
-                    {errors.ownerId && <p className="text-red-500 text-sm">{errors.owner_id}</p>}
+  options={owners}
+  value={owners.find((opt) => opt.value === formData.owner_id)}
+  onChange={(selected) =>
+    handleSelectChange("owner_id", selected)
+  }
+/>
+
+                    {errors.id && <p className="text-red-500 text-sm">{errors.id}</p>}
                   </td>
                 </tr>
                 <tr>
