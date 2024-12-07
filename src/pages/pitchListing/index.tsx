@@ -6,60 +6,64 @@ import Swal from "sweetalert2";
 import { RootState } from "../../redux/store";
 import { apiClient } from "../../utils/apiClient";
 import PitchCard from "../../components/pitchCard.r";
-import { filter, plus } from "../../assets/images";
+import { plus } from "../../assets/images";
 import "react-toastify/dist/ReactToastify.css";
 
 const PitchListing: React.FC = () => {
   const navigate = useNavigate();
-  const token = useSelector((state: RootState) => state.auth.token); // Fetch token from Redux state
+  const token = useSelector((state: RootState) => state.auth.token); 
   const [pitches, setPitches] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [dataFetched, setDataFetched] = useState(false); // Flag to check if data is already fetched
+  const [currentPage, setCurrentPage] = useState(1); 
+  const [totalPages, setTotalPages] = useState(1); 
+
+  const fetchPitches = async (page: number) => {
+    if (!token) {
+      toast.error("No Bearer token provided. Please log in.", { position: "top-right" });
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const response = await apiClient(`admin/pitches?page=${page}`, "GET");
+
+      const fetchedPitches = response.data.pitches || [];
+      const { current_page, last_page } = response.data;
+
+      if (fetchedPitches.length === 0) {
+        Swal.fire({
+          title: "No Pitches Found",
+          text: "There are currently no pitches in the database.",
+          icon: "info",
+          confirmButtonText: "OK",
+        });
+        toast.info("No pitch found", { position: "top-right" });
+      } else {
+        toast.success("Pitches loaded successfully!", { position: "top-right" });
+      }
+
+      
+      setPitches(fetchedPitches);
+      setCurrentPage(current_page);
+      setTotalPages(last_page);
+    } catch (error: any) {
+      console.error("Fetch Error:", error);
+      const errorMessage = error.response?.data?.message || "Failed to fetch pitches.";
+      toast.error(errorMessage, { position: "top-right" });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchPitches = async () => {
-      if (!token) {
-        toast.error("No Bearer token provided. Please log in.", { position: "top-right" });
-        return;
-      }
+    fetchPitches(currentPage);
+  }, [currentPage]); 
 
-      // Prevent refetching if data has already been fetched
-      if (dataFetched) {
-        return;
-      }
-
-      try {
-        setLoading(true);
-        const response = await apiClient("admin/pitches", "GET");
-
-        const fetchedPitches = response.data.pitches || [];
-
-        if (fetchedPitches.length === 0) {
-          Swal.fire({
-            title: "No Pitches Found",
-            text: "There are currently no pitches in the database.",
-            icon: "info",
-            confirmButtonText: "OK",
-          });
-          toast.info("No pitch found", { position: "top-right" });
-        } else {
-          toast.success("Pitches loaded successfully!", { position: "top-right" });
-        }
-
-        // Update state with fetched pitches and set dataFetched flag to true
-        setPitches(fetchedPitches);
-        setDataFetched(true); // Mark as fetched
-      } catch (error: any) {
-        console.error("Fetch Error:", error);
-        const errorMessage = error.response?.data?.message || "Failed to fetch pitches.";
-        toast.error(errorMessage, { position: "top-right" });
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPitches();
-  }, [token, dataFetched]); // Run only if token changes or data hasn't been fetched yet
+  const handlePageChange = (newPage: number) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage); 
+    }
+  };
 
   return (
     <div className="relative ml-72 p-8 mt-20 overflow-auto">
@@ -99,18 +103,35 @@ const PitchListing: React.FC = () => {
 
       {/* Pagination controls */}
       <div className="flex justify-between items-center mt-4">
-        <button className="text-playden-primary">Previous</button>
+        <button
+          className="text-playden-primary"
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+        >
+          Previous
+        </button>
         <div className="flex gap-2">
-          {[1, 2, 3, 4, 5].map((page) => (
+          {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
             <button
               key={page}
-              className={`px-2 py-1 rounded ${page === 1 ? "bg-playden-primary text-white" : "bg-gray-100 text-black"}`}
+              onClick={() => handlePageChange(page)}
+              className={`px-2 py-1 rounded ${
+                page === currentPage
+                  ? "bg-playden-primary text-white"
+                  : "bg-gray-100 text-black"
+              }`}
             >
               {page}
             </button>
           ))}
         </div>
-        <button className="text-playden-primary">Next</button>
+        <button
+          className="text-playden-primary"
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+        >
+          Next
+        </button>
       </div>
     </div>
   );
