@@ -10,7 +10,9 @@ import Input from "./forms/input";
 const AddNewPitch: React.FC = () => {
   const [fileInput, setFileInput] = useState<File | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [categories, setCategories] = useState<{ value: string; label: string }[]>([]);
+  const [categories, setCategories] = useState<
+    { value: string; label: string }[]
+  >([]);
   const [owners, setOwners] = useState<{ value: string; label: string }[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [formData, setFormData] = useState({
@@ -27,8 +29,8 @@ const AddNewPitch: React.FC = () => {
     managerContact: "",
     owner_id: "",
     location: { latitude: "", longitude: "" },
-    amenities: ['gmy', 'swiing ppol', 'bar'],
-    facilities: ['gmy', 'swiing ppol', 'bar'],
+    amenities: ["gmy", "swiing ppol", "bar"],
+    facilities: ["gmy", "swiing ppol", "bar"],
     image: null,
     gallery: [],
   });
@@ -37,19 +39,19 @@ const AddNewPitch: React.FC = () => {
   const [facilities, setFacilities] = useState<any[]>([]);
 
   const amenitiesOptions = [
-    { label: 'Changing Room', value: 'Changing Room' },
-    { label: 'Capacity', value: 'Capacity' },
-    { label: 'Sitting Area', value: 'Sitting Area' },
+    { label: "Changing Room", value: "Changing Room" },
+    { label: "Capacity", value: "Capacity" },
+    { label: "Sitting Area", value: "Sitting Area" },
   ];
 
   const facilitiesOptions = [
-    { label: 'Swimming Pool', value: 'Swimming Pool' },
-    { label: 'Garden', value: 'Garden' },
-    { label: 'Tennis Court', value: 'Tennis Court' },
-    { label: 'Gym', value: 'Gym' },
-    { label: 'Wifi', value: 'Wifi' },
-    { label: 'Spa', value: 'Spa' },
-    { label: 'Restaurant', value: 'Restaurant' },
+    { label: "Swimming Pool", value: "Swimming Pool" },
+    { label: "Garden", value: "Garden" },
+    { label: "Tennis Court", value: "Tennis Court" },
+    { label: "Gym", value: "Gym" },
+    { label: "Wifi", value: "Wifi" },
+    { label: "Spa", value: "Spa" },
+    { label: "Restaurant", value: "Restaurant" },
   ];
 
   useEffect(() => {
@@ -58,12 +60,15 @@ const AddNewPitch: React.FC = () => {
       const bearerToken = localStorage.getItem("token");
 
       try {
-        const response = await fetch(`${baseUrl}/admin/users?user_role=pitch_owner`, {
-          headers: {
-            Authorization: `Bearer ${bearerToken}`,
-            Accept: "application/json",
-          },
-        });
+        const response = await fetch(
+          `${baseUrl}/admin/users?user_role=pitch_owner`,
+          {
+            headers: {
+              Authorization: `Bearer ${bearerToken}`,
+              Accept: "application/json",
+            },
+          }
+        );
 
         if (!response.ok) {
           throw new Error("Failed to fetch users");
@@ -78,8 +83,8 @@ const AddNewPitch: React.FC = () => {
             label: user.id.toString(),
           }));
           setOwners(formattedOwners);
-           //  default id if not selected
-           if (formattedOwners.length > 0 && !formData.owner_id) {
+          //  default id if not selected
+          if (formattedOwners.length > 0 && !formData.owner_id) {
             setFormData((prev) => ({
               ...prev,
               owner_id: formattedOwners[0].value,
@@ -96,7 +101,6 @@ const AddNewPitch: React.FC = () => {
 
     fetchOwners();
   }, []);
-
 
   // Fetch categories from the API
   useEffect(() => {
@@ -116,7 +120,6 @@ const AddNewPitch: React.FC = () => {
         if (!response.ok) {
           throw new Error("Failed to fetch categories");
         }
-
 
         const result = await response.json();
         //console.log("Fetched categories data:", result);
@@ -165,13 +168,12 @@ const AddNewPitch: React.FC = () => {
     name: string,
     selectedOption: { value: string; label: string } | null
   ) => {
-    console.log(`Updating ${name} with value:`, selectedOption?.value);
-    
-    
-    if (name === 'pitch_owner_id') {
+    // console.log(`Updating ${name} with value:`, selectedOption?.value);
+
+    if (name === "pitch_owner_id") {
       setFormData((prev) => ({
         ...prev,
-        id: selectedOption ? selectedOption.value : "", 
+        id: selectedOption ? selectedOption.value : "",
       }));
     } else {
       setFormData((prev) => ({
@@ -183,9 +185,7 @@ const AddNewPitch: React.FC = () => {
 
   const handleFileUpload = (image: File) => setFileInput(image);
 
-
   const handleSave = async () => {
-
     // TODO
     // Here you should add your proper validation logic and save the pitch to the server
     // You should also return error messages to form inputs instead of toast, toast is for completed or failed operation
@@ -195,7 +195,7 @@ const AddNewPitch: React.FC = () => {
     // i've started the api client creation process, you study and follow aslonh
 
     // Validate required fields
-    console.log("Form Data on Save:", formData);
+    // console.log("Form Data on Save:", formData);
 
     const requiredFields = [
       { name: "name", label: "Pitch Name" },
@@ -213,9 +213,13 @@ const AddNewPitch: React.FC = () => {
     // Validate required fields
     for (const field of requiredFields) {
       const value = field.name.includes(".")
-        ? field.name.split(".").reduce((acc, key) => (acc && acc[key] !== undefined ? acc[key] : null), formData)
+        ? field.name
+            .split(".")
+            .reduce(
+              (acc, key) => (acc && acc[key] !== undefined ? acc[key] : null),
+              formData
+            )
         : formData[field.name];
-
 
       if (!value || value.trim() === "") {
         newErrors[field.name] = `${field.label} is required.`;
@@ -228,14 +232,14 @@ const AddNewPitch: React.FC = () => {
 
     //  errors in state
     setErrors(newErrors);
-console.log( Object.keys(newErrors));
+    // console.log(Object.keys(newErrors));
 
     //
     if (Object.keys(newErrors).length > 0) {
       return;
     }
 
-    // Ensure data types are correct
+    // To Ensure data types are correct
     const validatedFormData = {
       ...formData,
       amount_per_hour: parseFloat(formData.amountPerHour),
@@ -257,12 +261,11 @@ console.log( Object.keys(newErrors));
     try {
       const result = await pitchClient.createPitch(validatedFormData);
       toast.success("Pitch created successfully!");
-      console.log("Result:", result);
+      // console.log("Result:", result);
     } catch (error) {
       toast.error("Error creating pitch.");
       console.error("Error creating pitch:", error);
     }
-
   };
 
   return (
@@ -313,11 +316,15 @@ console.log( Object.keys(newErrors));
                     <Input
                       type="text"
                       name="name"
-                      className={`border px-2 py-1 ${errors.name ? "border-red-500" : ""}`}
+                      className={`border px-2 py-1 ${
+                        errors.name ? "border-red-500" : ""
+                      }`}
                       value={formData.name}
                       onChange={handleInputChange}
                     />
-                    {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
+                    {errors.name && (
+                      <p className="text-red-500 text-sm">{errors.name}</p>
+                    )}
                   </td>
                 </tr>
                 <tr>
@@ -326,11 +333,15 @@ console.log( Object.keys(newErrors));
                     <Input
                       type="text"
                       name="size"
-                      className={`border px-2 py-1 ${errors.size ? "border-red-500" : ""}`}
+                      className={`border px-2 py-1 ${
+                        errors.size ? "border-red-500" : ""
+                      }`}
                       value={formData.size}
                       onChange={handleInputChange}
                     />
-                    {errors.size && <p className="text-red-500 text-sm">{errors.size}</p>}
+                    {errors.size && (
+                      <p className="text-red-500 text-sm">{errors.size}</p>
+                    )}
                   </td>
                 </tr>
                 <tr>
@@ -339,11 +350,17 @@ console.log( Object.keys(newErrors));
                     <Input
                       type="number"
                       name="amountPerHour"
-                      className={`border px-2 py-1 ${errors.amountPerHour ? "border-red-500" : ""}`}
+                      className={`border px-2 py-1 ${
+                        errors.amountPerHour ? "border-red-500" : ""
+                      }`}
                       value={formData.amountPerHour}
                       onChange={handleInputChange}
                     />
-                    {errors.amountPerHour && <p className="text-red-500 text-sm">{errors.amountPerHour}</p>}
+                    {errors.amountPerHour && (
+                      <p className="text-red-500 text-sm">
+                        {errors.amountPerHour}
+                      </p>
+                    )}
                   </td>
                 </tr>
                 <tr>
@@ -356,7 +373,9 @@ console.log( Object.keys(newErrors));
                       value={formData.discount}
                       onChange={handleInputChange}
                     />
-                    {errors.discount && <p className="text-red-500 text-sm">{errors.discount}</p>}
+                    {errors.discount && (
+                      <p className="text-red-500 text-sm">{errors.discount}</p>
+                    )}
                   </td>
                 </tr>
                 <tr>
@@ -365,12 +384,18 @@ console.log( Object.keys(newErrors));
                     <Input
                       type="time"
                       name="openingHours"
-                      className={`border px-2 py-1 ${errors.openingHours ? "border-red-500" : ""}`}
+                      className={`border px-2 py-1 ${
+                        errors.openingHours ? "border-red-500" : ""
+                      }`}
                       value={formData.openingHours}
                       onChange={handleInputChange}
                     />
                   </td>
-                  {errors.openingHours && <p className="text-red-500 text-sm">{errors.openingHours}</p>}
+                  {errors.openingHours && (
+                    <p className="text-red-500 text-sm">
+                      {errors.openingHours}
+                    </p>
+                  )}
                 </tr>
                 <tr>
                   <td>Closing Hours:</td>
@@ -382,7 +407,11 @@ console.log( Object.keys(newErrors));
                       value={formData.closingHours}
                       onChange={handleInputChange}
                     />
-                    {errors.closingHours && <p className="text-red-500 text-sm">{errors.closingHours}</p>}
+                    {errors.closingHours && (
+                      <p className="text-red-500 text-sm">
+                        {errors.closingHours}
+                      </p>
+                    )}
                   </td>
                 </tr>
                 <tr>
@@ -420,7 +449,11 @@ console.log( Object.keys(newErrors));
                       value={formData.pitchManager}
                       onChange={handleInputChange}
                     />
-                    {errors.pitchManager && <p className="text-red-500 text-sm">{errors.pitchManager}</p>}
+                    {errors.pitchManager && (
+                      <p className="text-red-500 text-sm">
+                        {errors.pitchManager}
+                      </p>
+                    )}
                   </td>
                 </tr>
                 <tr>
@@ -433,7 +466,9 @@ console.log( Object.keys(newErrors));
                       value={formData.contact}
                       onChange={handleInputChange}
                     />
-                    {errors.contact && <p className="text-red-500 text-sm">{errors.contact}</p>}
+                    {errors.contact && (
+                      <p className="text-red-500 text-sm">{errors.contact}</p>
+                    )}
                   </td>
                 </tr>
                 <tr>
@@ -441,14 +476,18 @@ console.log( Object.keys(newErrors));
                   <td>
                     {/* You are to get the list of users with the role pitch other and pass it into a select form. NB the user id should be its value */}
                     <Select
-  options={owners}
-  value={owners.find((opt) => opt.value === formData.owner_id)}
-  onChange={(selected) =>
-    handleSelectChange("owner_id", selected)
-  }
-/>
+                      options={owners}
+                      value={owners.find(
+                        (opt) => opt.value === formData.owner_id
+                      )}
+                      onChange={(selected) =>
+                        handleSelectChange("owner_id", selected)
+                      }
+                    />
 
-                    {errors.id && <p className="text-red-500 text-sm">{errors.id}</p>}
+                    {errors.id && (
+                      <p className="text-red-500 text-sm">{errors.id}</p>
+                    )}
                   </td>
                 </tr>
                 <tr>
@@ -463,7 +502,11 @@ console.log( Object.keys(newErrors));
                         handleSelectChange("category_id", selected)
                       }
                     />
-                    {errors.category_id && <p className="text-red-500 text-sm">{errors.category_id}</p>}
+                    {errors.category_id && (
+                      <p className="text-red-500 text-sm">
+                        {errors.category_id}
+                      </p>
+                    )}
                   </td>
                 </tr>
                 <tr>
@@ -480,14 +523,15 @@ console.log( Object.keys(newErrors));
                       selectClassName="!px-2 py-1 rounded-full border-[0.4px] border-primary"
                       errorClassName="text-red-500"
                     />
-                    {errors.amenities && <p className="text-red-500 text-sm">{errors.amenities}</p>}
+                    {errors.amenities && (
+                      <p className="text-red-500 text-sm">{errors.amenities}</p>
+                    )}
                   </td>
                 </tr>
                 <tr>
                   <td>Facilities:</td>
                   <td>
                     <div className="">
-
                       <MultiSelect
                         value={facilities}
                         options={facilitiesOptions}
@@ -499,7 +543,11 @@ console.log( Object.keys(newErrors));
                         selectClassName="!px-2 py-1 rounded-full border-[0.4px] border-primary"
                         errorClassName="text-red-500"
                       />
-                      {errors.facilities && <p className="text-red-500 text-sm">{errors.facilities}</p>}
+                      {errors.facilities && (
+                        <p className="text-red-500 text-sm">
+                          {errors.facilities}
+                        </p>
+                      )}
                     </div>
                   </td>
                 </tr>
@@ -522,7 +570,9 @@ console.log( Object.keys(newErrors));
                         }))
                       }
                     />
-                    {errors.latitude && <p className="text-red-500 text-sm">{errors.latitude}</p>}
+                    {errors.latitude && (
+                      <p className="text-red-500 text-sm">{errors.latitude}</p>
+                    )}
                   </td>
                 </tr>
 
@@ -545,7 +595,9 @@ console.log( Object.keys(newErrors));
                         }))
                       }
                     />
-                    {errors.longitude && <p className="text-red-500 text-sm">{errors.longitude}</p>}
+                    {errors.longitude && (
+                      <p className="text-red-500 text-sm">{errors.longitude}</p>
+                    )}
                   </td>
                 </tr>
               </tbody>

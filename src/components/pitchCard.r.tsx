@@ -1,5 +1,4 @@
 import { useNavigate } from 'react-router-dom';
-import { pitchPic, coloredStar, star } from "../assets/images";
 
 interface PitchCardProps {
     sport: string;
@@ -44,11 +43,11 @@ const PitchCard: React.FC<PitchCardProps> = ({ sport, pitchSize, imageSrc, name,
                     View Details
                 </button>
                 <div className="flex flexrow gap-2 mr-10">
-                    <button className="text-white bg-playden-primary rounded-lg px-4 py-2 text-xs">Review</button>
-                    <img src={coloredStar} alt="rating" className="w-[20px] h-[20px] mt-2"/>
+                    <button className="bg-white border-2 border-red-500 rounded-lg px-4 py-2 text-xs text-red">Delete</button>
+                    {/* <img src={coloredStar} alt="rating" className="w-[20px] h-[20px] mt-2"/>
                     <img src={coloredStar} alt="rating" className="w-[20px] h-[20px] mt-2"/>
                     <img src={star} alt="rating" className="w-[20px] h-[20px] mt-2"/>
-                    <img src={star} alt="rating" className="w-[20px] h-[20px] mt-2"/>
+                    <img src={star} alt="rating" className="w-[20px] h-[20px] mt-2"/> */}
                 </div>
                 {/* Add star rating component here */}
             </div>
