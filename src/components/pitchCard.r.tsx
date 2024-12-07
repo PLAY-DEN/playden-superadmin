@@ -27,6 +27,7 @@ const PitchCard: React.FC<PitchCardProps> = ({
     navigate(`/pitch-listing/${id}`, {
       state: {
         sport,
+        imageSrc,
         pitchSize,
         name,
         contact,

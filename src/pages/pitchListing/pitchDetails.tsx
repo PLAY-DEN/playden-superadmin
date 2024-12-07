@@ -3,7 +3,6 @@ import { useParams, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBookingHistory } from "../../redux/bookingSlice";
 import { RootState } from "../../redux/store";
-import { pitchPic } from "../../assets/images";
 
 const PitchDetails: React.FC = () => {
   const { pitchId } = useParams<{ pitchId: string }>();
@@ -22,6 +21,7 @@ const PitchDetails: React.FC = () => {
 
   const {
     sport = "N/A",
+    imageSrc = "N/A",
     pitchSize = "N/A",
     name = "N/A",
     contact = "N/A",
@@ -33,7 +33,7 @@ const PitchDetails: React.FC = () => {
       {/* Pitch Details */}
       <div className="flex gap-6 mt-6 w-[680px]">
         <img
-          src={pitchPic}
+          src={imageSrc}
           alt="Pitch"
           className="min-w-[300px] h-[189px] rounded-md"
         />
