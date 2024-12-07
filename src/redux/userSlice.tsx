@@ -19,7 +19,7 @@ export const fetchUsers = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await apiClient("admin/users", "GET");
-      // console.log(response.data);
+      console.log(response.data);
       
       return response.data; // Response data 
     } catch (error: any) {

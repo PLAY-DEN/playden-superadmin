@@ -37,7 +37,7 @@ const PlaypointUsage: React.FC = () => {
         <div className="min-w-[320px] h-[180px] bg-[#D29AB8] rounded-md flex justify-between items-center">
           <div className="flex flex-col ml-5 text-white">
             <img src={Home7} alt="" className="w-[52px] h-[52px]" />
-            <p>{/* Add dynamic data if applicable */}</p>
+            <p>{playpoints.total}</p>
             <p>Today Redeemed</p>
           </div>
           <img src={Ellipse} alt="" className="object-cover mt-[-68px] w-[110px] h-[110px]" />
@@ -63,7 +63,7 @@ const PlaypointUsage: React.FC = () => {
               <td className="border-b p-4 text-sm">{usage.name}</td>
               <td className="border-b p-4 text-sm">{usage.bookingId}</td>
               <td className="border-b p-4 text-sm">{usage.playpointsRedeemed}</td>
-              <td className="border-b p-4 text-sm">{usage.date}</td>
+              <td className="border-b p-4 text-sm">{usage.updated_at}</td>
             </tr>
           ))}
         </tbody>
