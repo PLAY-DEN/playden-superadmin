@@ -167,11 +167,11 @@ const AddNewPitch: React.FC = () => {
   ) => {
     console.log(`Updating ${name} with value:`, selectedOption?.value);
     
-    // Specifically handle pitch_owner_id
+    
     if (name === 'pitch_owner_id') {
       setFormData((prev) => ({
         ...prev,
-        id: selectedOption ? selectedOption.value : "", // Set the ID directly
+        id: selectedOption ? selectedOption.value : "", 
       }));
     } else {
       setFormData((prev) => ({
