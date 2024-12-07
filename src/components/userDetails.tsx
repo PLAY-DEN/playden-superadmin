@@ -1,21 +1,19 @@
 import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
 import { bookingImg } from '../assets/images';
 
-const UserDetails = {
-  id: "#446664",
-  name: "Oyinkansola Soleye",
-  dateJoined: "20 Dec, 2024",
-  numberOfBooking: "10",
-  numberOfCancellation: "5",
-  lastBooking: "10",
-  lastCancellation: "5",
-  email: "zakregular12@gmail.com",
-  mobileNumber: "+234 7066048648",
-  playpoints: "Earned",
-};
 
 const userDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const user = useSelector((state: RootState) =>
+    state.users.data.users?.find((user) => user.id === Number(id))
+  );
+
+  if (!user) {
+    return <div className="ml-72 p-8 mt-20">User not found.</div>;
+  }
+
 
   return (
     <div className="bg-white relative ml-72 p-8 mt-24">
@@ -31,17 +29,17 @@ const userDetails: React.FC = () => {
       </div>
       
       <div className="mt-10">
-        <h2 className="text-xl font-semibold">{UserDetails.name}</h2>
-        <p className="text-gray-500">{UserDetails.id}</p>
+        <h2 className="text-xl font-semibold">{user.username}</h2>
+        <p className="text-gray-500">{user.id}</p>
       </div>
       
       <div className="flex flex-row">
         <div>
           <h2 className="ml-60 mt-5 font-bold">User Details</h2>
           <img
-            src={bookingImg}
-            alt={`${UserDetails.name}'s profile`}
-            className="mt-[-5px]"
+            src={user.profile_image}
+            alt={`${user.username}'s profile`}
+            className="mt-[-5px] w-52 h-58"
           />
         </div>
         
@@ -50,35 +48,31 @@ const userDetails: React.FC = () => {
               <tbody>
                 <tr className="border-none">
                    <td className="font-semibold">Date joined:</td>
-                   <td className='pl-5 py-1'>{UserDetails.dateJoined}</td>
+                   <td className='pl-5 py-1'>{user.created_at}</td>
                 </tr>
                 <tr className="border-none">
                   <td className="font-semibold">Number of booking:</td>
-                  <td className='pl-5 py-1'>{UserDetails.numberOfBooking}</td>
+                  <td className='pl-5 py-1'>{user.bookings_count}</td>
                </tr>
                <tr className="border-none">
                   <td className="font-semibold">Number of cancellation:</td>
-                  <td className='pl-5 py-1'>{UserDetails.numberOfCancellation}</td>
+                  <td className='pl-5 py-1'>{user.cancelled_bookings_count}</td>
                </tr>
                <tr className="border-none">
                   <td className="font-semibold">Last Booking:</td>
-                  <td className='pl-5 py-1'>{UserDetails.lastBooking}</td>
-               </tr>
-               <tr className="border-none">
-                 <td className="font-semibold">Last cancellation:</td>
-                 <td className='pl-5 py-1'>{UserDetails.lastCancellation}</td>
+                  <td className='pl-5 py-1'>{user.updated_at}</td>
                </tr>
                <tr className="border-none">
                    <td className="font-semibold">Email address:</td>
-                   <td className='pl-5 py-1'>{UserDetails.email}</td>
+                   <td className='pl-5 py-1'>{user.email}</td>
                </tr>
                <tr className="border-none">
                   <td className="font-semibold">Mobile number:</td>
-                  <td className='pl-5 py-1'>{UserDetails.mobileNumber}</td>
+                  <td className='pl-5 py-1'>{user.phone_number}</td>
                </tr>
                <tr className="border-none">
                   <td className="font-semibold">Play points:</td>
-                  <td className='pl-5 py-1'>{UserDetails.playpoints}</td>
+                  <td className='pl-5 py-1'>{user.cashbacks_sum_coins}</td>
                </tr>
              </tbody>
           </table>

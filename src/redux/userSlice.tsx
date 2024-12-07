@@ -1,36 +1,36 @@
-// redux/userSlice.ts
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { apiClient } from "../utils/apiClient";
 
-interface UserState {
-  data: any[] | null;
-  loading: boolean;
-  error: string | null;
-}
-
-const initialState: UserState = {
-  data: [],
-  loading: false,
-  error: null,
-};
-
+// Fetch users with statistics
 export const fetchUsers = createAsyncThunk(
   "users/fetchUsers",
-  async (_, { rejectWithValue }) => {
+  async (_, thunkAPI) => {
     try {
       const response = await apiClient("admin/users", "GET");
-      console.log(response.data);
-      
-      return response.data; // Response data 
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data || error.message);
+      console.log(response);
+      return response.data; // Expecting { users, statistics }
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response?.data || error.message);
     }
   }
 );
 
 const userSlice = createSlice({
   name: "users",
-  initialState,
+  initialState: {
+    data: {
+      users: [],
+      statistics: {
+        total_active_users: 0,
+        total_inactive_users: 0,
+        total_users: 0,
+        users_by_role: {},
+        users_joined_last_24_hours: 0,
+      },
+    },
+    loading: false,
+    error: null,
+  },
   reducers: {},
   extraReducers: (builder) => {
     builder
@@ -39,15 +39,12 @@ const userSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchUsers.fulfilled, (state, action) => {
-        // console.log(action.payload);
-        
         state.loading = false;
-        state.data = action.payload; // Store the fetched users
-        // state.data = Array.isArray(action.payload) ? action.payload : [];
-      })      
+        state.data = action.payload; // Store users and statistics in the state
+      })
       .addCase(fetchUsers.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string;
+        state.error = action.payload;
       });
   },
 });

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Home7, Ellipse } from "../../assets/images";
 import Pagination from "../../components/pagination";
@@ -8,20 +8,22 @@ import { RootState } from "../../redux/store";
 
 const UserManagement: React.FC = () => {
   const dispatch = useDispatch();
-
-  // Get data from Redux state
+  const [currentPage, setCurrentPage] = useState(1); // Current page state
   const { data, loading, error } = useSelector((state: RootState) => state.users);
 
-  // Fetch users on component mount
   useEffect(() => {
-    dispatch(fetchUsers());
-  }, [dispatch]);
+    dispatch(fetchUsers({ page: currentPage })); // Fetch users based on the current page
+  }, [dispatch, currentPage]);
 
-  if (loading) return <div className="ml-72 p-8 mt-20 ">Loading...</div>;
-  if (error) return <div className="ml-72 p-8 mt-20 ">Error: {error}</div>;
-// console.log(users.users);
+  if (loading) return <div className="ml-72 p-8 mt-20">Loading...</div>;
+  if (error) return <div className="ml-72 p-8 mt-20">Error: {error}</div>;
 
+  const { total_users, total_active_users, total_inactive_users } = data.statistics;
+  const totalPages = Math.ceil(total_users / 15); // Assuming 15 users per page
 
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   return (
     <div className="relative ml-72 p-8 mt-20">
@@ -32,35 +34,37 @@ const UserManagement: React.FC = () => {
           id="options"
           className="text-[16px] font-bold text-[#141B34] w-36 h-10 border border-[#8F55A224] bg-[#8F55A224] rounded-md"
         >
-          <option value="days">last 30 days</option>
+          <option value="days">Last 30 Days</option>
         </select>
       </div>
+
       <div className="grid grid-cols-3 gap-4 mb-6">
         <div className="min-w-[320px] h-[180px] bg-[#D29AB8] rounded-md flex justify-between items-center">
           <div className="flex flex-col ml-5 text-white">
             <img src={Home7} alt="" className="w-[52px] h-[52px]" />
-            <p>{data.statistics.total_users}</p>
-            <p>Total users</p>
+            <p>{total_users}</p>
+            <p>Total Users</p>
           </div>
           <img src={Ellipse} alt="" className="object-cover mt-[-68px] w-[110px] h-[110px]" />
         </div>
         <div className="min-w-[320px] h-[180px] bg-playden-primary rounded-md flex justify-between items-center">
           <div className="flex flex-col ml-5 text-white">
             <img src={Home7} alt="" className="w-[52px] h-[52px]" />
-            <p>{data.statistics.total_active_users}</p>
-            <p>active user</p>
+            <p>{total_active_users}</p>
+            <p>Active Users</p>
           </div>
           <img src={Ellipse} alt="" className="object-cover mt-[-68px] w-[110px] h-[110px]" />
         </div>
         <div className="min-w-[320px] h-[180px] bg-[#01031A] rounded-md flex justify-between items-center">
           <div className="flex flex-col ml-5 text-white">
             <img src={Home7} alt="" className="w-[52px] h-[52px]" />
-            <p>{data.statistics.total_inactive_users}</p>
-            <p>Ban/Suspended</p>
+            <p>{total_inactive_users}</p>
+            <p>Inactive Users</p>
           </div>
           <img src={Ellipse} alt="" className="object-cover mt-[-68px] w-[110px] h-[110px]" />
         </div>
       </div>
+
       <table className="min-w-full border-collapse border border-gray-200">
         <thead>
           <tr className="bg-gray-200">
@@ -75,44 +79,34 @@ const UserManagement: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          {data.users && Array.isArray(data.users) && data.users.length > 0 ? (
-            data.users.map((user) => (
-              <tr key={user.id} className="hover:bg-gray-100">
-                <td className="border border-gray-300 py-2 px-1">{user.full_name}</td>
-                <td className="border border-gray-300 py-2 px-1">{user.email}</td>
-                <td className="border border-gray-300 py-2 px-1 text-center">{user.phone_number}</td>
-                <td className="border border-gray-300 py-2 px-1 text-center">{user.bookings_count}</td>
-                <td className="border border-gray-300 p-2 text-center">
-                  <span className="bg-[#4F772D] text-white px-6 py-1 rounded-lg">
-                    {user.cancelled_bookings_count}
-                  </span>
-                </td>
-                <td className="border border-gray-300 py-2 px-1 text-center">{user.playpoints}</td>
-                <td className="border border-gray-300 py-2 px-1 text-center">{'Active'}</td>
-                <td className="border border-gray-300 py-2 px-1 text-center">
-                  <Link
-                    to={`/user-management/User-details/${user.id}`}
-                    className="text-sm font-bold cursor-pointer"
-                  >
-                    View Details
-                  </Link>
-                </td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan={8} className="text-center py-4">
-                No users found.
+          {data.users?.map((user) => (
+            <tr key={user.id} className="hover:bg-gray-100">
+              <td className="border border-gray-300 py-2 px-1">{user.full_name}</td>
+              <td className="border border-gray-300 py-2 px-1">{user.email}</td>
+              <td className="border border-gray-300 py-2 px-1 text-center">{user.phone_number}</td>
+              <td className="border border-gray-300 py-2 px-1 text-center">{user.bookings_count}</td>
+              <td className="border border-gray-300 p-2 text-center">
+                <span className="bg-[#4F772D] text-white px-6 py-1 rounded-lg">
+                  {user.cancelled_bookings_count}
+                </span>
+              </td>
+              <td className="border border-gray-300 py-2 px-1 text-center">{user.playpoints}</td>
+              <td className="border border-gray-300 py-2 px-1 text-center">Active</td>
+              <td className="border border-gray-300 py-2 px-1 text-center">
+                <Link to={`/user-management/User-details/${user.id}`} className="text-sm font-bold">
+                  View Details
+                </Link>
               </td>
             </tr>
-          )}
+          ))}
         </tbody>
-
-
       </table>
-      <Pagination currentPage={0} totalPages={0} onPageChange={function (page: number): void {
-        throw new Error("Function not implemented.");
-      }} />
+
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 };
