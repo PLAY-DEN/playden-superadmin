@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { apiClient } from "../utils/apiClient";
 
-
 interface PitchCardProps {
   sport: string;
   pitchSize: string;
@@ -36,6 +35,10 @@ const PitchCard: React.FC<PitchCardProps> = ({
     });
   };
 
+  const handleUpdate = () => {
+    navigate(`/update-pitch/${id}`); // Navigate to update page
+  };
+
   const handleDelete = async () => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this pitch? This action cannot be undone."
@@ -45,7 +48,7 @@ const PitchCard: React.FC<PitchCardProps> = ({
     try {
       await apiClient(`admin/pitches/${id}`, "DELETE");
       alert("Pitch deleted successfully.");
-      window.location.reload(); 
+      window.location.reload();
     } catch (error: any) {
       console.error("Error deleting pitch:", error);
       alert("Failed to delete the pitch. Please try again.");
@@ -75,6 +78,12 @@ const PitchCard: React.FC<PitchCardProps> = ({
             onClick={handleDelete}
           >
             Delete
+          </button>
+          <button
+            className="bg-playden-primary rounded-lg px-4 py-2 text-xs text-white"
+            onClick={handleUpdate}
+          >
+            Update
           </button>
         </div>
       </div>

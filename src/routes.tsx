@@ -19,6 +19,7 @@ import PitchAdminManagement from "./pages/pitchAdminManagement";
 import AddNewAdmin from "./components/addNewAdmin";
 import AdminDetails from "./components/adminDetails";
 import SettingsPage from "./pages/accountSettings";
+import UpdatePitch from "./components/updatePitch";
 
 const MyRoutes = () => (
   <Routes>
@@ -46,6 +47,8 @@ const MyRoutes = () => (
       <Route path="/pitch-admin-management/:id" element={<ProtectedRoute><AdminDetails /></ProtectedRoute>} />
       <Route path="/add-new-admin" element={<ProtectedRoute><AddNewAdmin /></ProtectedRoute>} />
       <Route path="/account-settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
+      <Route path="/update-pitch/:id" element={<ProtectedRoute><UpdatePitch /></ProtectedRoute>} />
+
     </Route>
   </Routes>
 );
