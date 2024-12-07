@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBookingHistory } from "../../redux/bookingSlice";
@@ -6,18 +6,19 @@ import { RootState } from "../../redux/store";
 
 const PitchDetails: React.FC = () => {
   const { pitchId } = useParams<{ pitchId: string }>();
-  const { state } = useLocation(); // Access state from navigation
+  const { state } = useLocation(); 
   const dispatch = useDispatch();
+  const [activeTab, setActiveTab] = useState<"bookings" | "reviews">("bookings");
 
   const { bookings, loading, error } = useSelector(
     (state: RootState) => state.bookings
   );
 
   useEffect(() => {
-    if (pitchId) {
-      dispatch(fetchBookingHistory(pitchId)); // Fetch booking history on mount
+    if (pitchId && activeTab === "bookings") {
+      dispatch(fetchBookingHistory(pitchId)); 
     }
-  }, [pitchId, dispatch]);
+  }, [pitchId, activeTab, dispatch]);
 
   const {
     sport = "N/A",
@@ -26,7 +27,7 @@ const PitchDetails: React.FC = () => {
     name = "N/A",
     contact = "N/A",
     price = "N/A",
-  } = state || {}; // Destructure state with default values
+  } = state || {}; 
 
   return (
     <div className="relative ml-72 p-8 mt-20 overflow-auto">
@@ -56,49 +57,83 @@ const PitchDetails: React.FC = () => {
         </div>
       </div>
 
-      {/* Booking History */}
+      {/* Tabs for Booking History and Reviews */}
       <div className="mt-8">
-        <h2 className="font-bold text-lg mb-4 text-[#808B9B]">
-          Booking History
-        </h2>
-        {loading ? (
-          <p>Loading bookings...</p>
-        ) : error ? (
-          <p className="text-red-500">{error}</p>
-        ) : (
-          <table className="w-full border">
-            <thead className="bg-transparent text-[#808B9B] text-left">
-              <tr>
-                <th className="p-2">ID</th>
-                <th className="p-2">Date/Time</th>
-                <th className="p-2">Amount</th>
-                <th className="p-2">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {Array.isArray(bookings) && bookings.length > 0 ? (
-                bookings.map((booking, index) => (
-                  <tr
-                    key={index}
-                    className="text-[14px] text-[#01031A] font-semibold"
-                  >
-                    <td className="p-2">{booking.booking_code}</td>
-                    <td className="p-2">{booking.date}</td>
-                    <td className="p-1">{booking.total_cost}</td>
-                    <td className="p-1 cursor-pointer">
-                      <u>View Transaction Details</u>
-                    </td>
+        <div className="flex border-b border-gray-300">
+          <button
+            className={`py-2 px-4 ${
+              activeTab === "bookings"
+                ? "border-b-2 border-playden-primary text-playden-primary font-bold"
+                : "text-gray-500"
+            }`}
+            onClick={() => setActiveTab("bookings")}
+          >
+            Booking History
+          </button>
+          <button
+            className={`py-2 px-4 ${
+              activeTab === "reviews"
+                ? "border-b-2 border-playden-primary text-playden-primary font-bold"
+                : "text-gray-500"
+            }`}
+            onClick={() => setActiveTab("reviews")}
+          >
+            Reviews
+          </button>
+        </div>
+
+        {activeTab === "bookings" && (
+          <div className="mt-4">
+            <h2 className="font-bold text-lg mb-4 text-[#808B9B]">
+              Booking History
+            </h2>
+            {loading ? (
+              <p>Loading bookings...</p>
+            ) : error ? (
+              <p className="text-red-500">{error}</p>
+            ) : (
+              <table className="w-full border">
+                <thead className="bg-transparent text-[#808B9B] text-left">
+                  <tr>
+                    <th className="p-2">ID</th>
+                    <th className="p-2">Date/Time</th>
+                    <th className="p-2">Amount</th>
+                    <th className="p-2">Action</th>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={5} className="text-center text-gray-500 p-4">
-                    No bookings available
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+                </thead>
+                <tbody>
+                  {Array.isArray(bookings) && bookings.length > 0 ? (
+                    bookings.map((booking, index) => (
+                      <tr
+                        key={index}
+                        className="text-[14px] text-[#01031A] font-semibold"
+                      >
+                        <td className="p-2">{booking.booking_code}</td>
+                        <td className="p-2">{booking.date}</td>
+                        <td className="p-1">{booking.total_cost}</td>
+                        <td className="p-1 cursor-pointer">
+                          <u>View Transaction Details</u>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={5} className="text-center text-gray-500 p-4">
+                        No bookings available
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            )}
+          </div>
+        )}
+
+        {activeTab === "reviews" && (
+          <div className="mt-4">
+            <h2 className="font-bold text-lg mb-4 text-[#808B9B]">Reviews</h2>
+            <p className="text-gray-500 italic">Reviews functionality is yet to be implemented.</p>
+          </div>
         )}
       </div>
     </div>
