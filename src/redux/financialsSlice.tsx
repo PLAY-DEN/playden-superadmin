@@ -1,27 +1,16 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { apiClient } from "../utils/apiClient";
 
-// Fetch pending payouts
+// Fetch pending payouts with pagination
 export const fetchPendingPayouts = createAsyncThunk(
   "financials/fetchPendingPayouts",
-  async (_, thunkAPI) => {
+  async ({ page = 1, perPage = 10 }, thunkAPI) => {
     try {
-      const response = await apiClient("admin/pitch-owners/pending-payouts", "GET");
-      console.log(response);
-      return response; // Expecting an array of records
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.response?.data || error.message);
-    }
-  }
-);
-
-// Mark payout as paid
-export const markAsPaid = createAsyncThunk(
-  "financials/markAsPaid",
-  async (id, thunkAPI) => {
-    try {
-      await apiClient(`admin/pitch-owners/pending-payouts/${id}`, "POST");
-      return id; // Return the ID of the marked record
+      const response = await apiClient(
+        `admin/pitch-owners/pending-payouts?page=${page}&per_page=${perPage}`,
+        "GET"
+      );
+      return response.data; // Expecting data with { records, current_page, total_pages, total_items }
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data || error.message);
     }
@@ -31,11 +20,19 @@ export const markAsPaid = createAsyncThunk(
 const financialsSlice = createSlice({
   name: "financials",
   initialState: {
-    records: [], 
+    records: [],
     loading: false,
     error: null,
+    currentPage: 1,
+    totalPages: 1,
+    perPage: 10,
+    totalItems: 0, // New field to store the total items
   },
-  reducers: {},
+  reducers: {
+    setPage: (state, action) => {
+      state.currentPage = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchPendingPayouts.pending, (state) => {
@@ -44,16 +41,20 @@ const financialsSlice = createSlice({
       })
       .addCase(fetchPendingPayouts.fulfilled, (state, action) => {
         state.loading = false;
-        state.records = Array.isArray(action.payload) ? action.payload : []; // Ensure it's an array
+        const { records, current_page, total_pages, total_items } = action.payload;
+        state.records = records || [];
+        state.currentPage = current_page || 1;
+        state.totalPages = total_pages || 1;
+        state.totalItems = total_items || 0; // Store total_items
       })
       .addCase(fetchPendingPayouts.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      })
-      .addCase(markAsPaid.fulfilled, (state, action) => {
-        state.records = state.records.filter((record) => record.id !== action.payload); // Remove the paid record
       });
   },
 });
+
+export const { setPage } = financialsSlice.actions;
+export const { markAsPaid} = financialsSlice.actions;
 
 export default financialsSlice.reducer;

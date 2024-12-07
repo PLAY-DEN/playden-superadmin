@@ -1,19 +1,25 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchPendingPayouts, markAsPaid } from "../../redux/financialsSlice";
+import { fetchPendingPayouts, markAsPaid, setPage } from "../../redux/financialsSlice";
 import { Home7, Ellipse } from "../../assets/images";
 import Pagination from "../../components/pagination";
 
-const Financials = () => {
+const Financials: React.FC = () => {
   const dispatch = useDispatch();
-  const { records, loading, error } = useSelector((state) => state.financials);
+  const { records, loading, error, currentPage, totalPages, perPage, totalItems } = useSelector(
+    (state) => state.financials
+  );
 
   useEffect(() => {
-    dispatch(fetchPendingPayouts());
-  }, [dispatch]);
+    dispatch(fetchPendingPayouts({ page: currentPage, perPage }));
+  }, [dispatch, currentPage, perPage]);
 
-  const handleMarkAsPaid = (id) => {
+  const handleMarkAsPaid = (id: number) => {
     dispatch(markAsPaid(id));
+  };
+
+  const handlePageChange = (page: number) => {
+    dispatch(setPage(page));
   };
 
   return (
@@ -37,7 +43,7 @@ const Financials = () => {
         >
           <div className="flex flex-col ml-5 text-xs text-white">
             <img src={Home7} alt="" className="w-[52px] h-[52px]" />
-            <p>10,000,000</p>
+            <p>{totalItems}</p> {/* Display total_items here */}
             <p>Today Revenue</p>
           </div>
           <img src={Ellipse} alt="" className="object-cover mt-[-50px] w-[80px] h-[80px]" />
@@ -96,7 +102,11 @@ const Financials = () => {
               </tbody>
             </table>
           )}
-          <Pagination />
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
         </div>
       </div>
     </div>
