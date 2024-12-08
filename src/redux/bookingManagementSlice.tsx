@@ -25,9 +25,9 @@ const initialState: BookingsState = {
 // Thunk for fetching bookings with pagination
 export const fetchBookingsMgt = createAsyncThunk(
   'bookings/fetchBookings',
-  async ({ page, limit }: { page: number; limit: number }) => {
+  async ({ page }: { page: number; }) => {
     try {
-      const response = await apiClient(`bookings?page=${page}&limit=${limit}`, 'GET');
+      const response = await apiClient(`bookings?page=${page}`, 'GET');
       return response.data;
     } catch (error: any) {
       throw new Error(error.message || 'Failed to fetch bookings');

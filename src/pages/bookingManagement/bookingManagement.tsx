@@ -13,12 +13,12 @@ const BookingManagement: React.FC = () => {
 
   // Fetch bookings when the page changes
   useEffect(() => {
-    dispatch(fetchBookingsMgt({ page: currentPage, limit: 15 }));
+    dispatch(fetchBookingsMgt({ page: currentPage }));
   }, [dispatch, currentPage]);
 
   const handlePageChange = (newPage: number) => {
     dispatch(setCurrentPage(newPage));
-    dispatch(fetchBookingsMgt({ page: newPage, limit: 15 }));
+    dispatch(fetchBookingsMgt({ page: newPage,}));
   };
 
   return (
@@ -79,7 +79,7 @@ const BookingManagement: React.FC = () => {
           </tbody>
         </table>
       ) : (
-        <p>No bookings found.</p>
+        <p>If loading takes a while, bookings not found.</p>
       )}
 
       <Pagination
