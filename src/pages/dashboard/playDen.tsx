@@ -1,52 +1,59 @@
+import React from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 import { vector6, person, equalizer, compiling } from "../../assets/images";
 
 interface StatCardProps {
-    title: string;
-    value: number;
-    icon?: string; 
+  title: string;
+  value: number | string; // Accept number or string for flexibility
+  icon?: string;
 }
 
 const StatCard: React.FC<StatCardProps> = ({ title, value, icon }) => {
-    return (
-        <div className="bg-white text-end rounded-lg p-4 min-w-32 min-h-24 shadow-sm relative">
-            {/* Display icon at top-right of the card */}
-            {icon && <img src={icon} alt={`${title} icon`} className="absolute top-2 left-2 w-6 h-6" />}
-            <p  className="text-[#41244B] text-xs font-bold">{value}</p>
-            <p className="text-[12px]">{title}</p>
-        </div>
-    );
+  return (
+    <div className="bg-white text-end rounded-lg p-4 min-w-32 min-h-24 shadow-sm relative">
+      {icon && <img src={icon} alt={`${title} icon`} className="absolute top-2 left-2 w-6 h-6" />}
+      <p className="text-[#41244B] text-xs font-bold">{value}</p>
+      <p className="text-[12px]">{title}</p>
+    </div>
+  );
 };
 
 const PlayDenStats: React.FC = () => {
-    return (
-        <div
-            className="bg-playden-primary rounded-lg p-5 flex flex-col items-center"
-            style={{  height: '242px' }}
+  // Fetch statistics from Redux state
+  const { bookings_count, total_users, total_pitch, users_joined_last_24_hours } = useSelector(
+    (state: RootState) => state.users.data.statistics
+  );
+
+  return (
+    <div
+      className="bg-playden-primary rounded-lg p-5 flex flex-col items-center"
+      style={{ height: "242px" }}
+    >
+      {/* Header Section */}
+      <div className="flex justify-between w-full">
+        <h2 className="text-sm text-white font-semibold">PlayDen Stat</h2>
+        <select
+          name="admin"
+          id="options"
+          className="text-xs text-white w-24 h-8 border border-none bg-transparent rounded-md"
         >
-            {/* Header Section */}
-            <div className="flex justify-between w-full">
-                <h2 className="text-sm text-white font-semibold">PlayDen Stat</h2>
-                <select
-                    name="admin"
-                    id="options"
-                    className="text-xs text-white w-24 h-8 border border-none bg-transparent rounded-md"
-                >
-                    <option value="days">Exports</option>
-                </select>
-            </div>
+          <option value="days">Exports</option>
+        </select>
+      </div>
 
-            {/* Image Section */}
-            <img src={vector6} alt="chart" className="mt-14 mx-auto" />
+      {/* Image Section */}
+      <img src={vector6} alt="chart" className="mt-14 mx-auto" />
 
-            {/* Stat Cards Section */}
-            <div className="grid grid-cols-2 gap-3 mt-8 justify-center">
-                <StatCard title="Total Booking" value={1000} icon={equalizer} />
-                <StatCard title="Total Users" value={1000} icon={person} />
-                <StatCard title="Total Pitch" value={1000} icon={compiling} />
-                <StatCard title="New Users" value={1000} icon={person} />
-            </div>
-        </div>
-    );
+      {/* Stat Cards Section */}
+      <div className="grid grid-cols-2 gap-3 mt-8 justify-center">
+        <StatCard title="Total Booking" value={bookings_count} icon={equalizer} />
+        <StatCard title="Total Users" value={total_users} icon={person} />
+        <StatCard title="Total Pitch" value={total_pitch} icon={compiling} />
+        <StatCard title="New Users" value={users_joined_last_24_hours} icon={person} />
+      </div>
+    </div>
+  );
 };
 
 export default PlayDenStats;

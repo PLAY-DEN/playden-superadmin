@@ -1,32 +1,69 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchUsers } from '../../redux/PitchAdmin';
-import { RootState } from '../../redux/store';
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUsers } from "../../redux/PitchAdmin";
+import { RootState } from "../../redux/store";
 import { Home7, Ellipse, plus } from "../../assets/images";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import Pagination from "../../components/pagination";
 
-const adminSummary = [
-  { title: "Total Admins", amount: "300", color: "#D29AB8", imageSrc: Home7 },
-  { title: "Total Spots", amount: "40", color: "#5A2C76", imageSrc: Home7 },
-];
+interface SummaryItem {
+  title: string;
+  amount: string | number;
+  color: string;
+  imageSrc: string;
+}
 
 const PitchAdminManagement: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { users, loading, error } = useSelector((state: RootState) => state.admin);
 
+  const [adminSummary, setAdminSummary] = useState<SummaryItem[]>([]);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (token) {
       dispatch(fetchUsers(token));
     }
   }, [dispatch]);
 
-  
-  const adminUsers = (users?.data?.users || []).filter(user => user.user_role.includes('super_admin'));
+  // Update adminSummary dynamically
+  useEffect(() => {
+    if (users?.data?.statistics) {
+      const stats = users.data.statistics;
+      setAdminSummary([
+        {
+          title: "Total Admins",
+          amount: stats.users_by_role?.super_admin || 0,
+          color: "#D29AB8",
+          imageSrc: Home7,
+        },
+        {
+          title: "Total Spots",
+          amount: stats.total_users || 0,
+          color: "#5A2C76",
+          imageSrc: Home7,
+        },
+        {
+          title: "Total Active Users",
+          amount: stats.total_active_users || 0,
+          color: "#9C27B0",
+          imageSrc: Home7,
+        },
+        {
+          title: "Users Joined Last 24 Hours",
+          amount: stats.users_joined_last_24_hours || 0,
+          color: "#673AB7",
+          imageSrc: Home7,
+        },
+      ]);
+    }
+  }, [users]);
+
+  const adminUsers = (users?.data?.users || []).filter((user) =>
+    user.user_role.includes("super_admin")
+  );
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
@@ -47,7 +84,10 @@ const PitchAdminManagement: React.FC = () => {
             <option value="days">12</option>
           </select>
         </div>
-        <button onClick={() => navigate('/add-new-admin')} className="flex flex-row gap-2 bg-playden-primary text-white font-semibold p-3 rounded-lg">
+        <button
+          onClick={() => navigate("/add-new-admin")}
+          className="flex flex-row gap-2 bg-playden-primary text-white font-semibold p-3 rounded-lg"
+        >
           <img src={plus} alt="" className="text-white font-bold mt-1" />
           <p>Add New Admin</p>
         </button>
@@ -56,7 +96,11 @@ const PitchAdminManagement: React.FC = () => {
       {/* Summary Cards */}
       <div className="grid grid-cols-3 gap-6 mb-8">
         {adminSummary.map((item, index) => (
-          <div key={index} className="min-w-[320px] h-[180px] rounded-md flex justify-between items-center" style={{ backgroundColor: item.color }}>
+          <div
+            key={index}
+            className="min-w-[320px] h-[180px] rounded-md flex justify-between items-center"
+            style={{ backgroundColor: item.color }}
+          >
             <div className="flex flex-col ml-5 text-white">
               <img src={item.imageSrc} alt="" className="w-[52px] h-[52px]" />
               <p>{item.amount}</p>
@@ -95,7 +139,9 @@ const PitchAdminManagement: React.FC = () => {
                 <td className="border-b p-4 text-sm">{user.bankName}</td>
                 <td className="border-b p-4 text-sm">{user.bankDetails}</td>
                 <td className="border-b p-4 text-sm text-playden-primary cursor-pointer">
-                  <Link to={`/pitch-admin-management/${user.id}`} className="font-bold">View details</Link>
+                  <Link to={`/pitch-admin-management/${user.id}`} className="font-bold">
+                    View details
+                  </Link>
                 </td>
               </tr>
             ))}
