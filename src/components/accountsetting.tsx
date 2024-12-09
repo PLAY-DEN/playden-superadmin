@@ -1,35 +1,59 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchSettings } from "../redux/settingsSlice";
 import { apiClient } from "../utils/apiClient";
+import { RootState } from "../redux/store";
 
 const AccountSettings: React.FC = () => {
-  const [settings, setSettings] = useState<any>(null); //to hold settings data
-  const [loading, setLoading] = useState<boolean>(true); // to handle loading
-  const [error, setError] = useState<string | null>(null); //  to handle errors
+  const dispatch = useDispatch();
+  const { data: settings, loading, error } = useSelector((state: RootState) => state.settings);
+
+  const [formData, setFormData] = useState({
+    name: "",
+    contactUs: "",
+    currency: "",
+  });
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
-    const fetchSettings = async () => {
-      try {
-        setLoading(true); // Start loading
-        const response = await apiClient("1/settings", "GET"); 
-        console.log("API Response:", response); 
-        setSettings(response); // Update state with API data
-      } catch (err: any) {
-        console.error("Error fetching settings:", err); // Log error
-        setError(err.message || "An error occurred"); 
-      } finally {
-        setLoading(false); 
-      }
-    };
+    // Fetch settings on mount
+    dispatch(fetchSettings());
+  }, [dispatch]);
 
-    fetchSettings(); 
-  }, []);
+  useEffect(() => {
+    // Populate form data when settings data is fetched
+    if (settings) {
+      setFormData({
+        name: settings.data?.name || "",
+        contactUs: settings.contactUs || "",
+        currency: settings.currency || "",
+      });
+    }
+  }, [settings]);
 
-  // Render loading state
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleSave = async () => {
+    try {
+      setIsSaving(true);
+      const response = await apiClient("1/settings", "POST", formData); // Save API
+      console.log("Save Response:", response);
+      alert("Settings saved successfully!");
+    } catch (err: any) {
+      console.error("Error saving settings:", err);
+      alert(err.response?.data || "Failed to save settings");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   if (loading) {
     return <div className="bg-white mt-8">Loading...</div>;
   }
 
-  // Render error state
   if (error) {
     return (
       <div className="bg-white mt-8 text-red-600">
@@ -38,58 +62,70 @@ const AccountSettings: React.FC = () => {
     );
   }
 
-  // Render settings data
   return (
-    <div className="bg-white mt-8">
-      {/* User Information Section */}
-      {settings ? (
-        <div className="mb-10">
-          <table className="max-w-[500px] border border-none">
-            <tbody>
-              <tr className="border-none">
-                <td className="font-semibold py-2">Name:</td>
-                <td className="text-sm py-2">{settings.data.name || "N/A"}</td>
-              </tr>
-              <tr className="border-none">
-                <td className="font-semibold py-2">Email address:</td>
-                <td className="text-sm py-2">{settings.email || "N/A"}</td>
-              </tr>
-              <tr className="border-none">
-                <td className="font-semibold py-2">Phone number:</td>
-                <td className="text-sm py-2">{settings.phone || "N/A"}</td>
-              </tr>
-              <tr className="border-none">
-                <td className="font-semibold py-2">Role:</td>
-                <td className="text-sm py-2">{settings.data.role || "N/A"}</td>
-              </tr>
-              <tr className="border-none">
-                <td className="font-semibold py-2">Change password:</td>
-                <td className="text-sm py-2">********</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      ) : (
-        <p>No account settings found.</p>
-      )}
+    <div className="bg-white mt-8 p-6 rounded-md shadow-md">
+      <h2 className="text-lg font-semibold mb-4">Account Settings</h2>
 
-      {/* Manage Admins Section */}
-      <div>
-        <h3 className="font-semibold mb-4">Manage admins</h3>
-        {settings?.admins?.length ? (
-          <div className="space-y-4 text-sm">
-            {settings.admins.map((admin: { name: string }, index: number) => (
-              <div className="flex gap-4" key={index}>
-                <span className="font-semibold">{admin.name}</span>
-                <button className="text-blue-500">Remove</button>
-                <button className="text-blue-500">Allocate new duties</button>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p>No admins available.</p>
-        )}
-      </div>
+      <form className="space-y-6">
+        {/* Name Input */}
+        <div>
+          <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+            Name
+          </label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            value={formData.name}
+            onChange={handleInputChange}
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          />
+        </div>
+
+        {/* Contact Us Input */}
+        <div>
+          <label htmlFor="contactUs" className="block text-sm font-medium text-gray-700">
+            Contact Us
+          </label>
+          <input
+            type="text"
+            id="contactUs"
+            name="contactUs"
+            value={formData.contactUs}
+            onChange={handleInputChange}
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          />
+        </div>
+
+        {/* Currency Input */}
+        <div>
+          <label htmlFor="currency" className="block text-sm font-medium text-gray-700">
+            Currency
+          </label>
+          <input
+            type="text"
+            id="currency"
+            name="currency"
+            value={formData.currency}
+            onChange={handleInputChange}
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          />
+        </div>
+
+        {/* Save Button */}
+        <div>
+          <button
+            type="button"
+            onClick={handleSave}
+            disabled={isSaving}
+            className={`w-full px-4 py-2 text-white rounded-md shadow-sm ${
+              isSaving ? "bg-gray-400 cursor-not-allowed" : "bg-indigo-600 hover:bg-indigo-700"
+            }`}
+          >
+            {isSaving ? "Saving..." : "Save Changes"}
+          </button>
+        </div>
+      </form>
     </div>
   );
 };
