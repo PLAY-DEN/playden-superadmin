@@ -6,7 +6,7 @@ export const createAdmin = createAsyncThunk(
   async (adminData: any, { rejectWithValue }) => {
     try {
       const response = await apiClient("admin/users", "POST", adminData);
-      console.log(response);
+    //   console.log(response);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Failed to create admin");
