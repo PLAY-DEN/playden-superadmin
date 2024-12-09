@@ -1,19 +1,16 @@
-import { useParams } from 'react-router-dom';
 import { bookingImg } from '../assets/images';
+import { useLocation, useParams } from "react-router-dom";
 
-const adminDetails = {
-  id: "#446664",
-  name: "Oyinkansola Soleye",
-  dateJoined: "20 Dec, 2024",
-  mobileNumber: "+234 7060496488",
-  email: "oyinkansola@gmail.com",
-  pitchOwned: "Plutos clubhouse field",
-  bankName: "Access Bank",
-  bankDetails: "123456489",
-};
 
 const AdminDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const location = useLocation();
+  const { user } = location.state || {}; 
+
+  if (!user) {
+    return <div>User data not available.</div>;
+  }
+
 
   return (
     <div className="bg-white relative ml-72 p-8 mt-24">
@@ -29,8 +26,8 @@ const AdminDetails: React.FC = () => {
       </div>
 
       <div className="mt-10">
-        <h2 className="text-xl font-semibold">{adminDetails.name}</h2>
-        <p className="text-gray-500">{adminDetails.id}</p>
+        <h2 className="text-xl font-semibold">{user.full_name || user.username}</h2>
+        <p className="text-gray-500">{id}</p>
       </div>
 
       <div className="flex flex-row">
@@ -38,7 +35,8 @@ const AdminDetails: React.FC = () => {
           <h2 className="ml-60 mt-5 font-bold">Admin Details</h2>
           <img
             src={bookingImg}
-            alt={`${adminDetails.name}'s profile`}
+            alt={`${user.full_name || user.username}'s profile`}
+
             className="mt-[-5px]"
           />
         </div>
@@ -48,27 +46,27 @@ const AdminDetails: React.FC = () => {
                 <tbody>
                     <tr className="border-none">
                         <td className="font-semibold">Date Joined:</td>
-                        <td className='pl-5 py-2'>{adminDetails.dateJoined}</td>
+                        <td className='pl-5 py-2'>{user.created_at}</td>
                     </tr>
                     <tr className="border-none">
                         <td className="font-semibold">Mobile Number:</td>
-                        <td className='pl-5 py-2'>{adminDetails.mobileNumber}</td>
+                        <td className='pl-5 py-2'>{user.phone_number}</td>
                     </tr>
                     <tr className="border-none">
                         <td className="font-semibold">Email Address:</td>
-                        <td className='pl-5 py-2'>{adminDetails.email}</td>
+                        <td className='pl-5 py-2'>{user.email}</td>
                     </tr>
                     <tr className="border-none">
                         <td className="font-semibold">Pitch Owned:</td>
-                        <td className='pl-5 py-2'>{adminDetails.pitchOwned}</td>
+                        <td className='pl-5 py-2'>{user.pitchOwned}</td>
                     </tr>
                     <tr className="border-none">
                         <td className="font-semibold">Bank Name:</td>
-                        <td className='pl-5 py-2'>{adminDetails.bankName}</td>
+                        <td className='pl-5 py-2'>{user.bankName}</td>
                     </tr>
                     <tr>
                         <td className="font-semibold">Bank Details:</td>
-                        <td className='pl-5 py-2'>{adminDetails.bankDetails}</td>
+                        <td className='pl-5 py-2'>{user.bankDetails}</td>
                     </tr>
                 </tbody>
             </table>

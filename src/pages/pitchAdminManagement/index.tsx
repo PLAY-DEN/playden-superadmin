@@ -3,9 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchUsers } from "../../redux/PitchAdmin";
 import { RootState } from "../../redux/store";
 import { Home7, Ellipse, plus } from "../../assets/images";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import Pagination from "../../components/pagination";
+import { createAdmin } from "../../redux/adminSlice";
+import { toast } from "react-toastify";
 
 interface SummaryItem {
   title: string;
@@ -20,6 +21,17 @@ const PitchAdminManagement: React.FC = () => {
   const { users, loading, error } = useSelector((state: RootState) => state.admin);
 
   const [adminSummary, setAdminSummary] = useState<SummaryItem[]>([]);
+  const [showModal, setShowModal] = useState(false);
+  const [formData, setFormData] = useState({
+    user_role: "super_admin",
+    full_name: "",
+    email: "",
+    username: "",
+    address: "",
+    phone_number: "",
+    password: "",
+  });
+  
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -28,7 +40,6 @@ const PitchAdminManagement: React.FC = () => {
     }
   }, [dispatch]);
 
-  // Update adminSummary dynamically
   useEffect(() => {
     if (users?.data?.statistics) {
       const stats = users.data.statistics;
@@ -61,31 +72,32 @@ const PitchAdminManagement: React.FC = () => {
     }
   }, [users]);
 
-  const adminUsers = (users?.data?.users || []).filter((user) =>
-    user.user_role.includes("super_admin")
-  );
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    dispatch(createAdmin(formData)); 
+    toast.success("Pitch Admin created successfully");
+    setShowModal(false); 
+    window.location.reload();
+
+  };
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
+  const adminUsers = (users?.data?.users || []).filter((user) =>
+    user.user_role.includes("super_admin")
+  );
+
   return (
     <div className="relative ml-64 p-8 mt-20">
-      {/* Header Section */}
       <div className="flex flex-row justify-between">
         <h2 className="text-2xl text-[#01031A] font-bold mb-4">Pitch Admin Management</h2>
-        <div className="flex flex-row gap-2">
-          <p className="text-[#141B34] text-[17px] font-bold mt-2 ml-72">showing</p>
-          <select
-            name="days"
-            id="options"
-            className="text-[17px] font-bold text-[#141B34] w-24 h-10 border border-[#8F55A224] bg-[#8F55A224] rounded-md"
-            defaultValue={12}
-          >
-            <option value="days">12</option>
-          </select>
-        </div>
         <button
-          onClick={() => navigate("/add-new-admin")}
+          onClick={() => setShowModal(true)}
           className="flex flex-row gap-2 bg-playden-primary text-white font-semibold p-3 rounded-lg"
         >
           <img src={plus} alt="" className="text-white font-bold mt-1" />
@@ -93,7 +105,7 @@ const PitchAdminManagement: React.FC = () => {
         </button>
       </div>
 
-      {/* Summary Cards */}
+      {/* Admin Summary Section */}
       <div className="grid grid-cols-3 gap-6 mb-8">
         {adminSummary.map((item, index) => (
           <div
@@ -111,7 +123,7 @@ const PitchAdminManagement: React.FC = () => {
         ))}
       </div>
 
-      {/* Admin Records Table */}
+      {/* Admin Users Table */}
       {adminUsers.length === 0 ? (
         <div>No user found</div>
       ) : (
@@ -122,9 +134,6 @@ const PitchAdminManagement: React.FC = () => {
               <th className="border-b p-4 font-semibold">Name</th>
               <th className="border-b p-4 font-semibold">Email</th>
               <th className="border-b p-4 font-semibold">Phone Number</th>
-              <th className="border-b p-4 font-semibold">Name of Pitch</th>
-              <th className="border-b p-4 font-semibold">Bank Name</th>
-              <th className="border-b p-4 font-semibold">Bank Details</th>
               <th className="border-b p-4 font-semibold">Action</th>
             </tr>
           </thead>
@@ -135,11 +144,12 @@ const PitchAdminManagement: React.FC = () => {
                 <td className="border-b p-4 text-sm">{user.full_name || user.username}</td>
                 <td className="border-b p-4 text-sm">{user.email}</td>
                 <td className="border-b p-4 text-sm">{user.phone_number}</td>
-                <td className="border-b p-4 text-sm">{user.pitchName}</td>
-                <td className="border-b p-4 text-sm">{user.bankName}</td>
-                <td className="border-b p-4 text-sm">{user.bankDetails}</td>
                 <td className="border-b p-4 text-sm text-playden-primary cursor-pointer">
-                  <Link to={`/pitch-admin-management/${user.id}`} className="font-bold">
+                  <Link
+                    to={`/pitch-admin-management/${user.id}`}
+                    state={{ user }} 
+                    className="font-bold"
+                  >
                     View details
                   </Link>
                 </td>
@@ -150,6 +160,101 @@ const PitchAdminManagement: React.FC = () => {
       )}
 
       <Pagination />
+
+      {/* Modal for Adding New Admin */}
+{showModal && (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 overflow-y-auto">
+    <div className="bg-white p-6 rounded-lg w-96">
+      <h2 className="text-xl font-semibold mb-4">Add New Admin</h2>
+      <form onSubmit={handleFormSubmit}>
+      <label>User Role</label>
+        <input
+          type="text"
+          name="user_role"
+          defaultValue={formData.user_role}
+          placeholder="User Role"
+          value={formData.user_role}
+          onChange={handleInputChange}
+          className="w-full mb-4 p-2 border rounded"
+          required
+        />
+        <label>Full Name</label>
+        <input
+          type="text"
+          name="full_name"
+          placeholder="Full Name"
+          value={formData.full_name}
+          onChange={handleInputChange}
+          className="w-full mb-4 p-2 border rounded"
+          required
+        />
+        <label>Email:</label>
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          value={formData.email}
+          onChange={handleInputChange}
+          className="w-full mb-4 p-2 border rounded"
+          required
+        />
+        <label>Username: </label>
+        <input
+          type="text"
+          name="username"
+          placeholder="Username"
+          value={formData.username}
+          onChange={handleInputChange}
+          className="w-full mb-4 p-2 border rounded"
+          required
+        />
+        <label>Address: </label>
+        <input
+          type="text"
+          name="address"
+          placeholder="Address"
+          value={formData.address}
+          onChange={handleInputChange}
+          className="w-full mb-4 p-2 border rounded"
+          required
+        />
+        <label>Phone Number: </label>
+        <input
+          type="text"
+          name="phone_number"
+          placeholder="Phone Number"
+          value={formData.phone_number}
+          onChange={handleInputChange}
+          className="w-full mb-4 p-2 border rounded"
+          required
+        />
+        <label>Password: </label>
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          value={formData.password}
+          onChange={handleInputChange}
+          className="w-full mb-4 p-2 border rounded"
+          required
+        />
+        <div className="flex justify-end gap-2">
+          <button
+            type="button"
+            onClick={() => setShowModal(false)}
+            className="bg-gray-500 text-white p-2 rounded"
+          >
+            Cancel
+          </button>
+          <button type="submit" className="bg-playden-primary text-white p-2 rounded">
+            Save
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+)}
+
     </div>
   );
 };

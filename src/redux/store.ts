@@ -1,6 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./authSlice";
 import adminReducer from "./PitchAdmin";
+import adminUserReducer from "./adminSlice";
 import bookingReducer from './bookingSlice';
 import cancellationReducer from './cancellationSlice';
 import settingsReducer from './settingsSlice';
@@ -16,6 +17,7 @@ export const store = configureStore({
         admin: adminReducer,
         bookings: bookingReducer,
         cancellations: cancellationReducer,
+        adminUser: adminUserReducer,
         financials: financialsReducer,
         settings: settingsReducer,
         users: userReducer,

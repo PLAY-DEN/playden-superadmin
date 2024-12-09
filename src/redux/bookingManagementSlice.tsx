@@ -41,6 +41,7 @@ export const fetchBookingDetails = createAsyncThunk(
   async (id: string) => {
     try {
       const response = await apiClient(`bookings/${id}`, 'GET');  
+      console.log(response);
       return response.data;
     } catch (error: any) {
       throw new Error(error.message || 'Failed to fetch booking details');

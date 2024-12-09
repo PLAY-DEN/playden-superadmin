@@ -51,7 +51,7 @@ const BookingDetails: React.FC = () => {
         <div>
           <h2 className="ml-60 mt-14 font-bold">Booking Details</h2>
           <img
-            src={bookingImg}
+            src={bookingDetails.qr_code_path}
             alt={`${bookingDetails.user?.username}'s profile`}
             className="mt-[-18px]"
           />
@@ -82,7 +82,7 @@ const BookingDetails: React.FC = () => {
               </tr>
               <tr className="border-none">
                 <td className="font-semibold pr-8 py-2">Amount Paid:</td>
-                <td className="font-bold">{bookingDetails.total_cost || 'N/A'}</td>
+                <td className="font-bold">{bookingDetails.sub_total || 'N/A'}</td>
               </tr>
             </tbody>
           </table>
