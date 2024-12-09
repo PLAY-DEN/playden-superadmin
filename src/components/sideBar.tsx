@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useDispatch } from "react-redux";
 import {
     profileImage,
     pitch,
@@ -10,22 +10,30 @@ import {
     user,
     dashboard,
     cancle,
-    logout
+    logout as logoutIcon,
 } from "../assets/images";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { logout } from "../redux/authSlice"; // Import logout action
 
 const Sidebar: React.FC = () => {
-    const [activeLink, setActiveLink] = useState('Dashboard');
+    const [activeLink, setActiveLink] = useState("Dashboard");
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        // Dispatch logout action to clear Redux state and localStorage
+        dispatch(logout());
+
+        // Navigate to login page
+        navigate("/login");
+    };
 
     return (
         <div className="h-screen w-[275px] shadow-2xl mt-16 font-poppins p-6 fixed flex flex-col text-playden-primary bg-[#8F55A21A] transition-all duration-300">
             {/* Top Section: Profile */}
             <div className="pt-5 flex items-center gap-2">
-                <img 
-                    src={profileImage} 
-                    alt="profile" 
-                    className="w-10 h-10 rounded-full"
-                />
+                <img src={profileImage} alt="profile" className="w-10 h-10 rounded-full" />
                 <div className="flex flex-col gap-1">
                     <p className="font-bold text-xs">Sophie Super Admin</p>
                     <p className="text-xs font-semibold">Zakbuilds213@gmail.com</p>
@@ -36,58 +44,55 @@ const Sidebar: React.FC = () => {
             <div className="mt-2">
                 <a
                     href="/"
-                    onClick={() => setActiveLink('Dashboard')}
-                    className={`flex items-center gap-4 px-4 mt-8 py-2 text-xs font-bold rounded-md hover:bg-[#35354C] hover:text-white
-                        ${activeLink === 'Dashboard' ? 'bg-[#35354C] text-white relative' : ''}`}
+                    onClick={() => setActiveLink("Dashboard")}
+                    className={`flex items-center gap-4 px-4 mt-8 py-2 text-xs font-bold rounded-md hover:bg-[#35354C] hover:text-white ${
+                        activeLink === "Dashboard" ? "bg-[#35354C] text-white relative" : ""
+                    }`}
                 >
-                    <img 
-                        src={dashboard} 
+                    <img
+                        src={dashboard}
                         alt="Dashboard Icon"
                         className="w-4 h-4"
-                        style={{ filter: activeLink === 'Dashboard' ? 'brightness(0) invert(1)' : 'brightness(0) invert(0.2)' }}
+                        style={{
+                            filter:
+                                activeLink === "Dashboard"
+                                    ? "brightness(0) invert(1)"
+                                    : "brightness(0) invert(0.2)",
+                        }}
                     />
                     <span>Dashboard</span>
-                    {activeLink === 'Dashboard' && 
-                    <span className="absolute right-2 top-4 transform -translate-y-1/2 text-xs font-bold">
-                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" className="size-5">
-                           <path fillRule="evenodd" d="M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z" clipRule="evenodd" />
-                        </svg>
-                    </span>}
                 </a>
             </div>
 
             {/* Middle Section: Navigation Links */}
             <div className="flex flex-col gap-1 mt-2">
                 <h1 className="font-bold text-xs">MENU</h1>
-                
+
                 {/* Menu Links */}
                 {[
-                    { name: 'Pitch Listing', icon: pitch, route: '/pitch-listing' },
-                    { name: 'Booking Management', icon: booking, route: '/booking-management' },
-                    { name: 'Cancellation', icon: cancle, route: '/cancellation-management'  },
-                    { name: 'Play Points', icon: playPoint, route: '/play-point' },
-                    { name: 'Financials & Analytics', icon: finance, route: '/finances' },
-                ].map(item => (
+                    { name: "Pitch Listing", icon: pitch, route: "/pitch-listing" },
+                    { name: "Booking Management", icon: booking, route: "/booking-management" },
+                    { name: "Cancellation", icon: cancle, route: "/cancellation-management" },
+                    { name: "Play Points", icon: playPoint, route: "/play-point" },
+                    { name: "Financials & Analytics", icon: finance, route: "/finances" },
+                ].map((item) => (
                     <Link
                         key={item.name}
                         to={item.route}
                         onClick={() => setActiveLink(item.name)}
-                        className={`flex items-center gap-3 px-2 py-2 text-sm font-bold rounded-md hover:bg-[#35354C] hover:text-white 
-                            ${activeLink === item.name ? 'bg-[#35354C] text-white relative' : ''}`}
+                        className={`flex items-center gap-3 px-2 py-2 text-sm font-bold rounded-md hover:bg-[#35354C] hover:text-white ${
+                            activeLink === item.name ? "bg-[#35354C] text-white relative" : ""
+                        }`}
                     >
-                        <img 
-                            src={item.icon} 
-                            alt={`${item.name} Icon`} 
-                            className="w-4 h-4" 
-                            style={{ filter: activeLink === item.name ? 'brightness(0) invert(1)' : '' }}
+                        <img
+                            src={item.icon}
+                            alt={`${item.name} Icon`}
+                            className="w-4 h-4"
+                            style={{
+                                filter: activeLink === item.name ? "brightness(0) invert(1)" : "",
+                            }}
                         />
                         <span>{item.name}</span>
-                        {activeLink === item.name && 
-                        <span className="absolute right-2 text-xs font-bold">
-                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" className="size-5">
-                                 <path fill-rule="evenodd" d="M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z" clip-rule="evenodd" />
-                             </svg>
-                        </span>}
                     </Link>
                 ))}
             </div>
@@ -95,44 +100,44 @@ const Sidebar: React.FC = () => {
             {/* Third Section: Profile Links */}
             <div className="flex flex-col gap-2 mt-4">
                 <h1 className="font-bold text-xs">PROFILE</h1>
-                
-                {/* Menu Links */}
+
+                {/* Profile Links */}
                 {[
-                     { name: 'User Management', icon: user, route: '/user-management' },                     
-                     { name: 'Pitch Admin Management', icon: pitchAdmin, route: '/pitch-admin-management'  }, 
-                     { name: 'Settings', icon: setting, route: '/account-settings'  },
-                ].map(item => (
+                    { name: "User Management", icon: user, route: "/user-management" },
+                    { name: "Pitch Admin Management", icon: pitchAdmin, route: "/pitch-admin-management" },
+                    { name: "Settings", icon: setting, route: "/account-settings" },
+                ].map((item) => (
                     <Link
                         key={item.name}
                         to={item.route}
                         onClick={() => setActiveLink(item.name)}
-                        className={`flex items-center gap-3 px-2 py-2 text-sm font-bold rounded-md hover:bg-[#35354C] hover:text-white 
-                            ${activeLink === item.name ? 'bg-[#35354C] text-white relative' : ''}`}
+                        className={`flex items-center gap-3 px-2 py-2 text-sm font-bold rounded-md hover:bg-[#35354C] hover:text-white ${
+                            activeLink === item.name ? "bg-[#35354C] text-white relative" : ""
+                        }`}
                     >
-                        <img 
-                            src={item.icon} 
-                            alt={`${item.name} Icon`} 
-                            className="w-4 h-4" 
-                            style={{ filter: activeLink === item.name ? 'brightness(0) invert(1)' : '' }}
+                        <img
+                            src={item.icon}
+                            alt={`${item.name} Icon`}
+                            className="w-4 h-4"
+                            style={{
+                                filter: activeLink === item.name ? "brightness(0) invert(1)" : "",
+                            }}
                         />
                         <span>{item.name}</span>
-                        {activeLink === item.name && 
-                        <span className="absolute right-2 text-xs font-bold">
-                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" className="size-5">
-                                <path fill-rule="evenodd" d="M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z" clip-rule="evenodd" />
-                            </svg>
-                        </span>}
                     </Link>
                 ))}
             </div>
 
             {/* Bottom Section: Logout */}
-            <div className="flex items-center gap-1 px-2 font-bold py-2 rounded-md text-red-500 cursor-pointer">
-                <img src={logout} alt="Logout Icon" className="w-4 h-4" />
+            <div
+                onClick={handleLogout}
+                className="flex items-center gap-1 px-2 font-bold py-2 rounded-md text-red-500 cursor-pointer"
+            >
+                <img src={logoutIcon} alt="Logout Icon" className="w-4 h-4" />
                 <span>Logout</span>
             </div>
         </div>
     );
 };
 
-export default Sidebar
+export default Sidebar;
