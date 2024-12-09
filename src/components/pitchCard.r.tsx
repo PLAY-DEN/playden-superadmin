@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { apiClient } from "../utils/apiClient";
 
 interface PitchCardProps {
@@ -39,19 +40,21 @@ const PitchCard: React.FC<PitchCardProps> = ({
     navigate(`/update-pitch/${id}`); // Navigate to update page
   };
 
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const handleDelete = async () => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this pitch? This action cannot be undone."
-    );
+    const confirmDelete = window.confirm("Are you sure?");
     if (!confirmDelete) return;
 
+    setIsDeleting(true);
     try {
       await apiClient(`admin/pitches/${id}`, "DELETE");
-      alert("Pitch deleted successfully.");
-      window.location.reload();
-    } catch (error: any) {
-      console.error("Error deleting pitch:", error);
-      alert("Failed to delete the pitch. Please try again.");
+      alert("Pitch deleted.");
+      setIsDeleting(false);
+    } catch (error) {
+      console.error(error);
+      alert("Failed to delete.");
+      setIsDeleting(false);
     }
   };
 
@@ -74,11 +77,17 @@ const PitchCard: React.FC<PitchCardProps> = ({
         </button>
         <div className="flex flex-row gap-2 mr-10">
           <button
-            className="bg-white border-2 border-red-500 rounded-lg px-4 py-2 text-xs text-red"
+            disabled={isDeleting}
+            className={`bg-white border-2 ${
+              isDeleting ? "border-gray-500" : "border-red-500"
+            } rounded-lg px-4 py-2 text-xs ${
+              isDeleting ? "text-gray-500" : "text-red"
+            }`}
             onClick={handleDelete}
           >
-            Delete
+            {isDeleting ? "Deleting..." : "Delete"}
           </button>
+
           <button
             className="bg-playden-primary rounded-lg px-4 py-2 text-xs text-white"
             onClick={handleUpdate}
