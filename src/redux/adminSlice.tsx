@@ -1,12 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { apiClient } from "../utils/apiClient";
 
+// Action to create an admin (as you already have)
 export const createAdmin = createAsyncThunk(
   "adminUser/createAdmin",
   async (adminData: any, { rejectWithValue }) => {
     try {
       const response = await apiClient("admin/users", "POST", adminData);
-    //   console.log(response);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Failed to create admin");
@@ -14,9 +14,22 @@ export const createAdmin = createAsyncThunk(
   }
 );
 
+// Action to set logged-in admin details
+export const setAdmin = createAsyncThunk(
+  "adminUser/setAdmin",
+  async (adminData: { name: string; email: string }) => {
+    // You can call an API here if necessary to get admin data
+    return adminData; // Return the passed adminData
+  }
+);
+
 const adminUserSlice = createSlice({
   name: "adminUser",
-  initialState: { loading: false, error: null },
+  initialState: {
+    loading: false,
+    error: null,
+    admin: null, // Store the admin data here
+  },
   reducers: {},
   extraReducers: (builder) => {
     builder
@@ -30,6 +43,10 @@ const adminUserSlice = createSlice({
       .addCase(createAdmin.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
+      })
+      // Handle the setAdmin action
+      .addCase(setAdmin.fulfilled, (state, action) => {
+        state.admin = action.payload; // Store the logged-in admin's data
       });
   },
 });

@@ -9,7 +9,10 @@ interface AuthState {
 }
 
 const initialState: AuthState = {
-  user: null,
+  user: {
+    name: "Sophie Suer Admin",
+    email: "Zakbuilds213@gmail.com",
+},
   token: localStorage.getItem("token") || null,  // Retrieve token from localStorage on initialization
   loading: false,
   error: null,

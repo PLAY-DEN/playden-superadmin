@@ -1,4 +1,4 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
     profileImage,
     pitch,
@@ -14,12 +14,15 @@ import {
 } from "../assets/images";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { logout } from "../redux/authSlice"; // Import logout action
+import { logout } from "../redux/authSlice"; 
+import { RootState } from "../redux/store";
 
 const Sidebar: React.FC = () => {
     const [activeLink, setActiveLink] = useState("Dashboard");
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    const { admin } = useSelector((state: RootState) => state.adminUser);
 
     const handleLogout = () => {
         // Dispatch logout action to clear Redux state and localStorage
@@ -35,8 +38,8 @@ const Sidebar: React.FC = () => {
             <div className="pt-5 flex items-center gap-2">
                 <img src={profileImage} alt="profile" className="w-10 h-10 rounded-full" />
                 <div className="flex flex-col gap-1">
-                    <p className="font-bold text-xs">Sophie Super Admin</p>
-                    <p className="text-xs font-semibold">Zakbuilds213@gmail.com</p>
+                    <p className="font-bold text-xs">{admin?.name || "Pitch Admin"}</p>
+                    <p className="text-xs font-semibold"> {admin?.user_id || "admin@example.com"}</p>
                 </div>
             </div>
 

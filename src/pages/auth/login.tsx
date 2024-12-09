@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../../redux/authSlice';
 import { RootState } from '../../redux/store';
 import { useNavigate } from 'react-router-dom';
+import { setAdmin } from '../../redux/adminSlice';
 
 const LoginValidationSchema = Yup.object({
     user_id: Yup.string()
@@ -47,9 +48,17 @@ const LoginValidationSchema = Yup.object({
         user_id: values.user_id,  // user_id could be email, phone number, or username
         password: values.password,  // password field
       };
+
+      const adminData = {
+        name: values.user_id,
+      };
   
       try {
         await dispatch(loginUser(credentials)).unwrap();
+        const adminData = {
+          name: values.user_id,
+        };
+        dispatch(setAdmin(adminData));
         // Redirect user or dashboard   
         navigate('/')
 
