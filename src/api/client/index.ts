@@ -3,7 +3,7 @@ import { IParams } from "../../types/client";
 // import { decryptData } from "../../utils/utils";
 
 const client = axios.create({
-  baseURL: import.meta.env.VITE_URL,
+  baseURL: import.meta.env.VITE_BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },

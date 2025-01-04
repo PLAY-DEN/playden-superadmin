@@ -1,0 +1,22 @@
+import { ApiClient } from ".";
+import { IParams } from "../../types/client";
+import API_ENDPOINTS from "./_endpoint";
+
+const userClient = {
+    getUsers: (params: IParams): Promise<any> =>
+        ApiClient.get(API_ENDPOINTS.GET_USERS, params),
+
+    // getCategory: (params: IParams, id: string): Promise<any> =>
+    //     ApiClient.get(API_ENDPOINTS.GET_CATEGORY.replace(":id", id), params),
+    // createCategory: (data: any): Promise<any> => {
+    //     const formData = objectToFormData(data);
+    //     return ApiClient.post(API_ENDPOINTS.CREATE_CATEGORY, formData, { headers: { "Content-Type": "multipart/form-data" } })
+    // },
+    // updateCategory: (data: any, id: string): Promise<any> =>
+    //     ApiClient.post(API_ENDPOINTS.UPDATE_CATEGORY.replace(":id", id) +
+    //         "?_method=PUT", data),
+    // deleteCategory: (id: string): Promise<any> =>
+    //     ApiClient.delete(API_ENDPOINTS.DELETE_CATEGORY.replace(":id", id)),
+};
+
+export default userClient;

@@ -1,6 +1,7 @@
 // bookingManagementSlice.ts
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { apiClient } from '../utils/apiClient';
+import API_ENDPOINTS from '../api/client/_endpoint';
 
 interface BookingsState {
   bookings: any[];
@@ -25,9 +26,10 @@ const initialState: BookingsState = {
 // Thunk for fetching bookings with pagination
 export const fetchBookingsMgt = createAsyncThunk(
   'bookings/fetchBookings',
-  async ({ page }: { page: number; }) => {
+  async ({ page, search }: { page: number; search?: string }) => {
     try {
-      const response = await apiClient(`bookings?page=${page}`, 'GET');
+      const query = new URLSearchParams({ page: String(page), search: search || '' }).toString();
+      const response = await apiClient(`${API_ENDPOINTS.GET_BOOKINGS}?${query}`, 'GET');
       return response.data;
     } catch (error: any) {
       throw new Error(error.message || 'Failed to fetch bookings');
@@ -35,13 +37,13 @@ export const fetchBookingsMgt = createAsyncThunk(
   }
 );
 
+
 // Thunk for fetching booking details by ID
 export const fetchBookingDetails = createAsyncThunk(
   'bookings/fetchBookingDetails',
   async (id: string) => {
     try {
-      const response = await apiClient(`bookings/${id}`, 'GET');  
-      console.log(response);
+      const response = await apiClient(`${API_ENDPOINTS.GET_BOOKINGS}/${id}`, 'GET');  
       return response.data;
     } catch (error: any) {
       throw new Error(error.message || 'Failed to fetch booking details');

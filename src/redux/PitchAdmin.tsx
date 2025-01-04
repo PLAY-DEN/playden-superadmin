@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { apiClient } from '../utils/apiClient';
+import API_ENDPOINTS from '../api/client/_endpoint';
 
 interface AdminState {
   users: any[];
@@ -17,9 +18,7 @@ const initialState: AdminState = {
 
 export const fetchUsers = createAsyncThunk('admin/fetchUsers', async (token: string) => {
   try {
-    
-    const data = await apiClient('admin/users', 'GET');
-    console.log(data);
+    const data = await apiClient(API_ENDPOINTS.GET_USERS, 'GET');
     return data; 
   } catch (error) {
     throw new Error(error instanceof Error ? error.message : 'Failed to fetch users');

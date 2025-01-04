@@ -1,27 +1,33 @@
+
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchSettings } from "../redux/settingsSlice";
 import { apiClient } from "../utils/apiClient";
 import { RootState } from "../redux/store";
 import { Editor } from "@tinymce/tinymce-react";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
+import { Loader, Switch } from "rizzui";
 
 const AccountSettings: React.FC = () => {
-  const dispatch = useDispatch();
+  const dispatch: any = useDispatch();
   const { data: settings, loading, error } = useSelector((state: RootState) => state.settings);
 
-  const wysiwyg = import.meta.env.VITE_WYSIWYG;
+  const wysiwyg = import.meta.env.VITE_WYSIWYG || "vo7hiyrk5rc1h6f5cdfkmd5dokr1k7ypwdkxtk8hae26c5bs";
 
   const [formData, setFormData] = useState({
     name: "",
     url: "",
-    cashbackValue: "",
-    referrerCreditValue: "",
-    hasBookingCancellation: false,
-    privacyPolicy: "",
-    termsOfService: "",
-    contactUs: "",
-    pitchOwnerPercent: "",
+    pushNotificationsData: null,
+    cashback_value: "",
+    currency: "",
+    referrerCreditValueReferee: "",
+    referrerCreditValueReferrer: "",
+    has_booking_cancellation: false,
+    privacy_policy: "",
+    terms_of_service: "",
+    about_us: "",
+    contact_us: "",
+    pitch_owner_percent: "",
   });
 
   const [isSaving, setIsSaving] = useState(false);
@@ -37,18 +43,22 @@ const AccountSettings: React.FC = () => {
       setFormData({
         name: settings.name || "",
         url: settings.url || "",
-        cashbackValue: settings.cashback_value?.toString() || "",
-        referrerCreditValue: settings.referrer_credit_value?.referee?.toString() || "",
-        hasBookingCancellation: settings.has_booking_cancellation || false,
-        privacyPolicy: settings.privacy_policy || "",
-        termsOfService: settings.terms_of_service || "",
-        contactUs: settings.contact_us || "",
-        pitchOwnerPercent: settings.pitch_owner_percent || "",
+        pushNotificationsData: settings.push_notifications_data || null,
+        cashback_value: settings.cashback_value?.toString() || "",
+        currency: settings.currency || "",
+        referrerCreditValueReferee: settings.referrer_credit_value?.referee?.toString() || "",
+        referrerCreditValueReferrer: settings.referrer_credit_value?.referrer?.toString() || "",
+        has_booking_cancellation: settings.has_booking_cancellation || false,
+        privacy_policy: settings.privacy_policy || "",
+        terms_of_service: settings.terms_of_service || "",
+        about_us: settings.about_us || "",
+        contact_us: settings.contact_us || "",
+        pitch_owner_percent: settings.pitch_owner_percent || "",
       });
     }
   }, [settings]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | any>) => {
     const { name, value, type, checked } = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -70,10 +80,19 @@ const AccountSettings: React.FC = () => {
       return;
     }
 
+    const payload: any = {
+      ...formData,
+      referrer_credit_value: {
+        referee: Number(formData.referrerCreditValueReferee),
+        referrer: Number(formData.referrerCreditValueReferrer),
+      },
+    };
+
+    delete payload.referrerCreditValueReferee;
+    delete payload.referrerCreditValueReferrer;
     try {
       setIsSaving(true);
-      const response = await apiClient("1/settings", "PUT", formData); // Save API
-      // console.log("Save Response:", response)
+      await apiClient("api/v1/1/settings", "PUT", payload);
       toast.success("Settings saved successfully!");
     } catch (err: any) {
       toast.warning(err.response?.data?.message || "Failed to save settings");
@@ -83,7 +102,11 @@ const AccountSettings: React.FC = () => {
   };
 
   if (loading) {
-    return <div className="bg-white mt-8">Loading...</div>;
+    return (
+      <div className="flex justify-center mt-36">
+        <Loader />
+      </div>
+    );
   }
 
   if (error) {
@@ -95,143 +118,189 @@ const AccountSettings: React.FC = () => {
   }
 
   return (
-    <div className="bg-white mt-8 p-6 rounded-md shadow-md">
-      <h2 className="text-lg font-semibold mb-6">Account Settings</h2>
+    <div className="bgwhite mt-8 p-6 roundedmd shadowmd">
+      <ToastContainer />
+      <h2 className="text-lg font-semibold mb-6">System Settings</h2>
+      <form>
+        <div className="grid grid-cols-3 gap-3">
 
-      <form className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Name */}
-        <div>
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-            Name <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleInputChange}
-            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            required
-          />
-        </div>
+          <div className="col-span-2 border-r pr-3">
+            {/* Name */}
+            <div className="mb-4">
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                Name
+              </label>
+              <input
+                type="text"
+                name="name"
+                id="name"
+                value={formData.name}
+                onChange={handleInputChange}
+                className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+            </div>
 
-        {/* URL */}
-        <div>
-          <label htmlFor="url" className="block text-sm font-medium text-gray-700">
-            URL
-          </label>
-          <input
-            type="text"
-            id="referrerCreditValue"
-            name="referrerCreditValue"
-            value={formData.referrerCreditValue}
-            onChange={handleInputChange}
-            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          />
-        </div>
+            {/* URL */}
+            <div className="mb-4">
+              <label htmlFor="url" className="block text-sm font-medium text-gray-700">
+                URL
+              </label>
+              <input
+                type="text"
+                name="url"
+                id="url"
+                value={formData.url}
+                onChange={handleInputChange}
+                className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                disabled
+              />
+            </div>
 
-        {/* Contact Us */}
-        <div>
-          <label htmlFor="url" className="block text-sm font-medium text-gray-700">
-            Contact No.
-          </label>
-          <input
-            type="tel"
-            id="contactUs"
-            name="contactUs"
-            value={formData.contactUs}
-            onChange={handleInputChange}
-            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          />
-        </div>
+            {/* Cashback Value */}
+            <div className="mb-4">
+              <label htmlFor="cashback_value" className="block text-sm font-medium text-gray-700">
+                Cashback Value
+              </label>
+              <input
+                type="number"
+                name="cashback_value"
+                id="cashback_value"
+                value={formData.cashback_value}
+                onChange={handleInputChange}
+                className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+            </div>
 
-        {/* Referree Credit Value */}
-        <div>
-          <label htmlFor="url" className="block text-sm font-medium text-gray-700">
-            Referrer Credit value
-          </label>
-          <input
-            type="text"
-            id="url"
-            name="url"
-            value={formData.url}
-            onChange={handleInputChange}
-            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          />
-        </div>
+            {/* Cashback Value */}
+            <div className="mb-4">
+              <label htmlFor="pitch_owner_percent" className="block text-sm font-medium text-gray-700">
+                pitch Owner Percent
+              </label>
+              <input
+                type="number"
+                name="pitch_owner_percent"
+                id="pitch_owner_percent"
+                value={formData.pitch_owner_percent}
+                onChange={handleInputChange}
+                className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+            </div>
 
-        {/* Cashback Value */}
-        <div>
-          <label htmlFor="cashbackValue" className="block text-sm font-medium text-gray-700">
-            Cashback Value
-          </label>
-          <input
-            type="number"
-            id="cashbackValue"
-            name="cashbackValue"
-            value={formData.cashbackValue}
-            onChange={handleInputChange}
-            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          />
-        </div>
+            {/* Currency */}
+            <div className="mb-4">
+              <label htmlFor="currency" className="block text-sm font-medium text-gray-700">
+                Currency
+              </label>
+              <input
+                type="text"
+                name="currency"
+                id="currency"
+                value={formData.currency}
+                onChange={handleInputChange}
+                className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                disabled
+              />
+            </div>
 
-        {/* Privacy Policy */}
-        <div className="col-span-2">
-          <label htmlFor="privacyPolicy" className="block text-sm font-medium text-gray-700">
-            Privacy Policy
-          </label>
-          <Editor
-            value={formData.privacyPolicy}
-            onEditorChange={(content) => handleEditorChange(content, "privacyPolicy")}
-            init={{
-              apiKey: wysiwyg,
-              height: 300,
-              menubar: true,
-              plugins: [
-                "advlist autolink lists link image charmap print preview anchor",
-                "searchreplace visualblocks code fullscreen",
-                "insertdatetime media table paste code help wordcount",
-              ],
-              toolbar:
-                "undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help",
-            }}
-          />
-        </div>
+            {/* Privacy Policy */}
+            <div className="mb-4">
+              <label htmlFor="privacy_policy" className="block text-sm font-medium text-gray-700">
+                Privacy Policy
+              </label>
+              <Editor
+                apiKey={wysiwyg}
+                value={formData.privacy_policy}
+                init={{
+                  height: 200,
+                  menubar: false,
+                  plugins: ["link", "lists", "table"],
+                  toolbar: "bold italic | alignleft aligncenter alignright | bullist numlist outdent indent | table",
+                }}
+                onEditorChange={(content) => handleEditorChange(content, "privacy_policy")}
+              />
+            </div>
 
-        <div className="col-span-2">
-          <label htmlFor="privacyPolicy" className="block text-sm font-medium text-gray-700">
-            Terms of Services
-          </label>
-          <Editor
-            value={formData.termsOfService}
-            onEditorChange={(content) => handleEditorChange(content, "termsOfService")}
-            init={{
-              apiKey: wysiwyg,
-              height: 300,
-              menubar: true,
-              plugins: [
-                "advlist autolink lists link image charmap print preview anchor",
-                "searchreplace visualblocks code fullscreen",
-                "insertdatetime media table paste code help wordcount",
-              ],
-              toolbar:
-                "undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help",
-            }}
-          />
-        </div>
+            {/* Privacy Policy */}
+            <div className="mb-4">
+              <label htmlFor="privacy_policy" className="block text-sm font-medium text-gray-700">
+                Terms of Service
+              </label>
+              <Editor
+                apiKey={wysiwyg}
+                value={formData.terms_of_service}
+                init={{
+                  height: 200,
+                  menubar: false,
+                  plugins: ["link", "lists", "table"],
+                  toolbar: "bold italic | alignleft aligncenter alignright | bullist numlist outdent indent | table",
+                }}
+                onEditorChange={(content) => handleEditorChange(content, "terms_of_service")}
+              />
+            </div>
 
-        {/* Save Button */}
-        <div className="col-span-2">
-          <button
-            type="button"
-            onClick={handleSave}
-            disabled={isSaving}
-            className={`w-full px-4 py-2 text-white rounded-md shadow-sm ${
-              isSaving ? "bg-gray-400 cursor-not-allowed" : "bg-playden-primary hover:bg-playden-primary"
-            }`}
-          >
-            {isSaving ? "Saving..." : "Save Changes"}
-          </button>
+            {/* Save Button */}
+            <div className="mt-6">
+              <button
+                type="button"
+                onClick={handleSave}
+                disabled={isSaving}
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                {isSaving ? "Saving..." : "Save Changes"}
+              </button>
+            </div>
+          </div>
+
+          <div className="col-span-1">
+            <div className="mb-4 flex justify-between items-center">
+              <label htmlFor="contact_us" className="block text-sm font-medium text-gray-700">
+                Booking cancellation
+              </label>
+
+              <Switch
+                name="has_booking_cancellation"
+                checked={formData.has_booking_cancellation}
+                onChange={handleInputChange}
+              />
+              {/* <input
+                type="text"
+                name="contact_us"
+                id="contact_us"
+                value={formData.contact_us}
+                onChange={handleInputChange}
+                className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              /> */}
+            </div>
+
+            <div className="mb-4">
+              <label htmlFor="referrerCreditValueReferee" className="block text-sm font-medium text-gray-700">
+                Referee Credit Value
+              </label>
+              <input
+                type="number"
+                name="referrerCreditValueReferee"
+                id="referrerCreditValueReferee"
+                value={formData.referrerCreditValueReferee}
+                onChange={handleInputChange}
+                className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+            </div>
+
+            <div className="mb-4">
+              <label htmlFor="referrerCreditValueReferrer" className="block text-sm font-medium text-gray-700">
+                Referrer Credit Value
+              </label>
+              <input
+                type="number"
+                name="referrerCreditValueReferrer"
+                id="referrerCreditValueReferrer"
+                value={formData.referrerCreditValueReferrer}
+                onChange={handleInputChange}
+                className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+            </div>
+
+          </div>
         </div>
       </form>
     </div>

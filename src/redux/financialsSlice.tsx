@@ -1,18 +1,22 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { apiClient } from "../utils/apiClient";
+import API_ENDPOINTS from "../api/client/_endpoint";
 
 // Fetch pending payouts with pagination
 export const fetchPendingPayouts = createAsyncThunk(
   "financials/fetchPendingPayouts",
-  async ({ page = 1, perPage = 10 }, thunkAPI) => {
+  async ({ page = 1, perPage = 10 }: {
+    page: number;
+    perPage: number;
+  }, thunkAPI) => {
     try {
       const response = await apiClient(
-        `admin/pitch-owners/pending-payouts?page=${page}&per_page=${perPage}`,
+        `${API_ENDPOINTS.GET_PENDING_PAYOUT}?page=${page}&per_page=${perPage}`,
         "GET"
       );
       return response.data; // Expecting data with { records, current_page, total_pages, total_items }
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.response?.data || error.message);
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.response?.data || error.message || "Error getting records");
     }
   }
 );
@@ -55,6 +59,6 @@ const financialsSlice = createSlice({
 });
 
 export const { setPage } = financialsSlice.actions;
-export const { markAsPaid} = financialsSlice.actions;
+export const { markAsPaid } = financialsSlice.actions;
 
 export default financialsSlice.reducer;

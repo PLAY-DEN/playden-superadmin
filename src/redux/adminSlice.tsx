@@ -1,12 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { apiClient } from "../utils/apiClient";
+import API_ENDPOINTS from "../api/client/_endpoint";
 
 // Action to create an admin (as you already have)
 export const createAdmin = createAsyncThunk(
   "adminUser/createAdmin",
   async (adminData: any, { rejectWithValue }) => {
     try {
-      const response = await apiClient("admin/users", "POST", adminData);
+      const response = await apiClient(API_ENDPOINTS.GET_USERS, "POST", adminData);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Failed to create admin");
@@ -28,7 +29,7 @@ const adminUserSlice = createSlice({
   initialState: {
     loading: false,
     error: null,
-    admin: null, // Store the admin data here
+    admin: {}, // Store the admin data here
   },
   reducers: {},
   extraReducers: (builder) => {

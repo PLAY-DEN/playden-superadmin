@@ -1,4 +1,5 @@
-import CryptoJS from "crypto-js";
+
+import { format } from 'date-fns';
 
 
 export function objectToFormData<T extends Record<string, any>>(
@@ -11,21 +12,14 @@ export function objectToFormData<T extends Record<string, any>>(
     if (value instanceof File || value instanceof Blob) {
       formData.append(key, value); // Append files or blobs directly
     } else {
-      formData.append(key, value.toString()); // Convert other values to strings
+      formData.append(key, value?.toString()); // Convert other values to strings
     }
   });
 
   return formData;
 }
 
-
-const SECRET_KEY = import.meta.env.VITE_SECRET_KEY || "default_secret_key";
-
-export const encryptData = (data: string) => {
-  return CryptoJS.AES.encrypt(data, SECRET_KEY).toString();
-};
-
-export const decryptData = (ciphertext: string) => {
-  const bytes = CryptoJS.AES.decrypt(ciphertext, SECRET_KEY);
-  return bytes.toString(CryptoJS.enc.Utf8);
+export const formatDate = (dateString: string, dateFormat = 'MMMM dd, yyyy, hh:mm a') => {
+  const date = new Date(dateString);
+  return format(date, dateFormat);
 };

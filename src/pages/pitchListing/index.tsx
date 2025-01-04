@@ -2,47 +2,41 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
-import Swal from "sweetalert2";
 import { RootState } from "../../redux/store";
-import { apiClient } from "../../utils/apiClient";
 import PitchCard from "../../components/pitchCard.r";
 import { plus } from "../../assets/images";
 import "react-toastify/dist/ReactToastify.css";
+import { Loader } from "rizzui";
+import Pagination from "../../components/paginator";
+import Button from "../../components/forms/button";
+import pitchClient from "../../api/client/pitch";
 
 const PitchListing: React.FC = () => {
   const navigate = useNavigate();
-  const token = useSelector((state: RootState) => state.auth.token); 
+  const token = useSelector((state: RootState) => state.auth.token);
   const [pitches, setPitches] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1); 
-  const [totalPages, setTotalPages] = useState(1); 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [isDeleted, setIsDeleted] = useState(false);
 
   const fetchPitches = async (page: number) => {
     if (!token) {
-      toast.error("No Bearer token provided. Please log in.", { position: "top-right" });
+      navigate('/login');
+      toast.error("Token expired, Kindly re-login");
       return;
     }
 
+    setLoading(true);
     try {
-      setLoading(true);
-      const response = await apiClient(`admin/pitches?page=${page}`, "GET");
+      const response = await pitchClient.getPitches({
+        page: page
+      });
 
       const fetchedPitches = response.data.pitches || [];
+
       const { current_page, last_page } = response.data;
 
-      if (fetchedPitches.length === 0) {
-        Swal.fire({
-          title: "No Pitches Found",
-          text: "There are currently no pitches in the database.",
-          icon: "info",
-          confirmButtonText: "OK",
-        });
-        toast.info("No pitch found", { position: "top-right" });
-      } else {
-        toast.success("Pitches loaded successfully!", { position: "top-right" });
-      }
-
-      
       setPitches(fetchedPitches);
       setCurrentPage(current_page);
       setTotalPages(last_page);
@@ -57,11 +51,12 @@ const PitchListing: React.FC = () => {
 
   useEffect(() => {
     fetchPitches(currentPage);
-  }, [currentPage]); 
+    return () => setIsDeleted(false);
+  }, [currentPage, isDeleted]);
 
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= totalPages) {
-      setCurrentPage(newPage); 
+      setCurrentPage(newPage);
     }
   };
 
@@ -70,69 +65,43 @@ const PitchListing: React.FC = () => {
       <ToastContainer />
       <div className="flex flex-row justify-between">
         <h2 className="text-2xl text-[#01031A] font-bold mb-4">Pitch Listing</h2>
-        <button
+        <Button
           onClick={() => navigate("/add-new-pitch")}
-          className="flex flex-row gap-2 bg-playden-primary text-white font-semibold p-3 rounded-lg"
+          className="flex gap-2 bg-playden-primary text-white font-semibold !items-center !px-0 !rounded-full"
         >
-          <img src={plus} alt="plus icon" className="text-white font-bold mt-1" />
+          <img src={plus} alt="plus icon" className="text-white font-bold mt-1 h-3" />
           <p>Add New Pitch</p>
-        </button>
+        </Button>
       </div>
+      {
+        loading ?
+          <div className="h-full mx-auto flex justify-center items-center">
+            <Loader />
+          </div> :
+          pitches.length === 0 ?
+            <div className="h-full mx-auto flex justify-center items-center">
+              <p>No pitches found.</p>
+            </div> :
+            <>
+              <div className="grid grid-cols-1 gap-6 mt-4">
+                {pitches.map((pitch: any) => (
+                  <PitchCard
+                    key={pitch.id}
+                    id={pitch.id}
+                    imageSrc={pitch.image}
+                    sport={pitch.sport}
+                    pitchSize={pitch.size}
+                    name={pitch.name}
+                    contact={pitch.contact}
+                    price={`₦${pitch.amount_per_hour}/hr`}
+                    setIsDeleted={setIsDeleted}
+                  />
+                ))}
+              </div>
 
-      {/* Grid for Pitch Cards */}
-      <div className="grid grid-cols-1 gap-6 mt-4">
-        {loading ? (
-          <p>Loading pitches...</p>
-        ) : pitches.length > 0 ? (
-          pitches.map((pitch: any) => (
-            <PitchCard
-              key={pitch.id}
-              id={pitch.id}
-              imageSrc={pitch.image}
-              sport={pitch.sport}
-              pitchSize={pitch.size}
-              name={pitch.name}
-              contact={pitch.contact}
-              price={`₦${pitch.amount_per_hour}/hr`}
-            />
-          ))
-        ) : (
-          <p>No pitches found.</p>
-        )}
-      </div>
-
-      {/* Pagination controls */}
-      <div className="flex justify-between items-center mt-4">
-        <button
-          className="text-playden-primary"
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-        >
-          Previous
-        </button>
-        <div className="flex gap-2">
-          {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
-            <button
-              key={page}
-              onClick={() => handlePageChange(page)}
-              className={`px-2 py-1 rounded ${
-                page === currentPage
-                  ? "bg-playden-primary text-white"
-                  : "bg-gray-100 text-black"
-              }`}
-            >
-              {page}
-            </button>
-          ))}
-        </div>
-        <button
-          className="text-playden-primary"
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
-        >
-          Next
-        </button>
-      </div>
+              <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+            </>
+      }
     </div>
   );
 };

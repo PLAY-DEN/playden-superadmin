@@ -1,27 +1,35 @@
 // src/store/bookingSlice.ts
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { apiClient } from "../utils/apiClient";
+import API_ENDPOINTS from "../api/client/_endpoint";
 
 interface BookingState {
   bookings: any[];
   loading: boolean;
   error: string | null;
+  totalPages: number;
 }
 
 const initialState: BookingState = {
   bookings: [],
   loading: false,
   error: null,
+  totalPages: 1,
 };
 
 // Thunk to fetch booking history
 export const fetchBookingHistory = createAsyncThunk(
   "bookings/fetchBookingHistory",
-  async (pitchId: string, { rejectWithValue }) => {
+  async ({ pitchId, page, search }: { pitchId: string; page: number; search: string }, { rejectWithValue }) => {
     try {
-      const response = await apiClient(`admin/pitches/bookings/${pitchId}`);
+      const response = await apiClient(
+        `${API_ENDPOINTS.GET_PITCH_BOOKINGS.replace(":pitchId", pitchId)}?page=${page}&search=${search}`
+      );
       const pitchData = response.data?.pitch?.[0]; 
-      return pitchData?.bookings || []; // Return the bookings array
+      return {
+        bookings: pitchData?.bookings || [],
+        totalPages: response.data?.totalPages || 1, // Total pages from API response
+      };
     } catch (error) {
       return rejectWithValue("Failed to fetch booking history");
     }
@@ -40,13 +48,15 @@ const bookingSlice = createSlice({
       })
       .addCase(fetchBookingHistory.fulfilled, (state, action) => {
         state.loading = false;
-        state.bookings = action.payload; // Store the fetched bookings
+        state.bookings = action.payload.bookings; // Store bookings
+        state.totalPages = action.payload.totalPages; // Store total pages
       })
       .addCase(fetchBookingHistory.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string; // Store the error message
+        state.error = action.payload as string; // Store error message
       });
   },
 });
+
 
 export default bookingSlice.reducer;

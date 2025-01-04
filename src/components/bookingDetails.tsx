@@ -3,95 +3,181 @@ import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 import { fetchBookingDetails } from '../redux/bookingManagementSlice';
-import { bookingImg } from '../assets/images';
+import { Loader } from 'rizzui';
+import { formatDate } from '../utils/utils';
 
 const BookingDetails: React.FC = () => {
-  const { id } = useParams<{ id: string }>();  
-  const dispatch = useDispatch();
-  
-  // Fetching booking details from Redux state
-  const { bookingDetails, loading, error } = useSelector((state: RootState) => state.bookingMgt);
-  
-  // Fetch booking details when the booking ID changes
+  const { id } = useParams<{ id: string }>();
+  const dispatch: any = useDispatch();
+
+  // Extracting state using Redux selector
+  const { bookingDetails, loading } = useSelector((state: RootState) => state.bookingMgt);
+
+  // Fetch booking details on mount or when `id` changes
   useEffect(() => {
     if (id) {
-      dispatch(fetchBookingDetails(id)); //  action to fetch booking details by ID
+      dispatch(fetchBookingDetails(id));
     }
   }, [dispatch, id]);
-  // console.log(bookingDetails);
-  
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p className="text-red-500">Error: {error}</p>;
 
-  
-  if (!bookingDetails) return <p>No booking details found.</p>;
+  // Conditional Rendering
+  if (loading) return <> <div className="flex justify-center">
+    <Loader />
+  </div></>;
+  // if (error) return <p className="text-red-500">Error: {error}</p>;
+  if (!bookingDetails) return <p className="flex justify-center">No booking details found.</p>;
+
+  const {
+    // id: bookingId,
+    user_id,
+    pitch_id,
+    sport,
+    date,
+    start_time,
+    end_time,
+    tournament,
+    notes,
+    total_cost,
+    sub_total,
+    qr_code_path,
+    used_cashback,
+    booking_code,
+    status,
+    payment_reference,
+    created_at,
+    updated_at,
+    meta,
+    has_paid_owner,
+    pitch_owner_due,
+    admin_commission,
+  } = bookingDetails;
 
 
-  //Most of the required Datas are not in the API Data.
 
   return (
     <div className="bg-white relative ml-72 p-8 mt-24">
-      <div className="flex flex-row justify-between w-full">
-        <h2 className="text-2xl text-[#01031A] font-bold mb-6">Booking Confirmation</h2>
-        <select
-          name="days"
-          id="options"
-          className="text-[16px] font-bold text-[#141B34] w-36 h-10 border border-[#8F55A224] bg-[#8F55A224] rounded-md"
-        >
-          <option value="days">Last 30 Days</option>
-        </select>
+      <div className="flex justify-between w-full">
+        <h2 className="text-2xl text-[#01031A] font-bold mb-6">Booking Details</h2>
       </div>
 
-      <div className="mt-10">
-        <h2 className="text-xl font-semibold">{bookingDetails.booking_code || 'N/A'}</h2>
-        <p className="text-gray-500">{bookingDetails.id}</p>
-      </div>
-
-      <div className="mt-[-20px] flex flex-row">
+      {/* Booking Information */}
+      <div className="grid grid-cols-2 gap-8">
+        {/* Booking Info */}
         <div>
-          <h2 className="ml-60 mt-14 font-bold">Booking Details</h2>
-          <img
-            src={bookingDetails.qr_code_path}
-            alt={`${bookingDetails.user?.username}'s profile`}
-            className="mt-[-18px]"
-          />
-        </div>
-
-        <div className="text-[#333543] text-xs mt-24 ml-[-120px]">
-          <table className="w-full">
+          <table className="table-auto text-sm text-gray-700">
             <tbody>
-              <tr className="border-none">
-                <td className="font-semibold pr-8 py-2">Date of Booking:</td>
-                <td>{bookingDetails.date}</td>
+              <tr>
+                <td className="font-semibold pr-4">Booking ID:</td>
+                <td>{booking_code}</td>
               </tr>
-              <tr className="border-none">
-                <td className="font-semibold pr-8 py-2">Mobile Number:</td>
-                <td>{bookingDetails.user?.phone_number || 'N/A'}</td>
+              <tr>
+                <td className="font-semibold pr-4">User ID:</td>
+                <td>{user_id}</td>
               </tr>
-              <tr className="border-none">
-                <td className="font-semibold pr-8 py-2">Email Address:</td>
-                <td>{bookingDetails.user?.email || 'N/A'}</td>
+              <tr>
+                <td className="font-semibold pr-4">Pitch ID:</td>
+                <td>{pitch_id}</td>
               </tr>
-              <tr className="border-none">
-                <td className="font-semibold pr-8 py-2">Sport Choice:</td>
-                <td>{bookingDetails.sport || 'N/A'}</td>
+              <tr>
+                <td className="font-semibold pr-4">Sport:</td>
+                <td>{sport}</td>
               </tr>
-              <tr className="border-none">
-                <td className="font-semibold pr-8 py-2">Pitch:</td>
-                <td>{bookingDetails.name || 'N/A'}</td>
+              <tr>
+                <td className="font-semibold pr-4">Date:</td>
+                <td>{date}</td>
               </tr>
-              <tr className="border-none">
-                <td className="font-semibold pr-8 py-2">Amount Paid:</td>
-                <td className="font-bold">{bookingDetails.sub_total || 'N/A'}</td>
+              <tr>
+                <td className="font-semibold pr-4">Time:</td>
+                <td>{`${start_time} - ${end_time}`}</td>
+              </tr>
+              <tr>
+                <td className="font-semibold pr-4">Tournament:</td>
+                <td>{tournament ? 'Yes' : 'No'}</td>
+              </tr>
+              <tr>
+                <td className="font-semibold pr-4">Notes:</td>
+                <td>{notes || 'None'}</td>
+              </tr>
+              <tr>
+                <td className="font-semibold pr-4">Total Cost:</td>
+                <td>&#8358;{total_cost}</td>
+              </tr>
+              <tr>
+                <td className="font-semibold pr-4">Sub Total:</td>
+                <td>&#8358;{sub_total}</td>
+              </tr>
+              <tr>
+                <td className="font-semibold pr-4">Status:</td>
+                <td>{status}</td>
+              </tr>
+              <tr>
+                <td className="font-semibold pr-4">Payment Reference:</td>
+                <td>{payment_reference || 'N/A'}</td>
+              </tr>
+              <tr>
+                <td className="font-semibold pr-4">Used Cashback:</td>
+                <td>{used_cashback ? 'Yes' : 'No'}</td>
+              </tr>
+              <tr>
+                <td className="font-semibold pr-4">Created At:</td>
+                <td>{formatDate(created_at)}</td>
+              </tr>
+              <tr>
+                <td className="font-semibold pr-4">Updated At:</td>
+                <td>{formatDate(updated_at)}</td>
               </tr>
             </tbody>
           </table>
         </div>
+
+        <div>
+          <h3 className="font-bold text-lg mb-4">Meta Information</h3>
+          <table className="table-auto text-sm text-gray-700 mb-6">
+            <tbody>
+              <tr>
+                <td className="font-semibold pr-4">New Total:</td>
+                <td>&#8358;{meta?.new_total}</td>
+              </tr>
+              <tr>
+                <td className="font-semibold pr-4">Sub Total:</td>
+                <td>&#8358;{meta?.sub_total}</td>
+              </tr>
+              <tr>
+                <td className="font-semibold pr-4">Remaining Cashback:</td>
+                <td>&#8358;{meta?.remaining_cashback}</td>
+              </tr>
+              <tr>
+                <td className="font-semibold pr-4">Total Cashback:</td>
+                <td>&#8358;{meta?.total_cashback}</td>
+              </tr>
+              <tr>
+                <td className="font-semibold pr-4">Pitch Owner Due:</td>
+                <td>&#8358;{pitch_owner_due}</td>
+              </tr>
+              <tr>
+                <td className="font-semibold pr-4">Admin Commission:</td>
+                <td>&#8358;{admin_commission}</td>
+              </tr>
+              <tr>
+                <td className="font-semibold pr-4">Has Paid Owner:</td>
+                <td>{has_paid_owner ? 'Yes' : 'No'}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 className="font-bold text-lg mb-4">QR Code</h3>
+          <img
+            src={`data:image/png;base64,${qr_code_path}`}
+            alt="QR Code"
+            className="w-40 h-40"
+          />
+        </div>
       </div>
 
-      <button className="mt-6 ml-60 h-[38px] w-[140px] text-xs px-4 py-2 bg-playden-primary text-white rounded-lg hover:bg-purple-900">
+      {/* Action Button */}
+      {/* <button className="mt-6 h-[38px] w-[140px] text-xs px-4 py-2 bg-playden-primary text-white rounded-lg hover:bg-purple-900">
         Confirm Booking
-      </button>
+      </button> */}
     </div>
   );
 };

@@ -3,9 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchPendingPayouts, markAsPaid, setPage } from "../../redux/financialsSlice";
 import { Home7, Ellipse } from "../../assets/images";
 import Pagination from "../../components/pagination";
+import { Loader } from "rizzui";
 
 const Financials: React.FC = () => {
-  const dispatch = useDispatch();
+  const dispatch: any = useDispatch();
   const { records, loading, error, currentPage, totalPages, perPage, totalItems } = useSelector(
     (state) => state.financials
   );
@@ -26,13 +27,6 @@ const Financials: React.FC = () => {
     <div className="relative ml-64 p-8 mt-20 overflow-auto">
       <div className="flex flex-row justify-between mb-6">
         <h2 className="text-2xl text-[#01031A] font-bold">Financial</h2>
-        <select
-          name="days"
-          id="options"
-          className="text-[16px] font-bold text-[#141B34] w-36 h-10 border border-transparent bg-[#8F55A224] rounded-md"
-        >
-          <option value="days">Last 30 Days</option>
-        </select>
       </div>
 
       <div className="grid grid-cols-4 gap-6 mb-8">
@@ -53,7 +47,9 @@ const Financials: React.FC = () => {
       <div className="flex gap-5">
         <div className="w-full">
           {loading ? (
-            <p>Loading...</p>
+            <div className="flex justify-center">
+              <Loader />
+            </div>
           ) : error ? (
             <p className="text-red-500">{error}</p>
           ) : (
@@ -74,7 +70,7 @@ const Financials: React.FC = () => {
               {/* Table Body */}
               <tbody>
                 {records.length > 0 ? (
-                  records.map((record, index) => (
+                  records.map((record: any, index: number) => (
                     <tr key={record.id}>
                       <td className="border-b p-4 text-sm">{index + 1}</td>
                       <td className="border-b p-4 text-sm">{record.name}</td>
@@ -94,7 +90,7 @@ const Financials: React.FC = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="7" className="p-4 text-center text-sm">
+                    <td colSpan={7} className="p-4 text-center text-sm">
                       No records found.
                     </td>
                   </tr>

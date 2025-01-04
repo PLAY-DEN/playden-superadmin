@@ -1,16 +1,19 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { apiClient } from "../utils/apiClient";
+import API_ENDPOINTS from "../api/client/_endpoint";
 
 // Fetch users with statistics
 export const fetchUsers = createAsyncThunk(
   "users/fetchUsers",
-  async (_, thunkAPI) => {
+  async ({ page, search }: {
+    page: number;
+    search: string;
+  }, thunkAPI) => {
     try {
-      const response = await apiClient("admin/users", "GET");
-      console.log(response);
+      const response = await apiClient(API_ENDPOINTS.GET_USERS + `?page=${page}&search=${search}`, "GET");
       return response.data; // Expecting { users, statistics }
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.response?.data || error.message);
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.response?.data || error.message || "Error getting users");
     }
   }
 );

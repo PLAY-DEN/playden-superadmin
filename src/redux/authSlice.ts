@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { apiClient } from "../utils/apiClient";
+import API_ENDPOINTS from "../api/client/_endpoint";
 
 interface AuthState {
   user: any | null;
@@ -20,10 +21,10 @@ const initialState: AuthState = {
 
 // Async thunk for login
 export const loginUser = createAsyncThunk(
-    "auth/login",
+    API_ENDPOINTS.LOGIN,
     async (credentials: { user_id: string; password: string }, thunkAPI) => {
       try {
-        const response = await apiClient("auth/login", "POST", credentials);
+        const response = await apiClient(API_ENDPOINTS.LOGIN, "POST", credentials);
         
         // Extract token and user from the nested `data` field
         const token = response.data?.user?.token; 

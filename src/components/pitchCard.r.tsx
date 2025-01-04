@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { apiClient } from "../utils/apiClient";
+import { toast } from "react-toastify";
+import Button from "./forms/button";
 
 interface PitchCardProps {
   sport: string;
@@ -10,6 +12,7 @@ interface PitchCardProps {
   contact: string;
   price: string;
   id: string;
+  setIsDeleted: (isDeleted: boolean) => void;
 }
 
 const PitchCard: React.FC<PitchCardProps> = ({
@@ -19,6 +22,7 @@ const PitchCard: React.FC<PitchCardProps> = ({
   name,
   contact,
   price,
+  setIsDeleted,
   id,
 }) => {
   const navigate = useNavigate();
@@ -48,18 +52,20 @@ const PitchCard: React.FC<PitchCardProps> = ({
 
     setIsDeleting(true);
     try {
-      await apiClient(`admin/pitches/${id}`, "DELETE");
+      await apiClient(`api/v1/admin/pitches/${id}`, "DELETE");
       alert("Pitch deleted.");
-      setIsDeleting(false);
+      toast.success("Pitch deleted");
+      setIsDeleted(true);
     } catch (error) {
       console.error(error);
-      alert("Failed to delete.");
+      toast.error("Failed to delete.");
+    } finally {
       setIsDeleting(false);
     }
   };
 
   return (
-    <div className="bg-white p-4 flex items-center gap-4">
+    <div className="bg-white p-4 flex justify-between items-center gap-4 border rounded">
       <img src={imageSrc} alt="Pitch" className="rounded-md w-80 h-36" />
       <div className="flex-1">
         <p className="text-sm font-bold">SPORT: {sport}</p>
@@ -68,33 +74,27 @@ const PitchCard: React.FC<PitchCardProps> = ({
         <p className="text-sm">MOBILE NUMBER: {contact}</p>
         <p className="text-sm">PRICE: {price}</p>
       </div>
-      <div className="flex flex-col gap-20 items-center">
-        <button
-          className="text-white bg-playden-primary rounded-xl w-36 h-10 px-w py-2 text-sm"
+        <div className="flex flex-ro gap-2 mr10">
+        <Button
+          className="text-white bg-playden-primary !rounded-lg  !py-2 !text-sm !w-fit"
           onClick={handleViewDetails}
         >
-          View Details
-        </button>
-        <div className="flex flex-row gap-2 mr-10">
-          <button
+          View
+        </Button>
+          <Button
             disabled={isDeleting}
-            className={`bg-white border-2 ${
-              isDeleting ? "border-gray-500" : "border-red-500"
-            } rounded-lg px-4 py-2 text-xs ${
-              isDeleting ? "text-gray-500" : "text-red"
-            }`}
+            className={'!bg-red !rounded-lg  !py-2 !text-sm !w-fit'}
             onClick={handleDelete}
           >
             {isDeleting ? "Deleting..." : "Delete"}
-          </button>
+          </Button>
 
-          <button
-            className="bg-playden-primary rounded-lg px-4 py-2 text-xs text-white"
+          <Button
+            className="!rounded-lg !py-2 !text-sm !w-fit !bg-transparent !border-2 !border-primary !text-primary "
             onClick={handleUpdate}
           >
-            Update
-          </button>
-        </div>
+            Edit
+          </Button>
       </div>
     </div>
   );

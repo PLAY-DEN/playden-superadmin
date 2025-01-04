@@ -11,15 +11,14 @@ const adminDetails = {
 };
 
 const AddNewAdmin: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
 
   return (
     <div className="bg-white relative ml-72 p-8 mt-24">
       
       {/* Header Section */}
-      <div className='flex flex-row justify-between'>
+      <div className='flex flex-row justify-between items-center mb-2'>
           <h2 className="text-2xl text-[#01031A] font-bold mb-4">Pitch Admin Management</h2>
-            <div className='flex flex-row gap-2'>
+            <div className='flex flex-row gap-2 mb-2'>
                <p className='text-[#141B34] text-[17px] font-bold mt-2 ml-72'>showing</p>
                   <select
                       name="days"

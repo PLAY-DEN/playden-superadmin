@@ -17,6 +17,7 @@
     "@types/react-redux": "^7.1.34",
     "axios": "^1.7.7",
     "crypto-js": "^4.2.0",
+    "date-fns": "^4.1.0",
     "formik": "^2.4.6",
     "jodit-react": "^4.1.2",
     "react": "^18.3.1",

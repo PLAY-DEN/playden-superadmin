@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { apiClient } from "../utils/apiClient";
+import API_ENDPOINTS from "../api/client/_endpoint";
 
 interface Metadata {
   current_page: number;
@@ -26,8 +27,7 @@ export const fetchActivePlaypoints = createAsyncThunk(
   "playpoints/fetchActivePlaypoints",
   async (page: number = 1, { rejectWithValue }) => {
     try {
-      const response = await apiClient(`admin/playpoints?status=active&page=${page}`, "GET");
-      console.log(response);
+      const response = await apiClient(`${API_ENDPOINTS.GET_PLAYPOINTS}?status=active&page=${page}`, "GET");
       return {
         playpoints: response.data.playpoints,
         meta: {

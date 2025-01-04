@@ -1,11 +1,10 @@
-"use client"
 import { Select as RizzSelect } from 'rizzui';
 
 type InputProps = {
   className?: string;
   options: Array<{ label: string; value: string }>;
   value: string;
-  setValue: (value: string) => void;
+  setValue?: (value: string) => void;
   label?: string;
   error?: string;
   [key: string]: unknown;

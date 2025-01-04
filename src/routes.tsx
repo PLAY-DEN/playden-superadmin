@@ -6,7 +6,7 @@ import AuthLayout from "./layouts/auth";
 import LoginPage from "./pages/auth/login";
 import PitchListing from "./pages/pitchListing";
 import PitchDetails from "./pages/pitchListing/pitchDetails";
-import AddNewPitch from "./components/AddNewPitch";
+import AddNewPitch from "./components/pitch/AddNewPitch";
 import BookingManagement from "./pages/bookingManagement/bookingManagement";
 import BookingDetails from "./components/bookingDetails";
 import CancellationManagement from "./pages/cancellation";
@@ -17,9 +17,9 @@ import UserManagement from "./pages/userMangement";
 import UserDetails from "./components/userDetails";
 import PitchAdminManagement from "./pages/pitchAdminManagement";
 import AddNewAdmin from "./components/addNewAdmin";
-import AdminDetails from "./components/adminDetails";
+import AdminDetails from "./pages/pitchAdminManagement/adminDetails";
 import SettingsPage from "./pages/accountSettings";
-import UpdatePitch from "./components/updatePitch";
+import UpdatePitch from "./components/pitch/updatePitch";
 
 const MyRoutes = () => (
   <Routes>
@@ -47,7 +47,7 @@ const MyRoutes = () => (
       <Route path="/pitch-admin-management/:id" element={<ProtectedRoute><AdminDetails /></ProtectedRoute>} />
       <Route path="/add-new-admin" element={<ProtectedRoute><AddNewAdmin /></ProtectedRoute>} />
       <Route path="/account-settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
-      <Route path="/update-pitch/:id" element={<ProtectedRoute><UpdatePitch /></ProtectedRoute>} />
+      <Route path="/update-pitch/:pitchId" element={<ProtectedRoute><UpdatePitch /></ProtectedRoute>} />
 
     </Route>
   </Routes>

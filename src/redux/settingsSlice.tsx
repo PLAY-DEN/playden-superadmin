@@ -19,9 +19,8 @@ export const fetchSettings = createAsyncThunk(
   "settings/fetchSettings",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await apiClient("1/settings", "GET" );
-      console.log(response);
-      return response; // Return resolved response
+      const response = await apiClient("api/v1/1/settings", "GET" );
+      return response.data; // Return resolved response
       
     } catch (error: any) {
       return rejectWithValue(error.response?.data || error.message); // Pass error to the rejected state

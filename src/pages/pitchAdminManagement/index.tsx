@@ -3,10 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchUsers } from "../../redux/PitchAdmin";
 import { RootState } from "../../redux/store";
 import { Home7, Ellipse, plus } from "../../assets/images";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Pagination from "../../components/pagination";
-import { createAdmin } from "../../redux/adminSlice";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
+import { apiClient } from "../../utils/apiClient";
+import API_ENDPOINTS from "../../api/client/_endpoint";
+import Button from "../../components/forms/button";
+import AdminFormModal from "../../components/user/AdminFormModel";
 
 interface SummaryItem {
   title: string;
@@ -15,23 +18,27 @@ interface SummaryItem {
   imageSrc: string;
 }
 
+const defaultValue = {
+  username: "",
+  phone_number: "",
+  full_name: "",
+  email: "",
+  address: "",
+  password: "",
+  user_role: ""
+};
+
 const PitchAdminManagement: React.FC = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const dispatch: any = useDispatch();
   const { users, loading, error } = useSelector((state: RootState) => state.admin);
 
   const [adminSummary, setAdminSummary] = useState<SummaryItem[]>([]);
   const [showModal, setShowModal] = useState(false);
-  const [formData, setFormData] = useState({
-    user_role: "super_admin",
-    full_name: "",
-    email: "",
-    username: "",
-    address: "",
-    phone_number: "",
-    password: "",
-  });
-  
+  const [isLoading, setIsLoading] = useState(false);
+  const [formData, setFormData] = useState(defaultValue);
+
+  const [formErrors, setFormErrors] = useState(defaultValue);
+
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -72,37 +79,54 @@ const PitchAdminManagement: React.FC = () => {
     }
   }, [users]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement> | { name: string; value: string }
+  ) => {
+    const { name, value } = "target" in e ? e.target : e;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    dispatch(createAdmin(formData)); 
-    toast.success("Pitch Admin created successfully");
-    setShowModal(false); 
-    window.location.reload();
+    setIsLoading(true);
+    try {
+      await apiClient(API_ENDPOINTS.GET_USERS, "POST", formData);
+      toast.success("Pitch Admin created successfully");
+      setShowModal(false);
+      setFormData(defaultValue);
+      setFormErrors(defaultValue);
+    } catch (error: any) {
+      const errors = error.response?.data?.data;
+      if (errors) {
+        setFormErrors(errors); // Update formErrors state with server errors
+      }
+      toast.error(error.response?.data.message || "Something went wrong");
+    } finally {
+      setIsLoading(false);
+    }
 
   };
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
-  const adminUsers = (users?.data?.users || []).filter((user) =>
-    user.user_role.includes("super_admin")
-  );
+  const adminUsers = (users?.data?.users || []).filter((user: any) => {
+    const roleArray = JSON.parse(user.user_role);
+    return ["super_admin", "pitch_owner", "pitch_manager"].includes(roleArray[0])
+  });
 
   return (
     <div className="relative ml-64 p-8 mt-20">
-      <div className="flex flex-row justify-between">
+      <ToastContainer />
+      <div className="flex flex-row justify-between items-center mb-2">
         <h2 className="text-2xl text-[#01031A] font-bold mb-4">Pitch Admin Management</h2>
-        <button
+        <Button
           onClick={() => setShowModal(true)}
-          className="flex flex-row gap-2 bg-playden-primary text-white font-semibold p-3 rounded-lg"
+          className="flex gap-2 bg-playden-primary text-white font-semibold !items-center !px-0 !rounded-full"
         >
           <img src={plus} alt="" className="text-white font-bold mt-1" />
           <p>Add New Admin</p>
-        </button>
+        </Button>
       </div>
 
       {/* Admin Summary Section */}
@@ -138,7 +162,7 @@ const PitchAdminManagement: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {adminUsers.map((user, index) => (
+            {adminUsers.map((user: any, index: number) => (
               <tr key={user.id}>
                 <td className="border-b p-4 text-sm">{index + 1}</td>
                 <td className="border-b p-4 text-sm">{user.full_name || user.username}</td>
@@ -147,7 +171,7 @@ const PitchAdminManagement: React.FC = () => {
                 <td className="border-b p-4 text-sm text-playden-primary cursor-pointer">
                   <Link
                     to={`/pitch-admin-management/${user.id}`}
-                    state={{ user }} 
+                    state={{ user }}
                     className="font-bold"
                   >
                     View details
@@ -159,101 +183,23 @@ const PitchAdminManagement: React.FC = () => {
         </table>
       )}
 
-      <Pagination />
+      <Pagination currentPage={0} totalPages={0} onPageChange={function (page: number): void {
+        throw new Error("Function not implemented.");
+      }} />
 
       {/* Modal for Adding New Admin */}
-{showModal && (
-  <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 overflow-y-auto">
-    <div className="bg-white p-6 rounded-lg w-96">
-      <h2 className="text-xl font-semibold mb-4">Add New Admin</h2>
-      <form onSubmit={handleFormSubmit}>
-      <label>User Role</label>
-        <input
-          type="text"
-          name="user_role"
-          defaultValue={formData.user_role}
-          placeholder="User Role"
-          value={formData.user_role}
-          onChange={handleInputChange}
-          className="w-full mb-4 p-2 border rounded"
-          required
+      {showModal && (
+        <AdminFormModal
+          isOpen={showModal}
+          onClose={() => setShowModal(false)}
+          onSubmit={handleFormSubmit}
+          formData={formData}
+          formErrors={formErrors}
+          handleInputChange={handleInputChange}
+          isLoading={isLoading}
+          isEditMode={false}
         />
-        <label>Full Name</label>
-        <input
-          type="text"
-          name="full_name"
-          placeholder="Full Name"
-          value={formData.full_name}
-          onChange={handleInputChange}
-          className="w-full mb-4 p-2 border rounded"
-          required
-        />
-        <label>Email:</label>
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleInputChange}
-          className="w-full mb-4 p-2 border rounded"
-          required
-        />
-        <label>Username: </label>
-        <input
-          type="text"
-          name="username"
-          placeholder="Username"
-          value={formData.username}
-          onChange={handleInputChange}
-          className="w-full mb-4 p-2 border rounded"
-          required
-        />
-        <label>Address: </label>
-        <input
-          type="text"
-          name="address"
-          placeholder="Address"
-          value={formData.address}
-          onChange={handleInputChange}
-          className="w-full mb-4 p-2 border rounded"
-          required
-        />
-        <label>Phone Number: </label>
-        <input
-          type="text"
-          name="phone_number"
-          placeholder="Phone Number"
-          value={formData.phone_number}
-          onChange={handleInputChange}
-          className="w-full mb-4 p-2 border rounded"
-          required
-        />
-        <label>Password: </label>
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleInputChange}
-          className="w-full mb-4 p-2 border rounded"
-          required
-        />
-        <div className="flex justify-end gap-2">
-          <button
-            type="button"
-            onClick={() => setShowModal(false)}
-            className="bg-gray-500 text-white p-2 rounded"
-          >
-            Cancel
-          </button>
-          <button type="submit" className="bg-playden-primary text-white p-2 rounded">
-            Save
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-)}
+      )}
 
     </div>
   );

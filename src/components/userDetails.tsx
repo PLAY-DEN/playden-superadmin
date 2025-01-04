@@ -1,95 +1,95 @@
+import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
-import { bookingImg } from '../assets/images';
+import { formatDate } from '../utils/utils';
 
-
-const userDetails: React.FC = () => {
+const UserDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const user = useSelector((state: RootState) =>
-    state.users.data.users?.find((user) => user.id === Number(id))
+  const user: any = useSelector((state: RootState) =>
+    state.users.data.users?.find((user: any) => user.id === Number(id))
   );
 
   if (!user) {
     return <div className="ml-72 p-8 mt-20">User not found.</div>;
   }
 
-
   return (
     <div className="bg-white relative ml-72 p-8 mt-24">
-      <div className="flex flex-row justify-between w-full">
-        <h2 className="text-2xl text-[#01031A] font-bold mb-6">User Details</h2>
+      {/* Header */}
+      <div className="flex justify-between w-full mb-6">
+        <h2 className="text-2xl font-bold text-[#01031A]">User Details</h2>
         <select
           name="days"
           id="options"
-          className="text-[16px] font-bold text-[#141B34] w-36 h-10 border border-[#8F55A224] bg-[#8F55A224] rounded-md"
+          className="w-36 h-10 text-[16px] font-bold text-[#141B34] bg-[#8F55A224] border border-[#8F55A224] rounded-md"
         >
           <option value="days">Last 30 Days</option>
         </select>
       </div>
-      
-      <div className="mt-10">
-        <h2 className="text-xl font-semibold">{user.username}</h2>
-        <p className="text-gray-500">{user.id}</p>
-      </div>
-      
-      <div className="flex flex-row">
-        <div>
-          <h2 className="ml-60 mt-5 font-bold">User Details</h2>
-          <img
-            src={user.profile_image}
-            alt={`${user.username}'s profile`}
-            className="mt-[-5px] w-52 h-58"
-          />
-        </div>
-        
-      <div className='text-[#333543] text-xs mt-12 ml-[-85px]'>
-           <table className="w-full">
-              <tbody>
-                <tr className="border-none">
-                   <td className="font-semibold">Date joined:</td>
-                   <td className='pl-5 py-1'>{user.created_at}</td>
-                </tr>
-                <tr className="border-none">
-                  <td className="font-semibold">Number of booking:</td>
-                  <td className='pl-5 py-1'>{user.bookings_count}</td>
-               </tr>
-               <tr className="border-none">
-                  <td className="font-semibold">Number of cancellation:</td>
-                  <td className='pl-5 py-1'>{user.cancelled_bookings_count}</td>
-               </tr>
-               <tr className="border-none">
-                  <td className="font-semibold">Last Booking:</td>
-                  <td className='pl-5 py-1'>{user.updated_at}</td>
-               </tr>
-               <tr className="border-none">
-                   <td className="font-semibold">Email address:</td>
-                   <td className='pl-5 py-1'>{user.email}</td>
-               </tr>
-               <tr className="border-none">
-                  <td className="font-semibold">Mobile number:</td>
-                  <td className='pl-5 py-1'>{user.phone_number}</td>
-               </tr>
-               <tr className="border-none">
-                  <td className="font-semibold">Play points:</td>
-                  <td className='pl-5 py-1'>{user.cashbacks_sum_coins}</td>
-               </tr>
-             </tbody>
-          </table>
-       </div>
 
-      
-       <div className='mt-[280px] flex flex-row gap-3 ml-[-300px]'>
-           <button className="h-[38px] w-[140px] text-xs px-4 py-2 bg-playden-primary text-white rounded-lg cursor-pointer">
-                Suspend
-           </button>
-           <button className="h-[38px] w-[140px] text-xs px-4 py-2 bg-[#8F55A2] text-white rounded-lg cursor-pointer">
-                 Ban/Delete
-           </button>
+      {/* User Info Section */}
+      <div className="mt-10 flex">
+        {/* Profile Image & Basic Info */}
+        <div>
+          <img
+            src={user.profile_image || "https://cdn.iconscout.com/icon/free/png-512/free-profile-icon-download-in-svg-png-gif-file-formats--communication-community-people-glyph-pack-network-icons-1254808.png?f=webp&w=512"}
+            alt={`${user.username}'s profile`}
+            className="w-52 h-58 mb-4"
+          />
+          <h2 className="text-xl font-semibold">{user.username}</h2>
+          <p className="text-gray-500">User ID: {user.id}</p>
+        </div>
+
+        {/* User Details Table */}
+        <div className="ml-12 text-[#333543] text-sm">
+          <h3 className="mb-4 font-bold text-lg">User Details</h3>
+          <table className="w-full">
+            <tbody>
+              <tr>
+                <td className="font-semibold py-2">Date Joined:</td>
+                <td className="pl-5">{formatDate(user.created_at)}</td>
+              </tr>
+              <tr>
+                <td className="font-semibold py-2">Number of Bookings:</td>
+                <td className="pl-5">{user.bookings_count}</td>
+              </tr>
+              <tr>
+                <td className="font-semibold py-2">Number of Cancellations:</td>
+                <td className="pl-5">{user.cancelled_bookings_count}</td>
+              </tr>
+              {/* <tr>
+                <td className="font-semibold py-2">Last Booking:</td>
+                <td className="pl-5">{user.updated_at}</td>
+              </tr> */}
+              <tr>
+                <td className="font-semibold py-2">Email Address:</td>
+                <td className="pl-5">{user.email}</td>
+              </tr>
+              <tr>
+                <td className="font-semibold py-2">Mobile Number:</td>
+                <td className="pl-5">{user.phone_number}</td>
+              </tr>
+              <tr>
+                <td className="font-semibold py-2">Play Points:</td>
+                <td className="pl-5">{user.cashbacks_sum_coins||0}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
+
+      {/* Action Buttons */}
+      {/* <div className="mt-12 flex gap-4">
+        <button className="px-6 py-2 bg-playden-primary text-white rounded-lg text-xs h-[38px] w-[140px]">
+          Suspend
+        </button>
+        <button className="px-6 py-2 bg-[#8F55A2] text-white rounded-lg text-xs h-[38px] w-[140px]">
+          Ban/Delete
+        </button>
+      </div> */}
     </div>
-  </div>
   );
 };
 
-export default userDetails;
+export default UserDetails;

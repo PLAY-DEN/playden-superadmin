@@ -27,7 +27,7 @@ export const apiClient = async (
   if (!validMethods.includes(method.toUpperCase())) {
     throw new Error(`Invalid HTTP method: ${method}`);
   }
-
+  
   try {
     const response = await axios({
       url: `${BASE_URL}/${endpoint}`,
