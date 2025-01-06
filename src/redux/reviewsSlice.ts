@@ -1,4 +1,4 @@
-// src/store/bookingSlice.ts
+// src/store/reviewSlice.ts
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { apiClient } from "../utils/apiClient";
 import API_ENDPOINTS from "../api/client/_endpoint";
@@ -18,17 +18,19 @@ const initialState: ReviewState = {
 };
 
 // Thunk to fetch booking history
-export const fetchBookingHistory = createAsyncThunk(
-    "bookings/fetchBookingHistory",
-    async ({ pitchId, page, search }: { pitchId: string; page: number; search: string }, { rejectWithValue }) => {
+export const fetchReviews = createAsyncThunk(
+    "pitch/ratings",
+    async ({ pitchId }: { pitchId: string; }, { rejectWithValue }) => {
         try {
             const response = await apiClient(
-                `${API_ENDPOINTS.GET_PITCH_BOOKINGS.replace(":pitchId", pitchId)}?page=${page}&search=${search}`
+                `${API_ENDPOINTS.GET_PITCH_RATINGS.replace(":pitchId", pitchId)}`
             );
-            const pitchData = response.data?.pitch?.[0];
+            console.log(response.data);
+            
+            const pitchData = response.data?.ratings;
             return {
-                bookings: pitchData?.bookings || [],
-                totalPages: response.data?.totalPages || 1, // Total pages from API response
+                reviews: pitchData || [],
+                totalPages: response.data?.last_page || 1, // Total pages from API response
             };
         } catch (error) {
             return rejectWithValue("Failed to fetch booking history");
@@ -36,22 +38,22 @@ export const fetchBookingHistory = createAsyncThunk(
     }
 );
 
-const bookingSlice = createSlice({
-    name: "bookings",
+const reviewSlice = createSlice({
+    name: "reviews",
     initialState,
     reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(fetchBookingHistory.pending, (state) => {
+            .addCase(fetchReviews.pending, (state) => {
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(fetchBookingHistory.fulfilled, (state, action) => {
+            .addCase(fetchReviews.fulfilled, (state, action) => {
                 state.loading = false;
                 state.reviews = action.payload.reviews; // Store reviews
                 state.totalPages = action.payload.totalPages; // Store total pages
             })
-            .addCase(fetchBookingHistory.rejected, (state, action) => {
+            .addCase(fetchReviews.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload as string; // Store error message
             });
@@ -59,4 +61,4 @@ const bookingSlice = createSlice({
 });
 
 
-export default bookingSlice.reducer;
+export default reviewSlice.reducer;

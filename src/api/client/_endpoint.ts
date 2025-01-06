@@ -21,7 +21,7 @@ const API_ENDPOINTS = {
   DELETE_PITCH: "api/v1/admin/pitches/:id",
   GET_OWNER_PITCHES: "api/v1/admin/pitches/owner/:id",
   GET_PITCH_BOOKINGS: "api/v1/admin/pitches/bookings/:pitchId",
-
+  GET_PITCH_RATINGS: "api/v1/admin/pitches/:pitchId/ratings",
   // category
   GET_CATEGORIES: "api/v1/admin/categories",
   GET_CATEGORY: "api/v1/admin/categories/:id",

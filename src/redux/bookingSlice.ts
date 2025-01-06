@@ -25,10 +25,13 @@ export const fetchBookingHistory = createAsyncThunk(
       const response = await apiClient(
         `${API_ENDPOINTS.GET_PITCH_BOOKINGS.replace(":pitchId", pitchId)}?page=${page}&search=${search}`
       );
-      const pitchData = response.data?.pitch?.[0]; 
+      
+      const pitchData = response.data?.pitch_bookings; 
+      console.log(response.data);
+      
       return {
-        bookings: pitchData?.bookings || [],
-        totalPages: response.data?.totalPages || 1, // Total pages from API response
+        bookings: pitchData || [],
+        totalPages: response.data?.last_page || 1, // Total pages from API response
       };
     } catch (error) {
       return rejectWithValue("Failed to fetch booking history");

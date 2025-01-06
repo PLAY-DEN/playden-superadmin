@@ -29,14 +29,14 @@ const PitchCard: React.FC<PitchCardProps> = ({
 
   const handleViewDetails = () => {
     navigate(`/pitch-listing/${id}`, {
-      state: {
-        sport,
-        imageSrc,
-        pitchSize,
-        name,
-        contact,
-        price,
-      },
+      // state: {
+      //   sport,
+      //   imageSrc,
+      //   pitchSize,
+      //   name,
+      //   contact,
+      //   price,
+      // },
     });
   };
 

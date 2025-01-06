@@ -9,6 +9,7 @@ import userReducer from './userSlice';
 import bookingMgtReducer from './bookingManagementSlice';
 import playpointsReducer from './playPointSlice';
 import financialsReducer from './financialsSlice';
+import reviewsReducer from './reviewsSlice';
 
 
 export const store = configureStore({
@@ -23,6 +24,7 @@ export const store = configureStore({
         users: userReducer,
         bookingMgt: bookingMgtReducer,
         playpoints: playpointsReducer,
+        ratings: reviewsReducer,
     },
 });
 

@@ -1,4 +1,6 @@
+import { useSelector } from "react-redux";
 import { Ellipse, vector12, Chart } from "../../assets/images";
+import { RootState } from "../../redux/store";
 import DashboardHeader from "./DashboardHeader";
 import StatisticsSummary from "./StatisticsSummary";
 import PitchProgress from "./pitchProgress";
@@ -6,6 +8,12 @@ import PlayDenStats from "./playDen";
 import TaskDetails from "./taskDetails";
 
 const Dashboard: React.FC = () => {
+  const { bookings, loading } = useSelector(
+    (state: RootState) => state.bookings
+  );
+
+  console.log(bookings);
+  
   return (
     <div className="">
       <DashboardHeader />
