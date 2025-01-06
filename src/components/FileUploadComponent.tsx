@@ -8,8 +8,8 @@ interface FileUploadComponentProps {
 
 const FileUploadComponent: React.FC<FileUploadComponentProps> = ({ onFileUpload, error }) => {
     const [file, setFile] = useState<File | null>(null);
-    const [uploading, setUploading] = useState(false);
-    const [progress, setProgress] = useState(0);
+    // const [uploading, setUploading] = useState(false);
+    // const [progress, setProgress] = useState(0);
     const [errorMessage, setErrorMessage] = useState<string | null>(error);
 
     const isValidFileType = (file: File) => {

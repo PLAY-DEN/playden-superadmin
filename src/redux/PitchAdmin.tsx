@@ -3,7 +3,7 @@ import { apiClient } from '../utils/apiClient';
 import API_ENDPOINTS from '../api/client/_endpoint';
 
 interface AdminState {
-  users: any[];
+  users: any;
   loading: boolean;
   error: string | null;
 }
@@ -16,7 +16,7 @@ const initialState: AdminState = {
 };
 
 
-export const fetchUsers = createAsyncThunk('admin/fetchUsers', async (token: string) => {
+export const fetchUsers = createAsyncThunk('admin/fetchUsers', async () => {
   try {
     const data = await apiClient(API_ENDPOINTS.GET_USERS, 'GET');
     return data; 
@@ -38,7 +38,7 @@ const adminSlice = createSlice({
       })
       .addCase(fetchUsers.fulfilled, (state, action) => {
         state.loading = false;
-        state.users = action.payload; 
+        state.users = action.payload as any; 
       })
       .addCase(fetchUsers.rejected, (state, action) => {
         state.loading = false;

@@ -21,7 +21,7 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, icon }) => {
 
 const PlayDenStats: React.FC = () => {
   // Fetch statistics from Redux state
-  const { bookings_count, total_users, total_pitch, users_joined_last_24_hours } = useSelector(
+  const { total_users, users_joined_last_24_hours } = useSelector(
     (state: RootState) => state.users.data.statistics
   );
 
@@ -47,9 +47,9 @@ const PlayDenStats: React.FC = () => {
 
       {/* Stat Cards Section */}
       <div className="grid grid-cols-2 gap-3 mt-8 justify-center">
-        <StatCard title="Total Booking" value={bookings_count} icon={equalizer} />
+        <StatCard title="Total Booking" value={0} icon={equalizer} />
         <StatCard title="Total Users" value={total_users} icon={person} />
-        <StatCard title="Total Pitch" value={total_pitch} icon={compiling} />
+        <StatCard title="Total Pitch" value={0} icon={compiling} />
         <StatCard title="New Users" value={users_joined_last_24_hours} icon={person} />
       </div>
     </div>

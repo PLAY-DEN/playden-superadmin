@@ -5,7 +5,7 @@ import { apiClient } from "../utils/apiClient";
 import { RootState } from "../redux/store";
 import { Editor } from "@tinymce/tinymce-react";
 import { toast, ToastContainer } from "react-toastify";
-import { Loader, Switch } from "rizzui";
+import { Switch } from "rizzui";
 import LoadingPage from "./loading-page";
 import ErrorPage from "./error-page";
 

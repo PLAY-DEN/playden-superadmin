@@ -1,4 +1,3 @@
-import { pitchImg } from "../../assets/images";
 
 interface Pitch {
     imageSrc: string;

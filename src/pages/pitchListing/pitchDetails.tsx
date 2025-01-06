@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
   useParams,
-  useLocation,
   useSearchParams,
-  useNavigate,
 } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBookingHistory } from "../../redux/bookingSlice";
@@ -20,7 +18,6 @@ import { formatDate } from "../../utils/utils";
 
 const PitchDetails: React.FC = () => {
   const { pitchId } = useParams<{ pitchId: string }>();
-  const { state } = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const dispatch: any = useDispatch();
   const [activeTab, setActiveTab] = useState<"bookings" | "reviews">(

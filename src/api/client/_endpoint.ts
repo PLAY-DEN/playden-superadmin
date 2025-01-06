@@ -36,6 +36,7 @@ const API_ENDPOINTS = {
 
   // settings
   GET_SETTINGS: "api/v1/admin/settings",
+  MARK_AS_PAID: "api/v1/admin/pitch-owners/mark-as-paid",
 
   // bookings
   // playpoints

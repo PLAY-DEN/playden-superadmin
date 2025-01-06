@@ -38,7 +38,7 @@ const AdminFormModal: React.FC<AdminFormModalProps> = ({
                             disabled={isLoading}
                             className="py-1 rounded-full border-[0.4px] border-primary w-full"
                             value={formData.user_role}
-                            onChange={(e: any) => handleInputChange({ name: "user_role", value: e.target.value })}
+                            onChange={handleInputChange}
                         >
                             <option value="super_admin">Super Admin</option>
                             <option value="pitch_owner">Pitch Admin</option>

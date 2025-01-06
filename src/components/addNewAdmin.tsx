@@ -1,5 +1,4 @@
-import { useParams } from 'react-router-dom';
-import { bookingImg } from '../assets/images'; 
+import { bookingImg } from "../assets/images";
 
 const adminDetails = {
   id: "#123456",

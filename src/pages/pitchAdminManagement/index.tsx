@@ -32,8 +32,9 @@ const defaultValue = {
 
 const PitchAdminManagement: React.FC = () => {
   const dispatch: any = useDispatch();
-  const { users, loading, error } =
-    useSelector((state: RootState) => state.admin) || {};
+  const { users, loading, error } = useSelector(
+    (state: RootState) => state.admin
+  ) || { users: { data: { users: [], statistics: {} } } };
 
   const [adminSummary, setAdminSummary] = useState<SummaryItem[]>([]);
   const [showModal, setShowModal] = useState(false);
@@ -43,10 +44,7 @@ const PitchAdminManagement: React.FC = () => {
   const [formErrors, setFormErrors] = useState(defaultValue);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      dispatch(fetchUsers(token));
-    }
+    dispatch(fetchUsers());
   }, [dispatch]);
 
   useEffect(() => {
@@ -206,7 +204,7 @@ const PitchAdminManagement: React.FC = () => {
       <Pagination
         currentPage={0}
         totalPages={0}
-        onPageChange={function (page: number): void {
+        onPageChange={function (): void {
           throw new Error("Function not implemented.");
         }}
       />

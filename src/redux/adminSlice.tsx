@@ -28,7 +28,7 @@ const adminUserSlice = createSlice({
   name: "adminUser",
   initialState: {
     loading: false,
-    error: null,
+    error: null as string | null,
     admin: {}, // Store the admin data here
   },
   reducers: {},

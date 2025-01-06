@@ -9,13 +9,12 @@ import { useParams } from "react-router-dom";
 import { amenitiesOptions, defaultValues, facilitiesOptions, fetchData, FormData } from "../../data/PitchFormData";
 import userClient from "../../api/client/user";
 import categoryClient from "../../api/client/category";
-import { string } from "yup";
 
 
 const UpdatePitch = () => {
   const { pitchId } = useParams<{ pitchId: string }>();
   const [fileInput, setFileInput] = useState<File | null>(null);
-  const [galleryFiles, setGalleryFiles] = useState<File[]>([]);
+  const [, setGalleryFiles] = useState<File[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [categories, setCategories] = useState<
     { value: string; label: string }[]

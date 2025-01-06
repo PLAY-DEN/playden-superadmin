@@ -1,4 +1,3 @@
-import { profileImage } from "../assets/images";
 
 interface SettingHeaderProps {
   activeTab: string;

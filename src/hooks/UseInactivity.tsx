@@ -5,8 +5,8 @@ import { logout } from "../redux/authSlice";
 
 const useInactivityTimeout = (timeoutDuration: number = 2 * 60 * 60 * 1000, warningTime: number = 5 * 60 * 1000) => {
   const dispatch = useDispatch();
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const warningRef = useRef<NodeJS.Timeout | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const warningRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   
   const resetTimeout = () => {

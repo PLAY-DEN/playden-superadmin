@@ -8,7 +8,7 @@ import PlayDenStats from "./playDen";
 import TaskDetails from "./taskDetails";
 
 const Dashboard: React.FC = () => {
-  const { bookings, loading } = useSelector(
+  const { bookings,  } = useSelector(
     (state: RootState) => state.bookings
   );
 

@@ -5,18 +5,35 @@ import API_ENDPOINTS from "../api/client/_endpoint";
 // Fetch pending payouts with pagination
 export const fetchPendingPayouts = createAsyncThunk(
   "financials/fetchPendingPayouts",
-  async ({ page = 1, perPage = 10 }: {
-    page: number;
-    perPage: number;
-  }, thunkAPI) => {
+  async (
+    {
+      page = 1,
+      perPage = 10,
+    }: {
+      page: number;
+      perPage: number;
+    },
+    thunkAPI
+  ) => {
     try {
       const response = await apiClient(
         `${API_ENDPOINTS.GET_PENDING_PAYOUT}?page=${page}&per_page=${perPage}`,
         "GET"
       );
-      return response.data; // Expecting data with { records, current_page, total_pages, total_items }
+      
+      const data = response.data?.pitch_owners;
+console.log( data);
+
+      return {
+        records: data?.data || [],
+        current_page: data?.current_page,
+        total_pages: data?.total_pages,
+        total_items: data?.total_items,
+      };
     } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.response?.data || error.message || "Error getting records");
+      return thunkAPI.rejectWithValue(
+        error.response?.data || error.message || "Error getting records"
+      );
     }
   }
 );
@@ -45,7 +62,8 @@ const financialsSlice = createSlice({
       })
       .addCase(fetchPendingPayouts.fulfilled, (state, action) => {
         state.loading = false;
-        const { records, current_page, total_pages, total_items } = action.payload;
+        const { records, current_page, total_pages, total_items } =
+          action.payload;
         state.records = records || [];
         state.currentPage = current_page || 1;
         state.totalPages = total_pages || 1;
@@ -53,12 +71,11 @@ const financialsSlice = createSlice({
       })
       .addCase(fetchPendingPayouts.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.payload as any;
       });
   },
 });
 
 export const { setPage } = financialsSlice.actions;
-export const { markAsPaid } = financialsSlice.actions;
 
 export default financialsSlice.reducer;

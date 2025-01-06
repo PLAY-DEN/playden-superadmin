@@ -37,7 +37,7 @@ const cancellationSlice = createSlice({
       })
       .addCase(fetchCancellations.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.payload as any;
       });
   },
 });
