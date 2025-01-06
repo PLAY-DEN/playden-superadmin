@@ -6,10 +6,11 @@ import { RootState } from "../../redux/store";
 import PitchCard from "../../components/pitchCard.r";
 import { plus } from "../../assets/images";
 import "react-toastify/dist/ReactToastify.css";
-import { Loader } from "rizzui";
 import Pagination from "../../components/paginator";
 import Button from "../../components/forms/button";
 import pitchClient from "../../api/client/pitch";
+import LoadingPage from "../../components/loading-page";
+import ErrorPage from "../../components/error-page";
 
 const PitchListing: React.FC = () => {
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ const PitchListing: React.FC = () => {
 
   const fetchPitches = async (page: number) => {
     if (!token) {
-      navigate('/login');
+      navigate("/login");
       toast.error("Token expired, Kindly re-login");
       return;
     }
@@ -30,7 +31,7 @@ const PitchListing: React.FC = () => {
     setLoading(true);
     try {
       const response = await pitchClient.getPitches({
-        page: page
+        page: page,
       });
 
       const fetchedPitches = response.data.pitches || [];
@@ -42,7 +43,8 @@ const PitchListing: React.FC = () => {
       setTotalPages(last_page);
     } catch (error: any) {
       console.error("Fetch Error:", error);
-      const errorMessage = error.response?.data?.message || "Failed to fetch pitches.";
+      const errorMessage =
+        error.response?.data?.message || "Failed to fetch pitches.";
       toast.error(errorMessage, { position: "top-right" });
     } finally {
       setLoading(false);
@@ -61,47 +63,55 @@ const PitchListing: React.FC = () => {
   };
 
   return (
-    <div className="relative ml-72 p-8 mt-20 overflow-auto">
+    <div className="bg-white p-8 rounded-lg mb-10">
       <ToastContainer />
       <div className="flex flex-row justify-between">
-        <h2 className="text-2xl text-[#01031A] font-bold mb-4">Pitch Listing</h2>
+        <h2 className="text-2xl text-[#01031A] font-bold mb-4">
+          Pitch Listing
+        </h2>
         <Button
           onClick={() => navigate("/add-new-pitch")}
           className="flex gap-2 bg-playden-primary text-white font-semibold !items-center !px-0 !rounded-full"
         >
-          <img src={plus} alt="plus icon" className="text-white font-bold mt-1 h-3" />
+          <img
+            src={plus}
+            alt="plus icon"
+            className="text-white font-bold mt-1 h-3"
+          />
           <p>Add New Pitch</p>
         </Button>
       </div>
-      {
-        loading ?
-          <div className="h-full mx-auto flex justify-center items-center">
-            <Loader />
-          </div> :
-          pitches.length === 0 ?
-            <div className="h-full mx-auto flex justify-center items-center">
-              <p>No pitches found.</p>
-            </div> :
-            <>
-              <div className="grid grid-cols-1 gap-6 mt-4">
-                {pitches.map((pitch: any) => (
-                  <PitchCard
-                    key={pitch.id}
-                    id={pitch.id}
-                    imageSrc={pitch.image}
-                    sport={pitch.sport}
-                    pitchSize={pitch.size}
-                    name={pitch.name}
-                    contact={pitch.contact}
-                    price={`₦${pitch.amount_per_hour}/hr`}
-                    setIsDeleted={setIsDeleted}
-                  />
-                ))}
-              </div>
+      {loading ? (
+        <LoadingPage />
+      ) : pitches.length === 0 ? (
+        <div className="h-full mx-auto flex justify-center items-center">
+          <ErrorPage errorMessage="No pitches found." />
+        </div>
+      ) : (
+        <>
+          <div className="grid grid-cols-1 gap-6 mt-4">
+            {pitches.map((pitch: any) => (
+              <PitchCard
+                key={pitch.id}
+                id={pitch.id}
+                imageSrc={pitch.image}
+                sport={pitch.sport}
+                pitchSize={pitch.size}
+                name={pitch.name}
+                contact={pitch.contact}
+                price={`₦${pitch.amount_per_hour}/hr`}
+                setIsDeleted={setIsDeleted}
+              />
+            ))}
+          </div>
 
-              <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
-            </>
-      }
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
+        </>
+      )}
     </div>
   );
 };

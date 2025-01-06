@@ -4,29 +4,53 @@ import { Link } from "react-router-dom";
 import { fetchCancellations } from "../../redux/cancellationSlice"; // Import the thunk
 import { Home7, Ellipse } from "../../assets/images";
 import Pagination from "../../components/pagination";
+import { AppDispatch } from "../../redux/store";
+import { setCurrentPage } from "../../redux/bookingManagementSlice";
+import LoadingPage from "../../components/loading-page";
+import ErrorPage from "../../components/error-page";
 
 const CancellationManagement: React.FC = () => {
-  const dispatch = useDispatch();
-  const { bookings = [], statistics = {}, loading, error } = useSelector(
-    (state) => state.cancellations
+  const dispatch = useDispatch<AppDispatch>();
+  const {
+    bookings = [],
+    statistics = {},
+    loading,
+    error,
+  } = useSelector(
+    (state: {
+      cancellations: {
+        bookings: any[];
+        statistics: any;
+        loading: boolean;
+        error: string;
+      };
+    }) => state.cancellations
   );
 
   useEffect(() => {
     dispatch(fetchCancellations());
   }, [dispatch]);
 
+  if (loading) {
+    return <LoadingPage />;
+  }
+
+  if (error) {
+    return <ErrorPage errorMessage={error} />;
+  }
+
   return (
-    <div className="bg-white relative ml-72 p-8 mt-20 overflow-auto">
+    <div className="bg-white p-8 rounded-lg">
       {/* Header and Filter */}
       <div className="flex flex-row justify-between mb-6">
         <h2 className="text-2xl text-[#01031A] font-bold">Cancellation</h2>
-        <select
+        {/* <select
           name="days"
           id="options"
           className="text-[16px] font-bold text-[#141B34] w-36 h-10 border border-[#8F55A224] bg-[#8F55A224] rounded-md"
         >
           <option value="days">Last 30 Days</option>
-        </select>
+        </select> */}
       </div>
 
       {/* Summary Cards */}
@@ -46,58 +70,64 @@ const CancellationManagement: React.FC = () => {
       </div>
 
       {/* Cancellation Table */}
-      {loading ? (
-        <p>Loading...</p>
-      ) : error ? (
-        <p className="text-red-500">{error}</p>
-      ) : (
-        <table className="w-full text-left border-collapse">
-          <thead>
-            <tr>
-              <th className="border-b p-4">S/N</th>
-              <th className="border-b p-4">Pitch Name</th>
-              <th className="border-b p-4">Booking Code</th>
-              <th className="border-b p-4">Contact</th>
-              <th className="border-b p-4">Status</th>
-              <th className="border-b p-4">Date</th>
-              <th className="border-b p-4">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {bookings.length > 0 ? (
-              bookings.map((booking, index) => (
-                <tr key={booking.id}>
-                  <td className="border-b p-4 text-sm">{index + 1}</td>
-                  <td className="border-b p-4 text-sm">{booking.pitch?.name || "N/A"}</td>
-                  <td className="border-b p-4 text-sm">{booking.booking_code}</td>
-                  <td className="border-b p-4 text-sm">{booking.contact}</td>
-                  <td className="border-b p-4 text-sm">
-                    <span className={`p-2 rounded-2xl text-sm ${booking.status === "cancelled" ? "bg-red-500 text-white" : "bg-green-500 text-white"}`}>
-                      {booking.status}
-                    </span>
-                  </td>
-                  <td className="border-b p-4 text-sm">{booking.date}</td>
-                  <td className="border-b p-4 text-sm">
-                    <Link
-                      to={`/cancellation-details/${booking.id}`}
-                      className="text-black font-semibold"
-                    >
-                      View details
-                    </Link>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="7" className="p-4 text-center text-sm">
-                  No cancellations found.
+      <table className="w-full text-left border-collapse">
+        <thead>
+          <tr>
+            <th className="border-b p-4">S/N</th>
+            <th className="border-b p-4">Pitch Name</th>
+            <th className="border-b p-4">Booking Code</th>
+            <th className="border-b p-4">Contact</th>
+            <th className="border-b p-4">Status</th>
+            <th className="border-b p-4">Date</th>
+            <th className="border-b p-4">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {bookings.length > 0 ? (
+            bookings.map((booking, index) => (
+              <tr key={booking.id}>
+                <td className="border-b p-4 text-sm">{index + 1}</td>
+                <td className="border-b p-4 text-sm">
+                  {booking.pitch?.name || "N/A"}
+                </td>
+                <td className="border-b p-4 text-sm">{booking.booking_code}</td>
+                <td className="border-b p-4 text-sm">{booking.contact}</td>
+                <td className="border-b p-4 text-sm">
+                  <span
+                    className={`p-2 rounded-2xl text-sm ${
+                      booking.status === "cancelled"
+                        ? "bg-red-500 text-white"
+                        : "bg-green-500 text-white"
+                    }`}
+                  >
+                    {booking.status}
+                  </span>
+                </td>
+                <td className="border-b p-4 text-sm">{booking.date}</td>
+                <td className="border-b p-4 text-sm">
+                  <Link
+                    to={`/cancellation-details/${booking.id}`}
+                    className="text-black font-semibold"
+                  >
+                    View details
+                  </Link>
                 </td>
               </tr>
-            )}
-          </tbody>
-        </table>
-      )}
-      <Pagination />
+            ))
+          ) : (
+            <tr>
+              <td colSpan={7} className="p-4 text-center text-sm">
+                No cancellations found.
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+      <Pagination
+        currentPage={1}
+        totalPages={0}
+        onPageChange={setCurrentPage}
+      />
     </div>
   );
 };

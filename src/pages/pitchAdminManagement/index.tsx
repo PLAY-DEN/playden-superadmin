@@ -10,6 +10,8 @@ import { apiClient } from "../../utils/apiClient";
 import API_ENDPOINTS from "../../api/client/_endpoint";
 import Button from "../../components/forms/button";
 import AdminFormModal from "../../components/user/AdminFormModel";
+import LoadingPage from "../../components/loading-page";
+import ErrorPage from "../../components/error-page";
 
 interface SummaryItem {
   title: string;
@@ -25,12 +27,13 @@ const defaultValue = {
   email: "",
   address: "",
   password: "",
-  user_role: ""
+  user_role: "",
 };
 
 const PitchAdminManagement: React.FC = () => {
   const dispatch: any = useDispatch();
-  const { users, loading, error } = useSelector((state: RootState) => state.admin);
+  const { users, loading, error } =
+    useSelector((state: RootState) => state.admin) || {};
 
   const [adminSummary, setAdminSummary] = useState<SummaryItem[]>([]);
   const [showModal, setShowModal] = useState(false);
@@ -38,7 +41,6 @@ const PitchAdminManagement: React.FC = () => {
   const [formData, setFormData] = useState(defaultValue);
 
   const [formErrors, setFormErrors] = useState(defaultValue);
-
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -80,7 +82,11 @@ const PitchAdminManagement: React.FC = () => {
   }, [users]);
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement> | { name: string; value: string }
+    e:
+      | React.ChangeEvent<
+          HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+        >
+      | { name: string; value: string }
   ) => {
     const { name, value } = "target" in e ? e.target : e;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -104,22 +110,30 @@ const PitchAdminManagement: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-
   };
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (loading) {
+    return <LoadingPage />;
+  }
+
+  if (error) {
+    return <ErrorPage errorMessage={error} />;
+  }
 
   const adminUsers = (users?.data?.users || []).filter((user: any) => {
     const roleArray = JSON.parse(user.user_role);
-    return ["super_admin", "pitch_owner", "pitch_manager"].includes(roleArray[0])
+    return ["super_admin", "pitch_owner", "pitch_manager"].includes(
+      roleArray[0]
+    );
   });
 
   return (
-    <div className="relative ml-64 p-8 mt-20">
+    <div className="bg-white p-8 rounded-lg mb-20">
       <ToastContainer />
       <div className="flex flex-row justify-between items-center mb-2">
-        <h2 className="text-2xl text-[#01031A] font-bold mb-4">Pitch Admin Management</h2>
+        <h2 className="text-2xl text-[#01031A] font-bold mb-4">
+          Pitch Admin Management
+        </h2>
         <Button
           onClick={() => setShowModal(true)}
           className="flex gap-2 bg-playden-primary text-white font-semibold !items-center !px-0 !rounded-full"
@@ -142,7 +156,11 @@ const PitchAdminManagement: React.FC = () => {
               <p>{item.amount}</p>
               <p>{item.title}</p>
             </div>
-            <img src={Ellipse} alt="" className="object-cover mt-[-66px] w-[110px] h-[110px]" />
+            <img
+              src={Ellipse}
+              alt=""
+              className="object-cover mt-[-66px] w-[110px] h-[110px]"
+            />
           </div>
         ))}
       </div>
@@ -165,7 +183,9 @@ const PitchAdminManagement: React.FC = () => {
             {adminUsers.map((user: any, index: number) => (
               <tr key={user.id}>
                 <td className="border-b p-4 text-sm">{index + 1}</td>
-                <td className="border-b p-4 text-sm">{user.full_name || user.username}</td>
+                <td className="border-b p-4 text-sm">
+                  {user.full_name || user.username}
+                </td>
                 <td className="border-b p-4 text-sm">{user.email}</td>
                 <td className="border-b p-4 text-sm">{user.phone_number}</td>
                 <td className="border-b p-4 text-sm text-playden-primary cursor-pointer">
@@ -183,9 +203,13 @@ const PitchAdminManagement: React.FC = () => {
         </table>
       )}
 
-      <Pagination currentPage={0} totalPages={0} onPageChange={function (page: number): void {
-        throw new Error("Function not implemented.");
-      }} />
+      <Pagination
+        currentPage={0}
+        totalPages={0}
+        onPageChange={function (page: number): void {
+          throw new Error("Function not implemented.");
+        }}
+      />
 
       {/* Modal for Adding New Admin */}
       {showModal && (
@@ -200,7 +224,6 @@ const PitchAdminManagement: React.FC = () => {
           isEditMode={false}
         />
       )}
-
     </div>
   );
 };

@@ -6,15 +6,38 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchUsers } from "../../redux/userSlice";
 import { RootState } from "../../redux/store";
 import Input from "../../components/forms/input";
+import LoadingPage from "../../components/loading-page";
+import ErrorPage from "../../components/error-page";
 
 const UserManagement: React.FC = () => {
-  const dispatch:any = useDispatch();
+  const dispatch: any = useDispatch();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState(""); // Search term state
-  const { data, loading, error } = useSelector((state: RootState) => state.users);
+  const { data, loading, error } = useSelector(
+    (state: RootState) => state.users
+  ) as {
+    data: {
+      users: {
+        id: number;
+        full_name: string;
+        email: string;
+        phone_number: string;
+        bookings_count: number;
+        cancelled_bookings_count: number;
+        playpoints: number;
+      }[];
+      statistics: {
+        total_users: number;
+        total_active_users: number;
+        total_inactive_users: number;
+      };
+    };
+    loading: boolean;
+    error: string | null;
+  };
 
   useEffect(() => {
-    dispatch(fetchUsers({ page: currentPage, search: '' })); // Fetch users on page load or page change
+    dispatch(fetchUsers({ page: currentPage, search: "" })); // Fetch users on page load or page change
   }, [dispatch, currentPage]);
 
   const handlePageChange = (page: number) => {
@@ -31,14 +54,20 @@ const UserManagement: React.FC = () => {
       user.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  if (loading) return <div className="ml-72 p-8 mt-20">Loading...</div>;
-  if (error) return <div className="ml-72 p-8 mt-20">Error: {error}</div>;
+  if (loading) {
+    return <LoadingPage />;
+  }
 
-  const { total_users, total_active_users, total_inactive_users } = data.statistics;
+  if (error) {
+    return <ErrorPage errorMessage={error} />;
+  }
+
+  const { total_users, total_active_users, total_inactive_users } =
+    data.statistics;
   const totalPages = Math.ceil(total_users / 15);
 
   return (
-    <div className="relative ml-72 p-8 mt-20">
+    <div className="bg-white p-8 rounded-lg mb-20">
       {/* Header Section */}
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl text-[#01031A] font-bold">User Management</h2>
@@ -114,7 +143,12 @@ interface SummaryCardProps {
   icon: string;
 }
 
-const SummaryCard: React.FC<SummaryCardProps> = ({ bgColor, title, value, icon }) => (
+const SummaryCard: React.FC<SummaryCardProps> = ({
+  bgColor,
+  title,
+  value,
+  icon,
+}) => (
   <div
     className="min-w-[320px] h-[180px] rounded-md flex justify-between items-center"
     style={{ backgroundColor: bgColor }}
@@ -124,7 +158,11 @@ const SummaryCard: React.FC<SummaryCardProps> = ({ bgColor, title, value, icon }
       <p>{value}</p>
       <p>{title}</p>
     </div>
-    <img src={Ellipse} alt="" className="object-cover mt-[-68px] w-[110px] h-[110px]" />
+    <img
+      src={Ellipse}
+      alt=""
+      className="object-cover mt-[-68px] w-[110px] h-[110px]"
+    />
   </div>
 );
 
@@ -145,15 +183,24 @@ const UserRow: React.FC<UserRowProps> = ({ user }) => (
   <tr className="hover:bg-gray-100">
     <td className="border border-gray-300 py-2 px-1">{user.full_name}</td>
     <td className="border border-gray-300 py-2 px-1">{user.email}</td>
-    <td className="border border-gray-300 py-2 px-1 text-center">{user.phone_number}</td>
-    <td className="border border-gray-300 py-2 px-1 text-center">{user.bookings_count}</td>
     <td className="border border-gray-300 py-2 px-1 text-center">
-    {user.cancelled_bookings_count}
+      {user.phone_number}
     </td>
-    <td className="border border-gray-300 py-2 px-1 text-center">{user.playpoints||0}</td>
+    <td className="border border-gray-300 py-2 px-1 text-center">
+      {user.bookings_count}
+    </td>
+    <td className="border border-gray-300 py-2 px-1 text-center">
+      {user.cancelled_bookings_count}
+    </td>
+    <td className="border border-gray-300 py-2 px-1 text-center">
+      {user.playpoints || 0}
+    </td>
     <td className="border border-gray-300 py-2 px-1 text-center">Active</td>
     <td className="border border-gray-300 py-2 px-1 text-center">
-      <Link to={`/user-management/User-details/${user.id}`} className="text-sm font-bold">
+      <Link
+        to={`/user-management/User-details/${user.id}`}
+        className="text-sm font-bold"
+      >
         View Details
       </Link>
     </td>

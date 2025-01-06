@@ -25,7 +25,7 @@ const StatisticsSummary: React.FC<StatisticsSummaryProps> = ({
 }) => {
     return (
         <div 
-            className="bg-white shadow-md rounded-lg p-6 relative" 
+            className="bg-white shadow-md rounded-lg p-6 relative w-full" 
             style={{ ...customStyle, minWidth: '300px', height: '180px' }}
         >
             {/* First Image */}

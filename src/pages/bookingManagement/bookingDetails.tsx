@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../redux/store';
-import { fetchBookingDetails } from '../redux/bookingManagementSlice';
-import { Loader } from 'rizzui';
-import { formatDate } from '../utils/utils';
+import { fetchBookingDetails } from '../../redux/bookingManagementSlice';
+import { RootState } from '../../redux/store';
+import { formatDate } from '../../utils/utils';
+import LoadingPage from '../../components/loading-page';
+import NotFoundPage from '../../components/not-found-page';
 
 const BookingDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -20,12 +21,14 @@ const BookingDetails: React.FC = () => {
     }
   }, [dispatch, id]);
 
-  // Conditional Rendering
-  if (loading) return <> <div className="flex justify-center">
-    <Loader />
-  </div></>;
-  // if (error) return <p className="text-red-500">Error: {error}</p>;
-  if (!bookingDetails) return <p className="flex justify-center">No booking details found.</p>;
+
+  if (loading) {
+    return <LoadingPage />;
+  }
+
+  if (!bookingDetails) {
+    return <NotFoundPage errorMessage={'No booking details found.'} />;
+  }
 
   const {
     // id: bookingId,
@@ -55,7 +58,7 @@ const BookingDetails: React.FC = () => {
 
 
   return (
-    <div className="bg-white relative ml-72 p-8 mt-24">
+    <div className="bg-white p-8 rounded-lg">
       <div className="flex justify-between w-full">
         <h2 className="text-2xl text-[#01031A] font-bold mb-6">Booking Details</h2>
       </div>

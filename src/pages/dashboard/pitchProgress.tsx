@@ -8,11 +8,11 @@ interface Pitch {
 }
 
 const pitches: Pitch[] = [
-    { imageSrc: pitchImg, name: "Plutous Pitch 1", sport: "Football 4 x 4", progress: 65 },
-    { imageSrc: pitchImg, name: "Plutous Pitch 2", sport: "Football 4 x 4", progress: 83 },
-    { imageSrc: pitchImg, name: "Plutous Pitch 3", sport: "Football 4 x 4", progress: 47 },
-    { imageSrc: pitchImg, name: "Plutous Pitch 4", sport: "Football 4 x 4", progress: 71 },
-    { imageSrc: pitchImg, name: "Plutous Pitch 5", sport: "Football 4 x 4", progress: 71 },
+    // { imageSrc: pitchImg, name: "Plutous Pitch 1", sport: "Football 4 x 4", progress: 65 },
+    // { imageSrc: pitchImg, name: "Plutous Pitch 2", sport: "Football 4 x 4", progress: 83 },
+    // { imageSrc: pitchImg, name: "Plutous Pitch 3", sport: "Football 4 x 4", progress: 47 },
+    // { imageSrc: pitchImg, name: "Plutous Pitch 4", sport: "Football 4 x 4", progress: 71 },
+    // { imageSrc: pitchImg, name: "Plutous Pitch 5", sport: "Football 4 x 4", progress: 71 },
 ];
 
 const PitchProgress: React.FC = () => {
@@ -21,7 +21,7 @@ const PitchProgress: React.FC = () => {
             <div className="flex flex-row p-3 justify-between mb-3">
                 <div>
                      <h2 className="text-xl font-bold">Pitch Progress</h2>
-                     <span className="text-[#A1A5B7] text-xs">890,344 Sales</span>
+                     <span className="text-[#A1A5B7] text-xs">0 Sales</span>
                 </div>
                 <select
                     name="user"

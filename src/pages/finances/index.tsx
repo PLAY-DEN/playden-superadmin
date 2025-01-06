@@ -1,15 +1,26 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchPendingPayouts, markAsPaid, setPage } from "../../redux/financialsSlice";
+import {
+  fetchPendingPayouts,
+  markAsPaid,
+  setPage,
+} from "../../redux/financialsSlice";
 import { Home7, Ellipse } from "../../assets/images";
 import Pagination from "../../components/pagination";
-import { Loader } from "rizzui";
+import LoadingPage from "../../components/loading-page";
+import ErrorPage from "../../components/error-page";
 
 const Financials: React.FC = () => {
   const dispatch: any = useDispatch();
-  const { records, loading, error, currentPage, totalPages, perPage, totalItems } = useSelector(
-    (state) => state.financials
-  );
+  const {
+    records,
+    loading,
+    error,
+    currentPage,
+    totalPages,
+    perPage,
+    totalItems,
+  } = useSelector((state: any) => state.financials);
 
   useEffect(() => {
     dispatch(fetchPendingPayouts({ page: currentPage, perPage }));
@@ -23,8 +34,16 @@ const Financials: React.FC = () => {
     dispatch(setPage(page));
   };
 
+  if (loading) {
+    return <LoadingPage />;
+  }
+
+  if (error) {
+    return <ErrorPage errorMessage={error} />;
+  }
+
   return (
-    <div className="relative ml-64 p-8 mt-20 overflow-auto">
+    <div className="bg-white p-8 rounded-lg">
       <div className="flex flex-row justify-between mb-6">
         <h2 className="text-2xl text-[#01031A] font-bold">Financial</h2>
       </div>
@@ -40,19 +59,17 @@ const Financials: React.FC = () => {
             <p>{totalItems}</p> {/* Display total_items here */}
             <p>Today Revenue</p>
           </div>
-          <img src={Ellipse} alt="" className="object-cover mt-[-50px] w-[80px] h-[80px]" />
+          <img
+            src={Ellipse}
+            alt=""
+            className="object-cover mt-[-50px] w-[80px] h-[80px]"
+          />
         </div>
       </div>
 
       <div className="flex gap-5">
         <div className="w-full">
-          {loading ? (
-            <div className="flex justify-center">
-              <Loader />
-            </div>
-          ) : error ? (
-            <p className="text-red-500">{error}</p>
-          ) : (
+          {
             <table className="w-full text-left border-collapse">
               {/* Table Headings */}
               <thead>
@@ -74,7 +91,9 @@ const Financials: React.FC = () => {
                     <tr key={record.id}>
                       <td className="border-b p-4 text-sm">{index + 1}</td>
                       <td className="border-b p-4 text-sm">{record.name}</td>
-                      <td className="border-b p-4 text-sm">{record.accountNo}</td>
+                      <td className="border-b p-4 text-sm">
+                        {record.accountNo}
+                      </td>
                       <td className="border-b p-4 text-sm">{record.amount}</td>
                       <td className="border-b p-4 text-sm">{record.status}</td>
                       <td className="border-b p-4 text-sm">{record.date}</td>
@@ -97,7 +116,7 @@ const Financials: React.FC = () => {
                 )}
               </tbody>
             </table>
-          )}
+          }
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}

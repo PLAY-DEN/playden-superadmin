@@ -3,17 +3,20 @@ import { useParams, useLocation, useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBookingHistory } from "../../redux/bookingSlice";
 import { RootState } from "../../redux/store";
-import { Loader } from "rizzui";
 import Pagination from "../../components/paginator";
 import Input from "../../components/forms/input";
 import Button from "../../components/forms/button";
+import LoadingPage from "../../components/loading-page";
+import ErrorPage from "../../components/error-page";
 
 const PitchDetails: React.FC = () => {
   const { pitchId } = useParams<{ pitchId: string }>();
   const { state } = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const dispatch: any = useDispatch();
-  const [activeTab, setActiveTab] = useState<"bookings" | "reviews">("bookings");
+  const [activeTab, setActiveTab] = useState<"bookings" | "reviews">(
+    "bookings"
+  );
 
   const searchQuery = searchParams.get("search") || "";
   const currentPage = Number(searchParams.get("page")) || 1;
@@ -24,7 +27,13 @@ const PitchDetails: React.FC = () => {
 
   useEffect(() => {
     if (pitchId && activeTab === "bookings") {
-      dispatch(fetchBookingHistory({ pitchId, search: searchQuery, page: currentPage }));
+      dispatch(
+        fetchBookingHistory({ pitchId, search: searchQuery, page: currentPage })
+      );
+    }
+
+    if (pitchId && activeTab === "reviews") {
+
     }
   }, [pitchId, activeTab, searchQuery, currentPage, dispatch]);
 
@@ -51,7 +60,7 @@ const PitchDetails: React.FC = () => {
   } = state || {};
 
   return (
-    <div className="relative ml-72 p-8 mt-20 overflow-auto">
+    <div className="bg-white p-8 rounded-lg">
       {/* Pitch Details */}
       <div className="flex gap-6 mt-6 w-[680px]">
         <img
@@ -82,19 +91,21 @@ const PitchDetails: React.FC = () => {
       <div className="mt-8">
         <div className="flex border-b border-gray-300">
           <button
-            className={`py-2 px-4 ${activeTab === "bookings"
-              ? "border-b-2 border-playden-primary text-playden-primary font-bold"
-              : "text-gray-500"
-              }`}
+            className={`py-2 px-4 ${
+              activeTab === "bookings"
+                ? "border-b-2 border-playden-primary text-playden-primary font-bold"
+                : "text-gray-500"
+            }`}
             onClick={() => setActiveTab("bookings")}
           >
             Booking History
           </button>
           <button
-            className={`py-2 px-4 ${activeTab === "reviews"
-              ? "border-b-2 border-playden-primary text-playden-primary font-bold"
-              : "text-gray-500"
-              }`}
+            className={`py-2 px-4 ${
+              activeTab === "reviews"
+                ? "border-b-2 border-playden-primary text-playden-primary font-bold"
+                : "text-gray-500"
+            }`}
             onClick={() => setActiveTab("reviews")}
           >
             Reviews
@@ -103,7 +114,10 @@ const PitchDetails: React.FC = () => {
 
         {activeTab === "bookings" && (
           <div className="mt-4">
-            <form onSubmit={handleSearch} className="mb-4 flex items-center justify-end">
+            <form
+              onSubmit={handleSearch}
+              className="mb-4 flex items-center justify-end"
+            >
               <Input
                 type="text"
                 name="search"
@@ -120,11 +134,11 @@ const PitchDetails: React.FC = () => {
             </form>
 
             {loading ? (
-              <div className="flex justify-center"><Loader /></div>
+              <LoadingPage />
             ) : error ? (
               <p className="text-red-500">{error}</p>
             ) : bookings.length === 0 ? (
-              <p className="flex justify-center">No bookings found.</p>
+              <ErrorPage errorMessage={"No bookings found."} />
             ) : (
               <>
                 <table className="w-full border">
@@ -144,7 +158,9 @@ const PitchDetails: React.FC = () => {
                       >
                         <td className="p-2">{booking.booking_code}</td>
                         <td className="p-2">{booking.date}</td>
-                        <td className="p-1">&#8358;{booking.sub_total || booking.total_cost}</td>
+                        <td className="p-1">
+                          &#8358;{booking.sub_total || booking.total_cost}
+                        </td>
                         <td className="p-1 cursor-pointer">
                           <u>View More</u>
                         </td>
@@ -165,7 +181,9 @@ const PitchDetails: React.FC = () => {
 
         {activeTab === "reviews" && (
           <div className="mt-4">
-            <p className="text-gray-500 italic">Reviews functionality is yet to be implemented.</p>
+            <p className="text-gray-500 italic">
+              Reviews functionality is yet to be implemented.
+            </p>
           </div>
         )}
       </div>
@@ -174,7 +192,6 @@ const PitchDetails: React.FC = () => {
 };
 
 export default PitchDetails;
-
 
 // import React, { useEffect, useState } from "react";
 // import { useParams, useLocation } from "react-router-dom";

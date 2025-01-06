@@ -188,7 +188,7 @@ const AddNewPitch: React.FC = () => {
   };
 
   return (
-    <div className="mt-20 relative ml-72 p-8">
+    <div className="bg-white p-8 rounded-lg">
       <ToastContainer />
       {/* Header Section */}
       <div className="flex flex-row justify-between mb-6">

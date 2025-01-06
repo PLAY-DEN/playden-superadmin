@@ -1,8 +1,9 @@
-import React from 'react';
-import { useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { RootState } from '../redux/store';
-import { formatDate } from '../utils/utils';
+import React from "react";
+import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
+import { formatDate } from "../../utils/utils";
+import NotFoundPage from "../../components/not-found-page";
 
 const UserDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -11,11 +12,11 @@ const UserDetails: React.FC = () => {
   );
 
   if (!user) {
-    return <div className="ml-72 p-8 mt-20">User not found.</div>;
+    return <NotFoundPage errorMessage="User details cannot found" />;
   }
 
   return (
-    <div className="bg-white relative ml-72 p-8 mt-24">
+    <div className="bg-white p-8 rounded-lg">
       {/* Header */}
       <div className="flex justify-between w-full mb-6">
         <h2 className="text-2xl font-bold text-[#01031A]">User Details</h2>
@@ -33,7 +34,10 @@ const UserDetails: React.FC = () => {
         {/* Profile Image & Basic Info */}
         <div>
           <img
-            src={user.profile_image || "https://cdn.iconscout.com/icon/free/png-512/free-profile-icon-download-in-svg-png-gif-file-formats--communication-community-people-glyph-pack-network-icons-1254808.png?f=webp&w=512"}
+            src={
+              user.profile_image ||
+              "https://cdn.iconscout.com/icon/free/png-512/free-profile-icon-download-in-svg-png-gif-file-formats--communication-community-people-glyph-pack-network-icons-1254808.png?f=webp&w=512"
+            }
             alt={`${user.username}'s profile`}
             className="w-52 h-58 mb-4"
           />
@@ -72,7 +76,7 @@ const UserDetails: React.FC = () => {
               </tr>
               <tr>
                 <td className="font-semibold py-2">Play Points:</td>
-                <td className="pl-5">{user.cashbacks_sum_coins||0}</td>
+                <td className="pl-5">{user.cashbacks_sum_coins || 0}</td>
               </tr>
             </tbody>
           </table>

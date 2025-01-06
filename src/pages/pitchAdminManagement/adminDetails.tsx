@@ -6,6 +6,7 @@ import API_ENDPOINTS from '../../api/client/_endpoint';
 import { formatDate } from '../../utils/utils';
 import { useEffect, useState } from 'react';
 import AdminFormModal from '../../components/user/AdminFormModel';
+import NotFoundPage from '../../components/not-found-page';
 
 const defaultValue = {
   username: "",
@@ -30,7 +31,7 @@ const AdminDetails: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
 
   if (!user) {
-    return <div>User data not available.</div>;
+    return <NotFoundPage errorMessage='user data not available'/>;
   }
 
   useEffect(() => {
@@ -93,7 +94,7 @@ const AdminDetails: React.FC = () => {
 
 
   return (
-    <div className="bg-white relative ml-72 p-8 mt-24">
+    <div className="bg-white p-8 rounded-lg">
       <ToastContainer />
       {/* Header */}
       <div className="flex flex-row justify-between w-full">

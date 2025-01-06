@@ -20,7 +20,7 @@ const Navbar: React.FC = () => {
             </div>
 
             {/* Middle Section: Search, Message, and Notification Icons */}
-            <div className="flex items-center gap-6 justify-center w-[calc(100%-16rem)]"> {/* Adjusted width */}
+            <div className="flex items-center gap-6 justify-center w-[calc(100%-16rem)] hidden"> {/* Adjusted width */}
                 <div className="flex items-center gap-4">
                     <FaEnvelope className="text-white text-lg cursor-pointer hover:text-opacity-80" />
                     <FaBell className="text-white text-lg cursor-pointer hover:text-opacity-80" />
