@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  useParams,
-  useSearchParams,
-} from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBookingHistory } from "../../redux/bookingSlice";
 import { RootState } from "../../redux/store";
@@ -15,6 +12,7 @@ import { toast } from "react-toastify";
 import pitchClient from "../../api/client/pitch";
 import { fetchReviews } from "../../redux/reviewsSlice";
 import { formatDate } from "../../utils/utils";
+import BackButton from "../../components/BackButton";
 
 const PitchDetails: React.FC = () => {
   const { pitchId } = useParams<{ pitchId: string }>();
@@ -30,7 +28,11 @@ const PitchDetails: React.FC = () => {
   const { bookings, loading, error, totalPages } = useSelector(
     (state: RootState) => state.bookings
   );
-  const { reviews, loading: reviewLoading, error: reviewError } = useSelector((state: RootState) => state.ratings);
+  const {
+    reviews,
+    loading: reviewLoading,
+    error: reviewError,
+  } = useSelector((state: RootState) => state.ratings);
   const [isFetchingPitch, setIsFetchingPitch] = useState(false);
 
   const [pitch, setPitch] = useState<any>();
@@ -85,6 +87,7 @@ const PitchDetails: React.FC = () => {
 
   return (
     <div className="bg-white p-8 rounded-lg">
+      <BackButton />
       {/* Pitch Details */}
       {isFetchingPitch ? (
         <LoadingPage />
@@ -189,13 +192,22 @@ const PitchDetails: React.FC = () => {
                           key={index}
                           className="text-[14px] text-[#01031A] font-semibold"
                         >
-                          <td className="p-2">{booking.booking_code}</td>
-                          <td className="p-2">{booking.date}</td>
-                          <td className="p-1">
+                          <td className="border border-gray-300 p-2">
+                            {booking.booking_code}
+                          </td>
+                          <td className="border border-gray-300 p-2">
+                            {booking.date}
+                          </td>
+                          <td className="border border-gray-300 p-2">
                             &#8358;{booking.sub_total || booking.total_cost}
                           </td>
-                          <td className="p-1 cursor-pointer">
-                            <u>View More</u>
+                          <td className="border border-gray-300 p-2 cursor-pointer">
+                            <Link
+                              to={`/booking-management/${booking.id}`}
+                              className="text-black font-semibold"
+                            >
+                              View details
+                            </Link>
                           </td>
                         </tr>
                       ))}
@@ -253,21 +265,44 @@ const PitchDetails: React.FC = () => {
                   </thead>
                   <tbody>
                     {reviews.map((review, index) => (
-                      <tr
-                        key={index}
-                        className="text-[14px] text-[#01031A] "
-                      >
-                        <td className="p-2 flex flex-col gap-">
-                          <span>
-                            {review.user?.full_name || review.user?.username}
-                          </span>
-                          <span>
-                            {review.user?.phoneNumber || review.user?.email}
+                      <tr key={index} className="text-[14px] text-[#01031A] ">
+                        <td className="border border-gray-300 p-2">
+                          <div className="flex flex-col">
+                            <span>
+                              Fullname: {review.user?.full_name || "N/A"}
+                            </span>
+                            <span>
+                              Username: {review.user?.username || "N/A"}
+                            </span>
+                            <span>Email: {review.user?.email || "N/A"}</span>
+                            <span>
+                              Phone: {review.user?.phone_number || "N/A"}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="border border-gray-300 p-2">
+                          {review.review}
+                        </td>
+                        <td className="border border-gray-300 p-2">
+                          {Array.from({ length: 5 }, (_, i) => (
+                            <span
+                              key={i}
+                              className={`inline-block ${
+                                i < Math.floor(Number(review.rating))
+                                  ? "text-yellow-500"
+                                  : "text-gray-300"
+                              }`}
+                            >
+                              ★
+                            </span>
+                          ))}
+                          <span className="text-sm ml-1">
+                            ({review.rating})
                           </span>
                         </td>
-                        <td className="p-2">{review.review}</td>
-                        <td className="p-2">{review.rating}</td>
-                        <td className="p-2">{formatDate(review.created_at)}</td>
+                        <td className="border border-gray-300 p-2">
+                          {formatDate(review.created_at)}
+                        </td>
                       </tr>
                     ))}
                   </tbody>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUsers } from "../../redux/PitchAdmin";
+import { fetchUsers, setCurrentPage } from "../../redux/PitchAdmin";
 import { RootState } from "../../redux/store";
 import { Home7, Ellipse, plus } from "../../assets/images";
 import { Link } from "react-router-dom";
@@ -12,6 +12,7 @@ import Button from "../../components/forms/button";
 import AdminFormModal from "../../components/user/AdminFormModel";
 import LoadingPage from "../../components/loading-page";
 import ErrorPage from "../../components/error-page";
+import { Input } from "rizzui";
 
 interface SummaryItem {
   title: string;
@@ -26,13 +27,13 @@ const defaultValue = {
   full_name: "",
   email: "",
   address: "",
-  password: "",
+  password: "000000",
   user_role: "",
 };
 
 const PitchAdminManagement: React.FC = () => {
   const dispatch: any = useDispatch();
-  const { users, loading, error } = useSelector(
+  const { users, loading, error, currentPage, lastPage } = useSelector(
     (state: RootState) => state.admin
   ) || { users: { data: { users: [], statistics: {} } } };
 
@@ -42,10 +43,43 @@ const PitchAdminManagement: React.FC = () => {
   const [formData, setFormData] = useState(defaultValue);
 
   const [formErrors, setFormErrors] = useState(defaultValue);
+  const [debouncedSearch, setDebouncedSearch] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [userRole, setUserRole] = useState<
+    "super_admin" | "pitch_owner" | "pitch_manager"
+  >("pitch_owner");
+  const [debouncedUserRole, setDebouncedUserRole] = useState<string>("");
+
+  // Handle search query with debounce
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+      setDebouncedSearch(searchQuery);
+      setDebouncedUserRole(userRole);
+    }, 1000);
+    return () => {
+      clearTimeout(timer);
+      setIsLoading(true);
+    };
+  }, [searchQuery, userRole]);
 
   useEffect(() => {
-    dispatch(fetchUsers());
-  }, [dispatch]);
+    dispatch(
+      fetchUsers({
+        page: currentPage,
+        search: debouncedSearch,
+        user_role: debouncedUserRole,
+      })
+    );
+  }, [dispatch, currentPage, debouncedSearch, debouncedUserRole]);
+
+  const handlePageChange = (newPage: number) => {
+    dispatch(setCurrentPage(newPage));
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
 
   useEffect(() => {
     if (users?.data?.statistics) {
@@ -110,20 +144,18 @@ const PitchAdminManagement: React.FC = () => {
     }
   };
 
-  if (loading) {
-    return <LoadingPage />;
-  }
-
   if (error) {
     return <ErrorPage errorMessage={error} />;
   }
 
-  const adminUsers = (users?.data?.users || []).filter((user: any) => {
-    const roleArray = JSON.parse(user.user_role);
-    return ["super_admin", "pitch_owner", "pitch_manager"].includes(
-      roleArray[0]
-    );
-  });
+  // const adminUsers = (users?.data?.users || []).filter((user: any) => {
+  //   const roleArray = JSON.parse(user.user_role);
+  //   return ["super_admin", "pitch_owner", "pitch_manager"].includes(
+  //     roleArray[0]
+  //   );
+  // });
+
+  const adminUsers = users?.data?.users || [];
 
   return (
     <div className="bg-white p-8 rounded-lg mb-20">
@@ -146,7 +178,7 @@ const PitchAdminManagement: React.FC = () => {
         {adminSummary.map((item, index) => (
           <div
             key={index}
-            className="min-w-[320px] h-[180px] rounded-md flex justify-between items-center"
+            className="min-w-[320px]h-[180px] rounded-md flex justify-between items-center overflow-hidden py-5"
             style={{ backgroundColor: item.color }}
           >
             <div className="flex flex-col ml-5 text-white">
@@ -163,8 +195,36 @@ const PitchAdminManagement: React.FC = () => {
         ))}
       </div>
 
+      <div className="w-full flex justify-between items-center">
+        <Input
+          label="Search users"
+          type="text"
+          value={searchQuery}
+          onChange={handleSearchChange}
+          placeholder="Search users..."
+          inputClassName="border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none"
+          clearable
+          onClear={() => setSearchQuery("")}
+        />
+
+        <select
+          disabled={isLoading}
+          className="border border-gray-300 rounded-md px-4 py-1 text-sm focus:outline-none h-10"
+          value={userRole}
+          onChange={(e) => {
+            setUserRole(e.target.value as any);
+          }}
+        >
+          <option value="super_admin">Super Admin</option>
+          <option value="pitch_owner">Pitch Admin</option>
+          <option value="pitch_manager">Pitch Manager</option>
+        </select>
+      </div>
+
       {/* Admin Users Table */}
-      {adminUsers.length === 0 ? (
+      {loading || isLoading ? (
+        <LoadingPage />
+      ) : adminUsers.length === 0 ? (
         <div>No user found</div>
       ) : (
         <table className="w-full text-left text-[#01031A] border-collapse mb-8">
@@ -174,6 +234,7 @@ const PitchAdminManagement: React.FC = () => {
               <th className="border-b p-4 font-semibold">Name</th>
               <th className="border-b p-4 font-semibold">Email</th>
               <th className="border-b p-4 font-semibold">Phone Number</th>
+              <th className="border-b p-4 font-semibold">Role</th>
               <th className="border-b p-4 font-semibold">Action</th>
             </tr>
           </thead>
@@ -186,6 +247,26 @@ const PitchAdminManagement: React.FC = () => {
                 </td>
                 <td className="border-b p-4 text-sm">{user.email}</td>
                 <td className="border-b p-4 text-sm">{user.phone_number}</td>
+                <td className="border-b p-4 text-sm">
+                  {(() => {
+                    try {
+                      // Ensure user_role is a valid JSON string and contains an array
+                      const roles = JSON.parse(user.user_role);
+                      if (
+                        Array.isArray(roles) &&
+                        roles.length > 0 &&
+                        typeof roles[0] === "string"
+                      ) {
+                        return roles[0].replace("_", " ").toUpperCase();
+                      } else {
+                        throw new Error("Invalid user role format");
+                      }
+                    } catch (error) {
+                      console.error("Error parsing user_role:", error);
+                      return "UNKNOWN ROLE"; // Fallback role if parsing fails
+                    }
+                  })()}
+                </td>
                 <td className="border-b p-4 text-sm text-playden-primary cursor-pointer">
                   <Link
                     to={`/pitch-admin-management/${user.id}`}
@@ -202,11 +283,9 @@ const PitchAdminManagement: React.FC = () => {
       )}
 
       <Pagination
-        currentPage={0}
-        totalPages={0}
-        onPageChange={function (): void {
-          throw new Error("Function not implemented.");
-        }}
+        currentPage={currentPage}
+        totalPages={lastPage}
+        onPageChange={handlePageChange}
       />
 
       {/* Modal for Adding New Admin */}

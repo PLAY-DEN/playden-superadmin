@@ -12,7 +12,8 @@ const API_ENDPOINTS = {
   UPDATE_USER: "api/v1/admin/users/:id",
   DELETE_USER: "api/v1/admin/users/:id",
   ASSIGN_PITCH_TO_USER: "api/v1/admin/users/assign-manager-to-pitch",
- 
+  ADD_PLAYPOINT: "api/v1/admin/playpoints",
+  
   // pitches
   GET_PITCHES: "api/v1/admin/pitches",
   GET_PITCH: "api/v1/admin/pitches/:id",
@@ -37,6 +38,8 @@ const API_ENDPOINTS = {
   // settings
   GET_SETTINGS: "api/v1/admin/settings",
   MARK_AS_PAID: "api/v1/admin/pitch-owners/mark-as-paid",
+
+  GET_RATINGS: "api/v1/admin/ratings",
 
   // bookings
   // playpoints

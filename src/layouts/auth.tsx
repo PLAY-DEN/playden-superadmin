@@ -4,7 +4,7 @@ import { AuthBg, logo } from "../assets/images";
 const AuthLayout = () => {
     return (
         <div className="min-h-screen w-full grid grid-cols-1 md:grid-cols-2">
-            <div className="mx-auto my-auto p-6 sm:p-10">
+            <div className="mx-auto my-auto p-6 sm:p-10 w-full">
                 <Outlet />
             </div>
             {/* Background Image Container - Only visible on medium and larger screens */}

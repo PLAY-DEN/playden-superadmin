@@ -72,7 +72,7 @@ const LoginPage: React.FC = () => {
 
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
+    <div className="flex items-center justify-center min-h-screen w-full">
       <ToastContainer />
       <div
         className="p-8 max-w-md mx-auto shadow-2xl rounded-md bg-cover bg-center md:hidden"
@@ -163,9 +163,9 @@ const LoginPage: React.FC = () => {
                   as={Password}
                   className="border border-gray-500 rounded-lg h-10 w-full px-4"
                 />
-                {errors.password && touched.password && (
+                {/* {errors.password && touched.password && (
                   <div className="text-red-500 text-sm">{errors.password}</div>
-                )}
+                )} */}
               </div>
 
               {/* {error && <p className="text-red-500 text-center">{error}</p>} */}

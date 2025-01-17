@@ -8,6 +8,7 @@ import { RootState } from "../../redux/store";
 import Input from "../../components/forms/input";
 import LoadingPage from "../../components/loading-page";
 import ErrorPage from "../../components/error-page";
+import { ToastContainer } from "react-toastify";
 
 const UserManagement: React.FC = () => {
   const dispatch: any = useDispatch();
@@ -68,6 +69,7 @@ const UserManagement: React.FC = () => {
 
   return (
     <div className="bg-white p-8 rounded-lg mb-20">
+      <ToastContainer />
       {/* Header Section */}
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl text-[#01031A] font-bold">User Management</h2>
@@ -117,7 +119,7 @@ const UserManagement: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          {filteredUsers?.map((user) => (
+          {filteredUsers?.map((user:any) => (
             <UserRow key={user.id} user={user} />
           ))}
         </tbody>
@@ -150,7 +152,7 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
   icon,
 }) => (
   <div
-    className="min-w-[320px] h-[180px] rounded-md flex justify-between items-center"
+    className="min-w-[320px]h-[180px] rounded-md flex justify-between items-center overflow-hidden py-5"
     style={{ backgroundColor: bgColor }}
   >
     <div className="flex flex-col ml-5 text-white">
@@ -161,7 +163,7 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
     <img
       src={Ellipse}
       alt=""
-      className="object-cover mt-[-68px] w-[110px] h-[110px]"
+      className="object-cover mt-[-68px] w-[110px]h-[110px]"
     />
   </div>
 );
@@ -176,26 +178,39 @@ interface UserRowProps {
     bookings_count: number;
     cancelled_bookings_count: number;
     playpoints: number;
+    deleted_at: string;
   };
 }
 
 const UserRow: React.FC<UserRowProps> = ({ user }) => (
   <tr className="hover:bg-gray-100">
-    <td className="border border-gray-300 py-2 px-1">{user.full_name}</td>
-    <td className="border border-gray-300 py-2 px-1">{user.email}</td>
+    <td className="border border-gray-300 py-2 px-1">
+      {user.full_name || "N/A"}
+    </td>
+    <td className="border border-gray-300 py-2 px-1">{user.email || "N/A"}</td>
     <td className="border border-gray-300 py-2 px-1 text-center">
-      {user.phone_number}
+      {user.phone_number || "N/A"}
     </td>
     <td className="border border-gray-300 py-2 px-1 text-center">
-      {user.bookings_count}
+      {user.bookings_count || 0}
     </td>
     <td className="border border-gray-300 py-2 px-1 text-center">
-      {user.cancelled_bookings_count}
+      {user.cancelled_bookings_count || 0}
     </td>
     <td className="border border-gray-300 py-2 px-1 text-center">
       {user.playpoints || 0}
     </td>
-    <td className="border border-gray-300 py-2 px-1 text-center">Active</td>
+    <td className="border border-gray-300 py-2 px-1 text-center">
+      {user.deleted_at ? (
+        <span className="inline-block px-3 py-1 text-sm font-semibold text-red-700 bg-red-100 rounded-full">
+          Suspended
+        </span>
+      ) : (
+        <span className="inline-block px-3 py-1 text-sm font-semibold text-green-700 bg-green-100 rounded-full">
+          Active
+        </span>
+      )}
+    </td>
     <td className="border border-gray-300 py-2 px-1 text-center">
       <Link
         to={`/user-management/User-details/${user.id}`}

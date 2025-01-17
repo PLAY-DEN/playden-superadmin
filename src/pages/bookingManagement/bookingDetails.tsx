@@ -1,18 +1,21 @@
-import React, { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchBookingDetails } from '../../redux/bookingManagementSlice';
-import { RootState } from '../../redux/store';
-import { formatDate } from '../../utils/utils';
-import LoadingPage from '../../components/loading-page';
-import NotFoundPage from '../../components/not-found-page';
+import React, { useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchBookingDetails } from "../../redux/bookingManagementSlice";
+import { RootState } from "../../redux/store";
+import { formatDate } from "../../utils/utils";
+import LoadingPage from "../../components/loading-page";
+import NotFoundPage from "../../components/not-found-page";
+import BackButton from "../../components/BackButton";
 
 const BookingDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const dispatch: any = useDispatch();
 
   // Extracting state using Redux selector
-  const { bookingDetails, loading } = useSelector((state: RootState) => state.bookingMgt);
+  const { bookingDetails, loading } = useSelector(
+    (state: RootState) => state.bookingMgt
+  );
 
   // Fetch booking details on mount or when `id` changes
   useEffect(() => {
@@ -21,13 +24,12 @@ const BookingDetails: React.FC = () => {
     }
   }, [dispatch, id]);
 
-
   if (loading) {
     return <LoadingPage />;
   }
 
   if (!bookingDetails) {
-    return <NotFoundPage errorMessage={'No booking details found.'} />;
+    return <NotFoundPage errorMessage={"No booking details found."} />;
   }
 
   const {
@@ -55,12 +57,13 @@ const BookingDetails: React.FC = () => {
     admin_commission,
   } = bookingDetails;
 
-
-
   return (
     <div className="bg-white p-8 rounded-lg">
+      <BackButton />
       <div className="flex justify-between w-full">
-        <h2 className="text-2xl text-[#01031A] font-bold mb-6">Booking Details</h2>
+        <h2 className="text-2xl text-[#01031A] font-bold mb-6">
+          Booking Details
+        </h2>
       </div>
 
       {/* Booking Information */}
@@ -95,11 +98,11 @@ const BookingDetails: React.FC = () => {
               </tr>
               <tr>
                 <td className="font-semibold pr-4">Tournament:</td>
-                <td>{tournament ? 'Yes' : 'No'}</td>
+                <td>{tournament ? "Yes" : "No"}</td>
               </tr>
               <tr>
                 <td className="font-semibold pr-4">Notes:</td>
-                <td>{notes || 'None'}</td>
+                <td>{notes || "None"}</td>
               </tr>
               <tr>
                 <td className="font-semibold pr-4">Total Cost:</td>
@@ -115,11 +118,11 @@ const BookingDetails: React.FC = () => {
               </tr>
               <tr>
                 <td className="font-semibold pr-4">Payment Reference:</td>
-                <td>{payment_reference || 'N/A'}</td>
+                <td>{payment_reference || "N/A"}</td>
               </tr>
               <tr>
                 <td className="font-semibold pr-4">Used Cashback:</td>
-                <td>{used_cashback ? 'Yes' : 'No'}</td>
+                <td>{used_cashback ? "Yes" : "No"}</td>
               </tr>
               <tr>
                 <td className="font-semibold pr-4">Created At:</td>
@@ -163,7 +166,7 @@ const BookingDetails: React.FC = () => {
               </tr>
               <tr>
                 <td className="font-semibold pr-4">Has Paid Owner:</td>
-                <td>{has_paid_owner ? 'Yes' : 'No'}</td>
+                <td>{has_paid_owner ? "Yes" : "No"}</td>
               </tr>
             </tbody>
           </table>

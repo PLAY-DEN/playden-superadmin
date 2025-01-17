@@ -11,6 +11,7 @@ import Button from "../../components/forms/button";
 import pitchClient from "../../api/client/pitch";
 import LoadingPage from "../../components/loading-page";
 import ErrorPage from "../../components/error-page";
+import { Input } from "rizzui";
 
 const PitchListing: React.FC = () => {
   const navigate = useNavigate();
@@ -21,7 +22,21 @@ const PitchListing: React.FC = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [isDeleted, setIsDeleted] = useState(false);
 
-  const fetchPitches = async (page: number) => {
+  const [debouncedSearch, setDebouncedSearch] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState<string>("");
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+      setDebouncedSearch(searchQuery);
+    }, 1000);
+    return () => {
+      clearTimeout(timer);
+      setLoading(true);
+    };
+  }, [searchQuery]);
+
+  const fetchPitches = async (page: number, search = "") => {
     if (!token) {
       navigate("/login");
       toast.error("Token expired, Kindly re-login");
@@ -32,6 +47,7 @@ const PitchListing: React.FC = () => {
     try {
       const response = await pitchClient.getPitches({
         page: page,
+        search,
       });
 
       const fetchedPitches = response.data.pitches || [];
@@ -52,14 +68,18 @@ const PitchListing: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchPitches(currentPage);
+    fetchPitches(currentPage, debouncedSearch);
     return () => setIsDeleted(false);
-  }, [currentPage, isDeleted]);
+  }, [currentPage, isDeleted, debouncedSearch]);
 
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= totalPages) {
       setCurrentPage(newPage);
     }
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
   };
 
   return (
@@ -81,10 +101,21 @@ const PitchListing: React.FC = () => {
           <p>Add New Pitch</p>
         </Button>
       </div>
+
+      <Input
+        label="Search pitches"
+        type="text"
+        value={searchQuery}
+        onChange={handleSearchChange}
+        placeholder="Search pitches..."
+        inputClassName="border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none w-fit"
+        clearable
+        onClear={() => setSearchQuery("")}
+      />
       {loading ? (
         <LoadingPage />
       ) : pitches.length === 0 ? (
-        <div className="h-full mx-auto flex justify-center items-center">
+        <div className="h-full w-full mt-3">
           <ErrorPage errorMessage="No pitches found." />
         </div>
       ) : (

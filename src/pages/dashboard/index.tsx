@@ -24,7 +24,7 @@ const Dashboard: React.FC = () => {
           <div className="flex w-full gap-4">
             <StatisticsSummary
               title="Total Revenue"
-              value="₦10,000,000.00"
+              value="₦0"
               colorClass="text-white"
               customStyle={{
                 backgroundColor: "#6C6C6C",
@@ -41,7 +41,7 @@ const Dashboard: React.FC = () => {
             />
             <StatisticsSummary
               title="Total Commission"
-              value="3,000"
+              value="0"
               colorClass="text-white"
               customStyle={{
                 backgroundColor: "#01031A",

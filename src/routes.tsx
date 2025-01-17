@@ -20,6 +20,7 @@ import AdminDetails from "./pages/pitchAdminManagement/adminDetails";
 import SettingsPage from "./pages/accountSettings";
 import UpdatePitch from "./components/pitch/updatePitch";
 import BookingDetails from "./pages/bookingManagement/bookingDetails";
+import RatingManagement from "./pages/ratingMangement";
 
 const MyRoutes = () => (
   <Routes>
@@ -108,6 +109,14 @@ const MyRoutes = () => (
         element={
           <ProtectedRoute>
             <Financials />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/reviews"
+        element={
+          <ProtectedRoute>
+            <RatingManagement />
           </ProtectedRoute>
         }
       />
