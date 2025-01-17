@@ -6,7 +6,6 @@ import { formatDate } from "../../utils/utils";
 import { useEffect, useState } from "react";
 import AdminFormModal from "../../components/user/AdminFormModel";
 import NotFoundPage from "../../components/not-found-page";
-import { FaArrowLeft } from "react-icons/fa";
 import BackButton from "../../components/BackButton";
 import LoadingPage from "../../components/loading-page";
 
