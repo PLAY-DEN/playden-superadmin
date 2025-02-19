@@ -21,6 +21,7 @@ import SettingsPage from "./pages/accountSettings";
 import UpdatePitch from "./components/pitch/updatePitch";
 import BookingDetails from "./pages/bookingManagement/bookingDetails";
 import RatingManagement from "./pages/ratingMangement";
+import ProfileSettings from "./pages/accountSettings/ProfileSettings";
 
 const MyRoutes = () => (
   <Routes>
@@ -173,6 +174,14 @@ const MyRoutes = () => (
         element={
           <ProtectedRoute>
             <UpdatePitch />
+          </ProtectedRoute>
+        }
+      />
+       <Route
+        path="/profile-settings"
+        element={
+          <ProtectedRoute>
+            <ProfileSettings />
           </ProtectedRoute>
         }
       />

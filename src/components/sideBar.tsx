@@ -111,11 +111,12 @@ const Sidebar: React.FC = () => {
         ))}
       </div>
 
-      {/* Third Section: Profile Links */}
+      {/* Third Section: Profile Links   */}
       <div className="flex flex-col gap-2 mt-4">
         <h1 className="font-bold text-xs">PROFILE</h1>
         {[
           { name: "User Management", icon: user, route: "/user-management" },
+          { name: "Profile Management", icon: user, route: "/profile-settings" },
           {
             name: "Pitch Admin Management",
             icon: pitchAdmin,

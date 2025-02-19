@@ -3,11 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchSettings } from "../redux/settingsSlice";
 import { apiClient } from "../utils/apiClient";
 import { RootState } from "../redux/store";
-import { Editor } from "@tinymce/tinymce-react";
 import { toast, ToastContainer } from "react-toastify";
 import { Switch } from "rizzui";
 import LoadingPage from "./loading-page";
 import ErrorPage from "./error-page";
+import "react-quill/dist/quill.snow.css";
+import ReactQuill from "react-quill";
 
 const AccountSettings: React.FC = () => {
   const dispatch: any = useDispatch();
@@ -16,10 +17,6 @@ const AccountSettings: React.FC = () => {
     loading,
     error,
   } = useSelector((state: RootState) => state.settings);
-
-  const wysiwyg =
-    import.meta.env.VITE_WYSIWYG ||
-    "vo7hiyrk5rc1h6f5cdfkmd5dokr1k7ypwdkxtk8hae26c5bs";
 
   const [formData, setFormData] = useState({
     name: "",
@@ -227,17 +224,10 @@ const AccountSettings: React.FC = () => {
               >
                 Privacy Policy
               </label>
-              <Editor
-                apiKey={wysiwyg}
+              <ReactQuill
+                theme="snow"
                 value={formData.privacy_policy}
-                init={{
-                  height: 200,
-                  menubar: false,
-                  plugins: ["link", "lists", "table"],
-                  toolbar:
-                    "bold italic | alignleft aligncenter alignright | bullist numlist outdent indent | table",
-                }}
-                onEditorChange={(content) =>
+                onChange={(content) =>
                   handleEditorChange(content, "privacy_policy")
                 }
               />
@@ -251,17 +241,10 @@ const AccountSettings: React.FC = () => {
               >
                 Terms of Service
               </label>
-              <Editor
-                apiKey={wysiwyg}
+              <ReactQuill
+                theme="snow"
                 value={formData.terms_of_service}
-                init={{
-                  height: 200,
-                  menubar: false,
-                  plugins: ["link", "lists", "table"],
-                  toolbar:
-                    "bold italic | alignleft aligncenter alignright | bullist numlist outdent indent | table",
-                }}
-                onEditorChange={(content) =>
+                onChange={(content) =>
                   handleEditorChange(content, "terms_of_service")
                 }
               />
