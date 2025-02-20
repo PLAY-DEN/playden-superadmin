@@ -18,9 +18,16 @@ const Dashboard: React.FC = () => {
     <div className="">
       <DashboardHeader />
 
-      <div className="flex gap  mt-8">
-        <div className="w-full mr-8 ">
-          {/* Stats Cards */}
+      <div className="flex gap  mt-8 w-full">
+        <PlayDenStats />
+      </div>
+    </div>
+  );
+};
+
+export default Dashboard;
+
+{/* <div className="w-full mr-8 ">
           <div className="flex w-full gap-4">
             <StatisticsSummary
               title="Total Revenue"
@@ -56,9 +63,7 @@ const Dashboard: React.FC = () => {
               tertiaryImageSrc={Chart}
               tertiaryImageStyle={{ fontWeight: "bold" }}
             />
-            {/*  */}
           </div>
-          {/* Pitch Progress Displayed Directly Under the Summary Cards */}
           <div className="mt-8">
             <PitchProgress />
           </div>
@@ -69,10 +74,4 @@ const Dashboard: React.FC = () => {
           <div className="mt-12 md:mt-52">
             <TaskDetails />
           </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default Dashboard;
+        </div> */}
