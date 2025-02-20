@@ -5,7 +5,13 @@ import CreateCategoryModal from "../Modal";
 import pitchClient from "../../api/client/pitch";
 import PitchForm from "./PitchForm";
 import Button from "../forms/button";
-import { amenitiesOptions, defaultValues, facilitiesOptions, fetchData, FormData } from "../../data/PitchFormData";
+import {
+  amenitiesOptions,
+  defaultValues,
+  facilitiesOptions,
+  fetchData,
+  FormData,
+} from "../../data/PitchFormData";
 import categoryClient from "../../api/client/category";
 import userClient from "../../api/client/user";
 
@@ -17,9 +23,10 @@ const AddNewPitch: React.FC = () => {
     { value: string; label: string }[]
   >([]);
   const [owners, setOwners] = useState<{ value: string; label: string }[]>([]);
-  const [managers, setManagers] = useState<{ value: string; label: string }[]>([]);
+  const [managers, setManagers] = useState<{ value: string; label: string }[]>(
+    []
+  );
   const [errors, setErrors] = useState<Record<string, string>>({});
-
 
   const [formData, setFormData] = useState<FormData>(defaultValues);
 
@@ -31,7 +38,7 @@ const AddNewPitch: React.FC = () => {
   const getPitchOwners = () => {
     fetchData(
       userClient.getUsers,
-      { user_role: 'pitch_owner' },
+      { user_role: "pitch_owner" },
       (data) =>
         data.users.map((user: any) => ({
           value: user.id.toString(),
@@ -46,13 +53,13 @@ const AddNewPitch: React.FC = () => {
   const getPitchManagers = () => {
     fetchData(
       userClient.getUsers,
-      { user_role: 'pitch_manager' },
+      { user_role: "pitch_manager" },
       (data) =>
         data.users.map((user: any) => ({
           value: user.id.toString(),
           label: `${user?.full_name} (${user?.phone_number})`,
         })),
-        setManagers,
+      setManagers,
       "Error fetching pitch managers.",
       setIsLoading
     );
@@ -87,7 +94,9 @@ const AddNewPitch: React.FC = () => {
   };
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -130,15 +139,21 @@ const AddNewPitch: React.FC = () => {
       { name: "openingHours", label: "Opening Hours" },
       { name: "closingHours", label: "Closing Hours" },
       { name: "size", label: "Pitch Size" },
-      { name: "owner_id", label: "Owner" },
+      { name: "owner_id", label: "Pitch Owner (Admin)" },
     ];
 
-    const newErrors: Record<string, string> = {};
+    let newErrors: Record<string, string> = {};
 
     // Validate required fields
     requiredFields.forEach((field) => {
       const value = field.name.includes(".")
-        ? field.name.split(".").reduce((acc: any, key) => acc && acc[key] !== undefined ? acc[key] : null, formData)
+        ? field.name
+            .split(".")
+            .reduce(
+              (acc: any, key) =>
+                acc && acc[key] !== undefined ? acc[key] : null,
+              formData
+            )
         : formData[field.name];
 
       if (!value || value.trim() === "") {
@@ -159,7 +174,7 @@ const AddNewPitch: React.FC = () => {
     }
 
     // Prepare validated form data
-    const validatedFormData = {
+    let validatedFormData: any = {
       ...formData,
       amount_per_hour: parseFloat(formData.amountPerHour),
       discount: parseFloat(formData.discount),
@@ -170,20 +185,48 @@ const AddNewPitch: React.FC = () => {
       image: fileInput,
       opening_hours: `${formData.openingHours} - ${formData.closingHours}`,
       size: formData.size,
-      gallery: galleryFiles
+      // "gallery[0]": galleryFiles[0],
     };
+    // Append gallery files
+    galleryFiles.forEach((file, index) => {
+      validatedFormData[`gallery[${index}]`] = file;
+    });
 
-    setIsLoading(true)
+    setIsLoading(true);
 
     try {
       await pitchClient.createPitch(validatedFormData);
       toast.success("Pitch created successfully!");
       setFormData(defaultValues);
-    } catch (error) {
-      toast.error("Error creating pitch.");
-      console.error("Error creating pitch:", error);
+      setAmenities([]);
+      setFacilities([]);
+      setGalleryFiles([]);
+      setFileInput(null);
+    } catch (error: any) {
+      const errorData = error?.data || {};
+      const newErrors: { [key: string]: string } = {};
+
+      for (const key in errorData) {
+        if (errorData.hasOwnProperty(key)) {
+          newErrors[key] = errorData[key];
+        }
+      }
+
+      // Handle gallery errors
+      if (errorData.gallery) {
+        for (const key in errorData.gallery) {
+          if (errorData.gallery.hasOwnProperty(key)) {
+            newErrors[`gallery[${key}]`] = errorData.gallery[key];
+          }
+        }
+      }
+
+      setErrors(newErrors);
+      if (Object.keys(newErrors).length === 0) {
+        toast.error("Error creating pitch.");
+      }
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
   };
 
@@ -227,7 +270,6 @@ const AddNewPitch: React.FC = () => {
         setFormData={setFormData}
         handleSave={handleSave}
         isLoading={isLoading}
-
       />
     </div>
   );

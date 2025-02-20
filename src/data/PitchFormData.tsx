@@ -18,7 +18,7 @@ export interface FormData {
   amenities: any[] | null;
   facilities: any[] | null;
   image: File | any | null;
-  gallery: any[];
+  // gallery: any[];
   [key: string]: any; // Add index signature
 }
 
@@ -40,7 +40,7 @@ export const defaultValues = {
   amenities: [],
   facilities: [],
   image: null,
-  gallery: [],
+  // gallery: [],
 };
 
 export const fetchData = async (
