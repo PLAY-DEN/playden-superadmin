@@ -6,23 +6,29 @@ import pitchClient from "../../api/client/pitch";
 import PitchForm from "./PitchForm";
 import Button from "../forms/button";
 import { useParams } from "react-router-dom";
-import { amenitiesOptions, defaultValues, facilitiesOptions, fetchData, FormData } from "../../data/PitchFormData";
+import {
+  amenitiesOptions,
+  defaultValues,
+  facilitiesOptions,
+  fetchData,
+  FormData,
+} from "../../data/PitchFormData";
 import userClient from "../../api/client/user";
 import categoryClient from "../../api/client/category";
-
 
 const UpdatePitch = () => {
   const { pitchId } = useParams<{ pitchId: string }>();
   const [fileInput, setFileInput] = useState<File | null>(null);
-  const [, setGalleryFiles] = useState<File[]>([]);
+  const [galleryFiles, setGalleryFiles] = useState<File[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [categories, setCategories] = useState<
     { value: string; label: string }[]
   >([]);
   const [owners, setOwners] = useState<{ value: string; label: string }[]>([]);
-  const [managers, setManagers] = useState<{ value: string; label: string }[]>([]);
+  const [managers, setManagers] = useState<{ value: string; label: string }[]>(
+    []
+  );
   const [errors, setErrors] = useState<Record<string, string>>({});
-
 
   const [formData, setFormData] = useState<FormData>(defaultValues);
 
@@ -34,7 +40,7 @@ const UpdatePitch = () => {
   const getPitchOwners = () => {
     fetchData(
       userClient.getUsers,
-      { user_role: 'pitch_owner' },
+      { user_role: "pitch_owner" },
       (data) =>
         data.users.map((user: any) => ({
           value: user.id.toString(),
@@ -64,7 +70,7 @@ const UpdatePitch = () => {
   const getPitchManagers = () => {
     fetchData(
       userClient.getUsers,
-      { user_role: 'pitch_manager' },
+      { user_role: "pitch_manager" },
       (data) =>
         data.users.map((user: any) => ({
           value: user.id.toString(),
@@ -76,53 +82,52 @@ const UpdatePitch = () => {
     );
   };
 
-
   useEffect(() => {
     getPitchOwners();
     getPitchCategories();
     getPitchManagers();
   }, []);
 
+  const fetchPitch = async () => {
+    try {
+      const response = await pitchClient.getPitch({}, pitchId!);
+      const pitch = response.data;
+
+      const openingHours = pitch.opening_hours.split(" - ");
+
+      setFormData({
+        name: pitch.name,
+        amountPerHour: pitch.amount_per_hour.toString(),
+        discount: pitch.discount.toString(),
+        // ratings: pitch.ratings.toString(),
+        category_id: pitch.category_id.toString(),
+        contact: pitch.contact,
+        openingHours: openingHours[0],
+        closingHours: openingHours[1],
+        size: pitch.size,
+        // pitchManager: pitch.pitch_manager,
+        // managerContact: pitch.manager_contact,
+        owner_id: pitch.owner_id.toString(),
+        manager_id: pitch.managers[0]?.id.toString(),
+        location: {
+          latitude: pitch.location.latitude.toString(),
+          longitude: pitch.location.longitude.toString(),
+        },
+        amenities: pitch.amenities,
+        facilities: pitch.facilities,
+        image: pitch.image,
+        gallery: pitch.gallery,
+      });
+
+      setAmenities(pitch.amenities);
+      setFacilities(pitch.facilities);
+    } catch (error) {
+      toast.error("Error fetching pitch details.");
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
-    const fetchPitch = async () => {
-      try {
-        const response = await pitchClient.getPitch({}, pitchId!);
-        const pitch = response.data;
-
-        const openingHours = pitch.opening_hours.split(' - ');
-
-        setFormData({
-          name: pitch.name,
-          amountPerHour: pitch.amount_per_hour.toString(),
-          discount: pitch.discount.toString(),
-          // ratings: pitch.ratings.toString(),
-          category_id: pitch.category_id.toString(),
-          contact: pitch.contact,
-          openingHours: openingHours[0],
-          closingHours: openingHours[1],
-          size: pitch.size,
-          // pitchManager: pitch.pitch_manager,
-          // managerContact: pitch.manager_contact,
-          owner_id: pitch.owner_id.toString(),
-          manager_id: pitch.managers[0]?.id.toString(),
-          location: {
-            latitude: pitch.location.latitude.toString(),
-            longitude: pitch.location.longitude.toString(),
-          },
-          amenities: pitch.amenities,
-          facilities: pitch.facilities,
-          image: pitch.image,
-          gallery: pitch.gallery,
-        });
-
-        setAmenities(pitch.amenities);
-        setFacilities(pitch.facilities);
-      } catch (error) {
-        toast.error("Error fetching pitch details.");
-        console.error(error);
-      }
-    };
-
     fetchPitch();
   }, [pitchId]);
 
@@ -134,7 +139,9 @@ const UpdatePitch = () => {
   };
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -144,7 +151,6 @@ const UpdatePitch = () => {
     name: string,
     selectedOption: { value: string; label: string } | null
   ) => {
-
     if (name === "pitch_owner_id") {
       setFormData((prev) => ({
         ...prev,
@@ -187,7 +193,13 @@ const UpdatePitch = () => {
     // Validate required fields
     requiredFields.forEach((field) => {
       const value = field.name.includes(".")
-        ? field.name.split(".").reduce((acc: any, key) => acc && acc[key] !== undefined ? acc[key] : null, formData)
+        ? field.name
+            .split(".")
+            .reduce(
+              (acc: any, key) =>
+                acc && acc[key] !== undefined ? acc[key] : null,
+              formData
+            )
         : formData[field.name];
 
       if (!value || value.trim() === "") {
@@ -206,41 +218,50 @@ const UpdatePitch = () => {
     if (Object.keys(newErrors).length > 0) {
       return;
     }
-
+    const { gallery, ...rest } = formData;
     // Prepare validated form data
-    const validatedFormData = {
-      ...formData,
+    const validatedFormData: any = {
+      ...rest,
       amount_per_hour: parseFloat(formData.amountPerHour),
       discount: parseFloat(formData.discount),
       "location[latitude]": parseFloat(formData.location.latitude),
       "location[longitude]": parseFloat(formData.location.longitude),
       amenities: JSON.stringify(amenities),
       facilities: JSON.stringify(facilities),
-      // image: fileInput ,
       opening_hours: `${formData.openingHours} - ${formData.closingHours}`,
       size: formData.size,
-      // gallery: galleryFiles
     };
 
-
     if (fileInput) {
-      validatedFormData['image'] = fileInput;
+      validatedFormData["image"] = fileInput;
     } else {
-      delete validatedFormData['image'];
+      delete validatedFormData["image"];
     }
-    setIsLoading(true)
+
+    if (galleryFiles.length > 0) {
+      galleryFiles.forEach((file, index) => {
+        validatedFormData[`gallery[${index}]`] = file;
+      });
+    } else {
+      Object.keys(validatedFormData).forEach((key) => {
+        if (key.startsWith("gallery[")) {
+          delete validatedFormData[key];
+        }
+      });
+    }
+    setIsLoading(true);
 
     try {
       await pitchClient.updatePitch(validatedFormData, pitchId!);
       toast.success("Pitch updated successfully!");
-      // setFormData(defaultValues);
+      fetchPitch();
     } catch (error: any) {
       toast.error("Error updating pitch.");
       const e = error?.data;
       if (e) setErrors(e);
       console.error(e);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
   };
 
@@ -324,146 +345,3 @@ const UpdatePitch = () => {
 };
 
 export default UpdatePitch;
-
-
-// import React, { useEffect, useState } from "react";
-// import { useParams, useNavigate } from "react-router-dom";
-// import { apiClient } from "../utils/apiClient";
-
-// const UpdatePitch: React.FC = () => {
-//   const { id } = useParams<{ id: string }>();
-//   const navigate = useNavigate();
-
-//   const [formData, setFormData] = useState({
-//     sport: "",
-//     pitchSize: "",
-//     name: "",
-//     contact: "",
-//     price: "",
-//     image: "",
-//   });
-//   const [loading, setLoading] = useState(false);
-
-//   useEffect(() => {
-//     const fetchPitchDetails = async () => {
-//       try {
-//         const response = await apiClient(`api/v1/admin/pitches/${id}`, "GET");
-//         const pitch = response.data.pitch;
-
-//         setFormData({
-//           sport: pitch.sport,
-//           pitchSize: pitch.size,
-//           name: pitch.name,
-//           contact: pitch.contact,
-//           price: pitch.amount_per_hour.toString(),
-//           image: pitch.image,
-//         });
-//       } catch (error: any) {
-//         console.error("Failed to fetch pitch details:", error);
-//         alert("Failed to fetch pitch details.");
-//       }
-//     };
-
-//     if (id) {
-//       fetchPitchDetails();
-//     }
-//   }, [id]);
-
-//   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-//     const { name, value } = e.target;
-//     setFormData({ ...formData, [name]: value });
-//   };
-
-//   const handleUpdate = async (e: React.FormEvent) => {
-//     e.preventDefault();
-
-//     try {
-//       setLoading(true);
-//       await apiClient(`admin/pitches/${id}`, "PUT", formData);
-//       alert("Pitch updated successfully.");
-//       navigate("/pitch-listing");
-//     } catch (error: any) {
-//       console.error("Error updating pitch:", error);
-//       alert("Failed to update the pitch.");
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   return (
-//     <div className="relative ml-72 p-8 mt-20">
-//       <h2 className="text-2xl font-bold mb-6">Update Pitch</h2>
-//       <form onSubmit={handleUpdate} className="space-y-4">
-//         <div>
-//           <label className="block font-semibold">Sport:</label>
-//           <input
-//             type="text"
-//             name="sport"
-//             value={formData.sport}
-//             onChange={handleInputChange}
-//             className="border p-2 rounded w-full"
-//           />
-//         </div>
-//         <div>
-//           <label className="block font-semibold">Pitch Size:</label>
-//           <input
-//             type="text"
-//             name="pitchSize"
-//             value={formData.pitchSize}
-//             onChange={handleInputChange}
-//             className="border p-2 rounded w-full"
-//           />
-//         </div>
-//         <div>
-//           <label className="block font-semibold">Name:</label>
-//           <input
-//             type="text"
-//             name="name"
-//             value={formData.name}
-//             onChange={handleInputChange}
-//             className="border p-2 rounded w-full"
-//           />
-//         </div>
-//         <div>
-//           <label className="block font-semibold">Contact:</label>
-//           <input
-//             type="text"
-//             name="contact"
-//             value={formData.contact}
-//             onChange={handleInputChange}
-//             className="border p-2 rounded w-full"
-//           />
-//         </div>
-//         <div>
-//           <label className="block font-semibold">Price (per hour):</label>
-//           <input
-//             type="text"
-//             name="price"
-//             value={formData.price}
-//             onChange={handleInputChange}
-//             className="border p-2 rounded w-full"
-//           />
-//         </div>
-//         {/* <div>
-//           <label className="block font-semibold">Image URL:</label>
-//           <input
-//             type="text"
-//             name="image"
-//             value={formData.image}
-//             onChange={handleInputChange}
-//             className="border p-2 rounded w-full"
-//           />
-//         </div> */}
-//         <button
-//           type="submit"
-//           className="bg-playden-primary text-white py-2 px-4 rounded"
-//           disabled={loading}
-//         >
-//           {loading ? "Updating..." : "Update Pitch"}
-//         </button>
-//       </form>
-//     </div>
-//   );
-// };
-
-// export default UpdatePitch;
