@@ -13,6 +13,7 @@ const API_ENDPOINTS = {
   DELETE_USER: "api/v1/admin/users/:id",
   ASSIGN_PITCH_TO_USER: "api/v1/admin/users/assign-manager-to-pitch",
   ADD_PLAYPOINT: "api/v1/admin/playpoints",
+  GET_USER_: "api/v1/user",
 
   // pitches
   GET_PITCHES: "api/v1/admin/pitches",

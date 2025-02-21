@@ -1,49 +1,126 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // import { Button } from "rizzui";
 import { FiUser, FiMail, FiPhone, FiMapPin } from "react-icons/fi";
 import Input from "../../components/forms/input";
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import Button from "../../components/forms/button";
+import API_ENDPOINTS from "../../api/client/_endpoint";
+import { apiClient } from "../../utils/apiClient";
 
 const ProfileSettings = () => {
   const [formData, setFormData] = useState({
-    fullName: "",
+    full_name: "",
     email: "",
     username: "",
-    phoneNumber: "",
+    phone_number: "",
     address: "",
     oldPassword: "",
     password: "",
     confirmPassword: "",
   });
 
+  // const [error, setError] = useState(null);
   const [isPasswordVisible] = useState(false);
   const [isLoading, setIsLoading] = useState({
     update: false,
     changePassword: false,
   });
 
+
+  const fetchProfileData = async () => {
+    try {
+      const response = await apiClient(`${API_ENDPOINTS.GET_USER_}`, "GET");
+
+      const userData = response.data; // Corrected data extraction
+
+      // Update state with received data, replacing `null` values with empty strings
+      setFormData({
+        full_name: userData.full_name ?? "",
+        email: userData.email ?? "",
+        username: userData.username ?? "",
+        phone_number: userData.phone_number ?? "",
+        address: userData.address ?? "",
+        oldPassword: "",
+        password: "",
+        confirmPassword: "",
+      });
+
+      console.log("Updated FormData State:", formData);
+    } catch (err: any) {
+      // setError(err.message);
+      toast.error(err.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchProfileData();
+  }, []);
+
   const handleInputChange = (e: any) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleUpdate = () => {
+  const handleUpdate = async () => {
     setIsLoading((prev) => ({ ...prev, update: true }));
-    // Simulate API call
-    setTimeout(
-      () => setIsLoading((prev) => ({ ...prev, update: false })),
-      1500
-    );
+    const { oldPassword, password, confirmPassword, ...rest } = formData;
+    try {
+      await apiClient(
+        `${API_ENDPOINTS.GET_USER_}`,
+        "PUT",
+        JSON.stringify(rest)
+      );
+
+      toast.success("Profile updated successfully!");
+      fetchProfileData();
+    } catch (err: any) {
+      toast.error(err.message);
+    } finally {
+      setIsLoading((prev) => ({ ...prev, update: false }));
+    }
   };
 
-  const handleChangePassword = () => {
+  const handleChangePassword = async () => {
+    if (formData.password !== formData.confirmPassword) {
+      toast.error("Passwords do not match.");
+      return;
+    }
+
     setIsLoading((prev) => ({ ...prev, changePassword: true }));
-    // Simulate API call
-    setTimeout(
-      () => setIsLoading((prev) => ({ ...prev, changePassword: false })),
-      1500
-    );
+
+    try {
+      await apiClient(
+        `${API_ENDPOINTS.GET_USER_}`,
+        "PUT",
+        JSON.stringify({
+          old_password: formData.oldPassword,
+          new_password: formData.password,
+          type: "password",
+        })
+      );
+      toast.success("Password changed successfully!");
+      setFormData((prev) => ({
+        ...prev,
+        oldPassword: "",
+        password: "",
+        confirmPassword: "",
+      }));
+    } catch (err: any) {
+      console.log(err.response.data.data);
+
+      if (err?.response?.data?.data) {
+        const errorData = err?.response?.data?.data;
+        for (const key in errorData) {
+          if (errorData.hasOwnProperty(key)) {
+            toast.error(errorData[key]);
+          }
+        }
+      } else {
+        // toast.error(err.message);
+      }
+    } finally {
+      setIsLoading((prev) => ({ ...prev, changePassword: false }));
+    }
   };
 
   return (
@@ -53,8 +130,8 @@ const ProfileSettings = () => {
       <div className="space-y-4 mt-4">
         <Input
           label="Full Name"
-          name="fullName"
-          value={formData.fullName}
+          name="full_name"
+          value={formData.full_name}
           onChange={handleInputChange}
           placeholder="Full name"
           icon={<FiUser />}
@@ -77,8 +154,8 @@ const ProfileSettings = () => {
         />
         <Input
           label="Phone Number"
-          name="phoneNumber"
-          value={formData.phoneNumber}
+          name="phone_number"
+          value={formData.phone_number}
           onChange={handleInputChange}
           placeholder="Phone number"
           icon={<FiPhone />}

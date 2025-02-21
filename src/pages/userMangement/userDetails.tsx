@@ -82,19 +82,21 @@ const UserDetails: React.FC = () => {
     }
   };
 
-  const handleSuspendUser = async () => {
+  const handleSuspendUser = async (isR = false) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to suspend this user?"
     );
     if (!confirmDelete) return;
 
     try {
-      await apiClient(
-        API_ENDPOINTS.GET_USERS + `/suspend/${user.id}`,
-        "DELETE"
-      );
-      toast.success("Admin suspended successfully");
-      navigate("/user-management"); // Navigate to admin list or another page after deletion
+      if (isR) {
+        await apiClient(`api/v1/user/un-suspend/${user.id}`, "POST");
+        toast.success("Admin un-suspended successfully");
+      } else {
+        await apiClient(`api/v1/user/suspend/${user.id}`, "DELETE");
+        toast.success("Admin suspended successfully");
+      }
+      getUser(id); // Reload the user details after suspension/unsuspension
     } catch (error: any) {
       toast.error(error.response?.data.message || "Something went wrong");
     }
@@ -198,15 +200,22 @@ const UserDetails: React.FC = () => {
           </table>
         </div>
       </div>
-
+      <hr className="my-12 "/>
       {/* Action Buttons */}
-      <div className="mt-12 flex gap-4">
-        {!user.deleted_at && (
+      <div className="flex gap-4">
+        {!user.deleted_at ? (
           <button
-            onClick={handleSuspendUser}
+            onClick={() => handleSuspendUser(false)}
             className="px-6 py-2 bg-yellow-500 text-white rounded-lg text-xs h-[38px] w-[140px]"
           >
             Suspend
+          </button>
+        ) : (
+          <button
+            onClick={() => handleSuspendUser(true)}
+            className="px-6 py-2 bg-green-500 text-white rounded-lg text-xs h-[38px] w-[140px]"
+          >
+            Unsuspend
           </button>
         )}
         <button

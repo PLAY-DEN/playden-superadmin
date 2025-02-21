@@ -177,6 +177,7 @@ interface UserRowProps {
     phone_number: string;
     bookings_count: number;
     cancelled_bookings_count: number;
+    cashbacks_sum_coins: number;
     playpoints: number;
     deleted_at: string;
   };
@@ -198,7 +199,7 @@ const UserRow: React.FC<UserRowProps> = ({ user }) => (
       {user.cancelled_bookings_count || 0}
     </td>
     <td className="border border-gray-300 py-2 px-1 text-center">
-      {user.playpoints || 0}
+      {user.cashbacks_sum_coins || 0}
     </td>
     <td className="border border-gray-300 py-2 px-1 text-center">
       {user.deleted_at ? (
