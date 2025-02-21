@@ -123,7 +123,7 @@ const Financials: React.FC = () => {
                         {record.accountNo}
                       </td> */}
                       <td className="border-b p-4 text-sm">
-                        {record.pending_payout}
+                        NGN {record.pending_payout}
                       </td>
                       {/* <td className="border-b p-4 text-sm">{record.status}</td>
                       <td className="border-b p-4 text-sm">{record.date}</td> */}

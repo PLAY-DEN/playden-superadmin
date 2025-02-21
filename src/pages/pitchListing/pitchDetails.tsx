@@ -18,17 +18,16 @@ import SwiperCore from "swiper";
 import {
   Autoplay,
   EffectFade,
-  Navigation,
   Mousewheel,
   Keyboard,
 } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 // Import Swiper styles
-import "swiper/css";
+// import "swiper/css";
 import "swiper/swiper-bundle.css";
-import "swiper/css/effect-fade";
-import "swiper/css/navigation";
+// import "swiper/css/effect-fade";
+// import "swiper/css/navigation";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
 const PitchDetails: React.FC = () => {
@@ -114,14 +113,6 @@ const PitchDetails: React.FC = () => {
     const formData = new FormData(event.currentTarget);
     const searchValue = formData.get("search") as string;
     setSearchParams({ search: searchValue, page: "1" });
-  };
-
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
   };
 
   return (

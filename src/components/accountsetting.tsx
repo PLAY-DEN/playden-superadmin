@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+// import ReactQuill from "react-quill";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchSettings } from "../redux/settingsSlice";
 import { apiClient } from "../utils/apiClient";
@@ -7,8 +8,7 @@ import { toast, ToastContainer } from "react-toastify";
 import { Switch } from "rizzui";
 import LoadingPage from "./loading-page";
 import ErrorPage from "./error-page";
-import "react-quill/dist/quill.snow.css";
-import ReactQuill from "react-quill";
+// import "react-quill/dist/quill.snow.css";
 
 const AccountSettings: React.FC = () => {
   const dispatch: any = useDispatch();
@@ -74,12 +74,12 @@ const AccountSettings: React.FC = () => {
     }));
   };
 
-  const handleEditorChange = (content: string, name: string) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: content,
-    }));
-  };
+  // const handleEditorChange = (content: string, name: string) => {
+  //   setFormData((prevData) => ({
+  //     ...prevData,
+  //     [name]: content,
+  //   }));
+  // };
 
   const handleSave = async () => {
     // Validation
@@ -98,9 +98,11 @@ const AccountSettings: React.FC = () => {
 
     delete payload.referrerCreditValueReferee;
     delete payload.referrerCreditValueReferrer;
+    
     try {
       setIsSaving(true);
       await apiClient("api/v1/1/settings", "PUT", payload);
+      // dispatch(fetchSettings());
       toast.success("Settings saved successfully!");
     } catch (err: any) {
       toast.warning(err.response?.data?.message || "Failed to save settings");
@@ -224,13 +226,19 @@ const AccountSettings: React.FC = () => {
               >
                 Privacy Policy
               </label>
-              <ReactQuill
+              <textarea
+                name="privacy_policy"
+                onChange={handleInputChange}
+                rows={5}
+                className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              ></textarea>
+              {/* <ReactQuill
                 theme="snow"
                 value={formData.privacy_policy}
-                onChange={(content) =>
+                onChange={(content: string) =>
                   handleEditorChange(content, "privacy_policy")
                 }
-              />
+              /> */}
             </div>
 
             {/* Privacy Policy */}
@@ -241,13 +249,19 @@ const AccountSettings: React.FC = () => {
               >
                 Terms of Service
               </label>
-              <ReactQuill
+              <textarea
+                name="terms_of_service"
+                onChange={handleInputChange}
+                rows={5}
+                className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              ></textarea>
+              {/* <ReactQuill
                 theme="snow"
                 value={formData.terms_of_service}
-                onChange={(content) =>
+                onChange={(content: string) =>
                   handleEditorChange(content, "terms_of_service")
                 }
-              />
+              /> */}
             </div>
 
             {/* Save Button */}

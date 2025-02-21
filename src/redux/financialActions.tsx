@@ -3,7 +3,7 @@
 import { ThunkAction } from "redux-thunk";
 import { RootState } from "../redux/store";
 import { Action } from "redux";
-import axios from "axios";
+
 import {
   FETCH_FINANCIAL_STATISTICS_FAILURE,
   FETCH_FINANCIAL_STATISTICS_REQUEST,

@@ -88,12 +88,12 @@ const PlayDenStats: React.FC = () => {
           icon={person}
         />
         <StatCard
-          title="Total Admin Commission"
+          title="Total PlayDen Commission"
           value={`₦${totalAdminCommission.toFixed(2)}`}
           icon={compiling}
         />
         <StatCard
-          title="Total Owner Due"
+          title="Total Pitch Admin Due"
           value={`₦${totalOwnerDue.toFixed(2)}`}
           icon={person}
         />
