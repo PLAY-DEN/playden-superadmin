@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBookingHistory } from "../../redux/bookingSlice";
@@ -13,6 +13,23 @@ import pitchClient from "../../api/client/pitch";
 import { fetchReviews } from "../../redux/reviewsSlice";
 import { formatDate } from "../../utils/utils";
 import BackButton from "../../components/BackButton";
+// Import Swiper React components
+import SwiperCore from "swiper";
+import {
+  Autoplay,
+  EffectFade,
+  Navigation,
+  Mousewheel,
+  Keyboard,
+} from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+
+// Import Swiper styles
+import "swiper/css";
+import "swiper/swiper-bundle.css";
+import "swiper/css/effect-fade";
+import "swiper/css/navigation";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
 const PitchDetails: React.FC = () => {
   const { pitchId } = useParams<{ pitchId: string }>();
@@ -24,6 +41,20 @@ const PitchDetails: React.FC = () => {
 
   const searchQuery = searchParams.get("search") || "";
   const currentPage = Number(searchParams.get("page")) || 1;
+
+  const swiperRef = useRef<SwiperCore | null>(null);
+
+  const handlePrev = () => {
+    if (swiperRef.current) {
+      swiperRef.current.slidePrev();
+    }
+  };
+
+  const handleNext = () => {
+    if (swiperRef.current) {
+      swiperRef.current.slideNext();
+    }
+  };
 
   const { bookings, loading, error, totalPages } = useSelector(
     (state: RootState) => state.bookings
@@ -43,6 +74,7 @@ const PitchDetails: React.FC = () => {
       const response = await pitchClient.getPitch({}, pitchId);
 
       const fetchedPitch = response.data || {};
+      console.log(fetchedPitch);
 
       setPitch(fetchedPitch);
     } catch (error: any) {
@@ -83,7 +115,14 @@ const PitchDetails: React.FC = () => {
     const searchValue = formData.get("search") as string;
     setSearchParams({ search: searchValue, page: "1" });
   };
-  console.log(reviews);
+
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+  };
 
   return (
     <div className="bg-white p-8 rounded-lg">
@@ -92,32 +131,84 @@ const PitchDetails: React.FC = () => {
       {isFetchingPitch ? (
         <LoadingPage />
       ) : (
-        <div className="flex gap-6 mt-6 w-[680px]">
-          <img
-            src={pitch?.image}
-            alt="Pitch"
-            className="min-w-[300px] h-[189px] rounded-md"
-          />
-          <div className="text-sm mt-3">
-            <p>
-              <strong className="text-[#01031A]">PITCH NAME:</strong>{" "}
-              {pitch?.name}
-            </p>
-            <p>
-              <strong className="text-[#01031A]">SPORT:</strong> {pitch?.sport}
-            </p>
-            <p>
-              <strong className="text-[#01031A]">PITCH SIZE:</strong>{" "}
-              {pitch?.size}
-            </p>
-            <p>
-              <strong className="text-[#01031A]">CONTACT:</strong>{" "}
-              {pitch?.contact}
-            </p>
-            <p>
-              <strong className="text-[#01031A]">PRICE:</strong> ₦
-              {pitch?.amount_per_hour}/hr
-            </p>
+        <div className="fle gap-6 mt-6 w-[680px]">
+          {pitch?.gallery.length > 0 && (
+            <div className="w-ull w[680px] ">
+              <Swiper
+                onInit={(swiper) => (swiperRef.current = swiper)}
+                slidesPerView={1}
+                autoplay={true}
+                speed={500}
+                loop={true}
+                className="mySwiper1 w-[680px relative rounded-[20px] h-80"
+                modules={[Autoplay, EffectFade, Mousewheel, Keyboard]}
+                keyboard={true}
+                spaceBetween={8}
+                direction="horizontal"
+                touchAngle={45}
+                draggable
+              >
+                {pitch?.gallery.length >= 2 && (
+                  <div className="">
+                    <div className="absolute top-1/2 left-2 transform -translate-y-1/2 z-10  my-auto backdrop-blur-lg ">
+                      <button onClick={handlePrev}>
+                        <FaArrowLeft className="w-4 h-4 bg-white shadow-lg p-1 rounded-full" />
+                      </button>
+                    </div>
+
+                    <div className="absolute top-1/2 right-2 transform -translate-y-1/2 z-10 my-auto backdrop-blur-lg">
+                      <button onClick={handleNext} className="">
+                        <FaArrowRight className="w-4 h-4 bg-white shadow-lg p-1 rounded-full" />
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {pitch?.gallery.map((image: string, index: number) => (
+                  <SwiperSlide key={index} className="h-full">
+                    <div className="relative w-full h-[295px] md:h-full overflow-hidden">
+                      <img
+                        src={image}
+                        alt={`Gallery image ${index + 1}`}
+                        // fill
+                        className="object-cover"
+                        //  className="min-w-[300px] h-[189px] rounded-md"
+                      />
+                    </div>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </div>
+          )}
+
+          <div className="gap-6 w-full flex mt-16">
+            <img
+              src={pitch?.image}
+              alt="Pitch"
+              className="min-w[300px] w-[189px] h-[189px] rounded-full"
+            />
+            <div className="text-sm mt-3">
+              <p>
+                <strong className="text-[#01031A]">PITCH NAME:</strong>{" "}
+                {pitch?.name}
+              </p>
+              <p>
+                <strong className="text-[#01031A]">SPORT:</strong>{" "}
+                {pitch?.sport}
+              </p>
+              <p>
+                <strong className="text-[#01031A]">PITCH SIZE:</strong>{" "}
+                {pitch?.size}
+              </p>
+              <p>
+                <strong className="text-[#01031A]">CONTACT:</strong>{" "}
+                {pitch?.contact}
+              </p>
+              <p>
+                <strong className="text-[#01031A]">PRICE:</strong> ₦
+                {pitch?.amount_per_hour}/hr
+              </p>
+            </div>
           </div>
         </div>
       )}
