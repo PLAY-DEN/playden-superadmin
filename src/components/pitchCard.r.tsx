@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import Button from "./forms/button";
 
 interface PitchCardProps {
-  sport: string;
+  address: string;
   pitchSize: string;
   imageSrc: string;
   name: string;
@@ -16,7 +16,7 @@ interface PitchCardProps {
 }
 
 const PitchCard: React.FC<PitchCardProps> = ({
-  sport,
+  address,
   pitchSize,
   imageSrc,
   name,
@@ -45,6 +45,7 @@ const PitchCard: React.FC<PitchCardProps> = ({
   };
 
   const [isDeleting, setIsDeleting] = useState(false);
+  const [showFullAddress, setShowFullAddress] = useState(false);
 
   const handleDelete = async () => {
     const confirmDelete = window.confirm("Are you sure?");
@@ -67,34 +68,58 @@ const PitchCard: React.FC<PitchCardProps> = ({
   return (
     <div className="bg-white p-4 flex justify-between items-center gap-4 border rounded">
       <img src={imageSrc} alt="Pitch" className="rounded-md w-80 h-36" />
-      <div className="flex-1">
-        <p className="text-sm font-bold">SPORT: {sport}</p>
-        <p className="text-sm">PITCH SIZE: {pitchSize}</p>
-        <p className="text-sm">PITCH Name: {name}</p>
-        <p className="text-sm">MOBILE NUMBER: {contact}</p>
-        <p className="text-sm">PRICE: {price}</p>
+      <div className="flex-1 space-y-2 ">
+        <h3 className="text-lg font-bold text-gray-700">{name}</h3>
+        <div className="text-sm text-gray-600">
+          <p>
+            <span className="font-semibold">Pitch Size:</span> {pitchSize}
+          </p>
+          <p>
+            <span className="font-semibold">Contact:</span> {contact}
+          </p>
+          <p>
+            <span className="font-semibold">Price:</span> {price}
+          </p>
+          <p>
+            <span className="font-semibold">Address:</span>{" "}
+            {address.length > 100 ? (
+              <>
+                {showFullAddress ? address : `${address.substring(0, 100)}...`}
+                <button
+                  onClick={() => setShowFullAddress(!showFullAddress)}
+                  className="text-playden-primary ml-2"
+                >
+                  {showFullAddress ? "Show less" : "Show more"}
+                </button>
+              </>
+            ) : (
+              address
+            )}
+          </p>
+        </div>
       </div>
-        <div className="flex flex-ro gap-2 mr10">
+
+      <div className="flex flex-ro gap-2 mr10">
         <Button
           className="text-white bg-playden-primary !rounded-lg  !py-2 !text-sm !w-fit"
           onClick={handleViewDetails}
         >
           View
         </Button>
-          <Button
-            disabled={isDeleting}
-            className={'!bg-red !rounded-lg  !py-2 !text-sm !w-fit'}
-            onClick={handleDelete}
-          >
-            {isDeleting ? "Deleting..." : "Delete"}
-          </Button>
+        <Button
+          disabled={isDeleting}
+          className={"!bg-red !rounded-lg  !py-2 !text-sm !w-fit"}
+          onClick={handleDelete}
+        >
+          {isDeleting ? "Deleting..." : "Delete"}
+        </Button>
 
-          <Button
-            className="!rounded-lg !py-2 !text-sm !w-fit !bg-transparent !border-2 !border-primary !text-primary "
-            onClick={handleUpdate}
-          >
-            Edit
-          </Button>
+        <Button
+          className="!rounded-lg !py-2 !text-sm !w-fit !bg-transparent !border-2 !border-primary !text-primary "
+          onClick={handleUpdate}
+        >
+          Edit
+        </Button>
       </div>
     </div>
   );

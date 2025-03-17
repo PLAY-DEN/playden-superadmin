@@ -72,6 +72,23 @@ const PitchForm: React.FC<PitchFormProps> = ({
             </div>
 
             <div>
+              <label>Pitch Address:</label>
+              <Input
+                disabled={isLoading}
+                type="text"
+                name="address"
+                className={`border px-2 py-1 ${
+                  errors.address ? "border-red-500" : ""
+                }`}
+                value={formData.address}
+                onChange={handleInputChange}
+              />
+              {errors.address && (
+                <p className="text-red-500 text-sm">{errors.address}</p>
+              )}
+            </div>
+
+            <div>
               <label>Pitch Size:</label>
               <Input
                 disabled={isLoading}

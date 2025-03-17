@@ -97,6 +97,7 @@ const UpdatePitch = () => {
 
       setFormData({
         name: pitch.name,
+        address: pitch.address,
         amountPerHour: pitch.amount_per_hour.toString(),
         discount: pitch.discount.toString(),
         // ratings: pitch.ratings.toString(),
@@ -178,6 +179,7 @@ const UpdatePitch = () => {
     // Define required fields
     const requiredFields = [
       { name: "name", label: "Pitch Name" },
+      { name: "address", label: "Pitch Address" },
       { name: "amountPerHour", label: "Pitch Price" },
       { name: "category_id", label: "Category" },
       { name: "contact", label: "Contact" },

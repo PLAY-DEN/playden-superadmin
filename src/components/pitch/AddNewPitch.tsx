@@ -133,6 +133,7 @@ const AddNewPitch: React.FC = () => {
     // Define required fields
     const requiredFields = [
       { name: "name", label: "Pitch Name" },
+      { name: "address", label: "Pitch Address" },
       { name: "amountPerHour", label: "Pitch Price" },
       { name: "category_id", label: "Category" },
       { name: "contact", label: "Contact" },

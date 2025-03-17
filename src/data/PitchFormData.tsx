@@ -4,7 +4,7 @@ export interface FormData {
   name: string;
   amountPerHour: string;
   discount: string;
-  // ratings: string;
+  address: string;
   category_id: string;
   contact: string;
   openingHours: string;
@@ -26,7 +26,7 @@ export const defaultValues = {
   name: "",
   amountPerHour: "",
   discount: "",
-  // ratings: "",
+  address: "",
   category_id: "",
   contact: "",
   openingHours: "",
