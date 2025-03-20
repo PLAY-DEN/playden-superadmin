@@ -116,9 +116,11 @@ const BookingDetails: React.FC = () => {
                 <td className="font-semibold pr-4">Status:</td>
                 <td>{status}</td>
               </tr>
-              <tr>
+              <tr className="">
                 <td className="font-semibold pr-4">Payment Reference:</td>
-                <td>{payment_reference || "N/A"}</td>
+                <td className="font-extrabold text-red">
+                  {payment_reference || "User has not made payment"}
+                </td>
               </tr>
               <tr>
                 <td className="font-semibold pr-4">Used Cashback:</td>
