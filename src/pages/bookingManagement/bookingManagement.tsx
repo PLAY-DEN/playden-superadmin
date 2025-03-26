@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import Pagination from "../../components/pagination";
 import Input from "../../components/forms/input";
 import LoadingPage from "../../components/loading-page";
+import { formatDate } from "../../utils/utils";
 
 const BookingManagement: React.FC = () => {
   const dispatch: any = useDispatch();
@@ -100,7 +101,7 @@ const BookingManagement: React.FC = () => {
                     {booking.status}
                   </span>
                 </td>
-                <td className="border-b p-4 text-sm">{booking.date}</td>
+                <td className="border-b p-4 text-sm">{formatDate(booking.date)}</td>
                 <td className="border-b p-4 text-sm">
                   {booking.pitch?.name || "N/A"}
                 </td>

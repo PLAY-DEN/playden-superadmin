@@ -43,6 +43,8 @@ const API_ENDPOINTS = {
   GET_RATINGS: "api/v1/admin/ratings",
   FINANCIAL_B: "api/v1/admin/financial-statistics",
 
+  GET_ADS: "api/v1/admin/ads",
+
   // bookings
   // playpoints
   // settings

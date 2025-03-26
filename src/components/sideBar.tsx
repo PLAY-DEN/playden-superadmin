@@ -122,6 +122,34 @@ const Sidebar: React.FC = () => {
             icon: pitchAdmin,
             route: "/pitch-admin-management",
           },
+        ].map((item) => (
+          <Link
+            key={item.name}
+            to={item.route}
+            className={`flex items-center gap-3 px-2 py-2 text-sm font-bold rounded-md hover:bg-[#35354C] hover:text-white ${
+              isActive(item.route) ? "bg-[#35354C] text-white relative" : ""
+            }`}
+          >
+            <img
+              src={item.icon}
+              alt={`${item.name} Icon`}
+              className="w-4 h-4"
+              style={{
+                filter: isActive(item.route)
+                  ? "brightness(0) invert(1)"
+                  : "brightness(0) invert(0.2)",
+              }}
+            />
+            <span>{item.name}</span>
+          </Link>
+        ))}
+      </div>
+
+       {/* Third Section: Profile Links   */}
+       <div className="flex flex-col gap-2 mt-4">
+        <h1 className="font-bold text-xs">OTHERS</h1>
+        {[
+          { name: "Ads", icon: playPoint, route: "/ads" },
           { name: "Settings", icon: setting, route: "/account-settings" },
         ].map((item) => (
           <Link

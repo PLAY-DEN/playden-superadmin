@@ -11,6 +11,7 @@ import playpointsReducer from './playPointSlice';
 import financialsReducer from './financialsSlice';
 import reviewsReducer from './reviewsSlice';
 import { financialReducer } from "./financialActions";
+import adsMgtReducer from './adsSlice';
 
 
 export const store = configureStore({
@@ -27,6 +28,7 @@ export const store = configureStore({
         playpoints: playpointsReducer,
         ratings: reviewsReducer,
         financial: financialReducer,
+        adsMgt: adsMgtReducer,
     },
 });
 

@@ -90,7 +90,7 @@ const BookingDetails: React.FC = () => {
               </tr>
               <tr>
                 <td className="font-semibold pr-4">Date:</td>
-                <td>{date}</td>
+                <td>{formatDate(date)}</td>
               </tr>
               <tr>
                 <td className="font-semibold pr-4">Time:</td>

@@ -22,6 +22,7 @@ import UpdatePitch from "./components/pitch/updatePitch";
 import BookingDetails from "./pages/bookingManagement/bookingDetails";
 import RatingManagement from "./pages/ratingMangement";
 import ProfileSettings from "./pages/accountSettings/ProfileSettings";
+import Ads from "./pages/ads";
 
 const MyRoutes = () => (
   <Routes>
@@ -182,6 +183,14 @@ const MyRoutes = () => (
         element={
           <ProtectedRoute>
             <ProfileSettings />
+          </ProtectedRoute>
+        }
+      />
+       <Route
+        path="/ads"
+        element={
+          <ProtectedRoute>
+            <Ads />
           </ProtectedRoute>
         }
       />
