@@ -161,7 +161,6 @@ const AdsForm: React.FC = () => {
       await ApiClient.post(API_ENDPOINTS.GET_ADS, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      // dispatch(fetchSettings());
       toast.success("Ads saved successfully!");
     } catch (err: any) {
       const errorData = err?.data || {};
