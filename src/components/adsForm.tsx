@@ -25,11 +25,16 @@ const AdsForm: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [debouncedSearch] = useState<string>("");
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    title: string;
+    content: string;
+    type: string;
+    pitch_id: string | null;
+  }>({
     title: "",
     content: "",
     type: "carousel",
-    pitch_id: "",
+    pitch_id: null,
   });
 
   const [fileInput, setFileInput] = useState<File | null>(null);
@@ -85,7 +90,7 @@ const AdsForm: React.FC = () => {
         title: settings.title || "",
         content: settings.content || "",
         type: settings.type || "carousel",
-        pitch_id: settings.pitch_id?.toString() || "",
+        pitch_id: settings.pitch_id?.toString() || null,
       });
     }
   }, [settings]);
@@ -119,7 +124,7 @@ const AdsForm: React.FC = () => {
     if (name === "pitch_id") {
       setFormData((prev) => ({
         ...prev,
-        pitch_id: selectedOption ? selectedOption.value : "",
+        pitch_id: selectedOption ? selectedOption.value : null,
       }));
     } else {
       setFormData((prev) => ({
@@ -153,6 +158,9 @@ const AdsForm: React.FC = () => {
       type: "carousel",
       image: fileInput,
     };
+    if (formData.pitch_id == null) {
+      delete payload.pitch_id;
+    }
     console.log(payload);
 
     try {
@@ -162,6 +170,7 @@ const AdsForm: React.FC = () => {
         headers: { "Content-Type": "multipart/form-data" },
       });
       toast.success("Ads saved successfully!");
+      window.location.reload();
     } catch (err: any) {
       const errorData = err?.data || {};
       const newErrors: { [key: string]: string } = {};
@@ -175,6 +184,7 @@ const AdsForm: React.FC = () => {
       setErrors(newErrors);
       if (Object.keys(newErrors).length === 0) {
         toast.error("Error creating ads.");
+        console.log(err);
       }
     } finally {
       setIsSaving(false);
