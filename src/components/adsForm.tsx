@@ -1,8 +1,4 @@
 import React, { useEffect, useState } from "react";
-// import ReactQuill from "react-quill";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchSettings } from "../redux/settingsSlice";
-import { apiClient } from "../utils/apiClient";
 import { RootState } from "../redux/store";
 import { toast, ToastContainer } from "react-toastify";
 import LoadingPage from "./loading-page";
@@ -14,10 +10,9 @@ import { Select } from "rizzui";
 import { objectToFormData } from "../utils/utils";
 import { ApiClient } from "../api/client";
 import API_ENDPOINTS from "../api/client/_endpoint";
-// import "react-quill/dist/quill.snow.css";
+import { useSelector } from "react-redux";
 
 const AdsForm: React.FC = () => {
-  const dispatch: any = useDispatch();
   const {
     data: settings,
     loading,
@@ -25,12 +20,10 @@ const AdsForm: React.FC = () => {
   } = useSelector((state: RootState) => state.settings);
 
   const [pitches, setPitches] = useState<any[]>([]);
-  const [totalPages, setTotalPages] = useState(1);
-  const [isDeleted, setIsDeleted] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [, setTotalPages] = useState(1);
+  const [, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [debouncedSearch, setDebouncedSearch] = useState<string>("");
-  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [debouncedSearch] = useState<string>("");
 
   const [formData, setFormData] = useState({
     title: "",

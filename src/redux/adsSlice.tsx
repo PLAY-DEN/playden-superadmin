@@ -85,7 +85,7 @@ const adsSlice = createSlice({
       .addCase(fetchBookingDetails.pending, (state) => {
         state.loading = true;
       })
-      .addCase(fetchBookingDetails.fulfilled, (state, action) => {
+      .addCase(fetchBookingDetails.fulfilled, (state) => {
         state.loading = false;
         // state.bookingDetails = action.payload; // Store booking details in state
       })

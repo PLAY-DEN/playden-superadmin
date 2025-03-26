@@ -1,10 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-// import { RootState } from "../../redux/store";
-// import {
-//   fetchBookingsMgt,
-//   setCurrentPage,
-// } from "../../redux/bookingManagementSlice";
 import { Link } from "react-router-dom";
 import { RootState } from "../redux/store";
 import { fetchAds, setCurrentPage } from "../redux/adsSlice";
@@ -58,8 +53,7 @@ const AdsList: React.FC = () => {
     setSearchQuery(e.target.value);
   };
 
-  const [isDeleting, setIsDeleting] = useState({});
-  // const [showFullAddress, setShowFullAddress] = useState(false);
+  const [, setIsDeleting] = useState({});
 
   const handleDelete = async (id: number) => {
     const confirmDelete = window.confirm("Are you sure?");
