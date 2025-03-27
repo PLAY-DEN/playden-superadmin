@@ -118,6 +118,8 @@ const UpdatePitch = () => {
         facilities: pitch.facilities,
         image: pitch.image,
         gallery: pitch.gallery,
+        booking_above_2_hours_discount:
+          pitch.booking_above_2_hours_discount * 100 || 0,
       });
 
       setAmenities(pitch.amenities);
@@ -232,6 +234,8 @@ const UpdatePitch = () => {
       facilities: JSON.stringify(facilities),
       opening_hours: `${formData.openingHours} - ${formData.closingHours}`,
       size: formData.size,
+      booking_above_2_hours_discount:
+        formData.booking_above_2_hours_discount / 100,
     };
 
     if (fileInput) {

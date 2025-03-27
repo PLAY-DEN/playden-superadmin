@@ -18,6 +18,7 @@ export interface FormData {
   amenities: any[] | null;
   facilities: any[] | null;
   image: File | any | null;
+  booking_above_2_hours_discount: number;
   // gallery: any[];
   [key: string]: any; // Add index signature
 }
@@ -40,6 +41,7 @@ export const defaultValues = {
   amenities: [],
   facilities: [],
   image: null,
+  booking_above_2_hours_discount: 0,
   // gallery: [],
 };
 
@@ -68,8 +70,12 @@ export const amenitiesOptions = [
   { label: "Changing Room", value: "Changing Room" },
   { label: "Capacity", value: "Capacity" },
   { label: "Sitting Area", value: "Sitting Area" },
+  { label: "Bibs", value: "Bibs" },
+  { label: "Football", value: "Football" },
+  { label: "Rackets", value: "Rackets" },
 ];
 
+// Facilities to add: toilet, parking
 export const facilitiesOptions = [
   { label: "Swimming Pool", value: "Swimming Pool" },
   { label: "Garden", value: "Garden" },
@@ -78,4 +84,6 @@ export const facilitiesOptions = [
   { label: "Wifi", value: "Wifi" },
   { label: "Spa", value: "Spa" },
   { label: "Restaurant", value: "Restaurant" },
+  { label: "Toilet", value: "Toilet" },
+  { label: "Parking", value: "Parking" },
 ];

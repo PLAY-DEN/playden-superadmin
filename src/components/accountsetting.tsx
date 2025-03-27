@@ -32,6 +32,7 @@ const AccountSettings: React.FC = () => {
     about_us: "",
     contact_us: "",
     pitch_owner_percent: "",
+    first_booking_discount: 0,
   });
 
   const [isSaving, setIsSaving] = useState(false);
@@ -60,6 +61,7 @@ const AccountSettings: React.FC = () => {
         about_us: settings.about_us || "",
         contact_us: settings.contact_us || "",
         pitch_owner_percent: settings.pitch_owner_percent || "",
+        first_booking_discount: settings.first_booking_discount * 100 || 0,
       });
     }
   }, [settings]);
@@ -94,11 +96,12 @@ const AccountSettings: React.FC = () => {
         referee: Number(formData.referrerCreditValueReferee),
         referrer: Number(formData.referrerCreditValueReferrer),
       },
+      first_booking_discount: formData.first_booking_discount / 100,
     };
 
     delete payload.referrerCreditValueReferee;
     delete payload.referrerCreditValueReferrer;
-    
+
     try {
       setIsSaving(true);
       await apiClient("api/v1/1/settings", "PUT", payload);
@@ -187,7 +190,7 @@ const AccountSettings: React.FC = () => {
                 htmlFor="pitch_owner_percent"
                 className="block text-sm font-medium text-gray-700"
               >
-                pitch Owner Percent
+                Pitch Owner Percent
               </label>
               <input
                 type="number"
@@ -330,6 +333,23 @@ const AccountSettings: React.FC = () => {
                 name="referrerCreditValueReferrer"
                 id="referrerCreditValueReferrer"
                 value={formData.referrerCreditValueReferrer}
+                onChange={handleInputChange}
+                className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+            </div>
+
+            <div className="mb-4">
+              <label
+                htmlFor="referrerCreditValueReferrer"
+                className="block text-sm font-medium text-gray-700"
+              >
+                First time booking discount (%)
+              </label>
+              <input
+                type="number"
+                name="first_booking_discount"
+                id="first_booking_discount"
+                value={formData.first_booking_discount}
                 onChange={handleInputChange}
                 className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />

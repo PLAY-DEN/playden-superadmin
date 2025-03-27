@@ -186,6 +186,8 @@ const AddNewPitch: React.FC = () => {
       image: fileInput,
       opening_hours: `${formData.openingHours} - ${formData.closingHours}`,
       size: formData.size,
+      booking_above_2_hours_discount:
+        formData.booking_above_2_hours_discount / 100,
       // "gallery[0]": galleryFiles[0],
     };
     // Append gallery files
