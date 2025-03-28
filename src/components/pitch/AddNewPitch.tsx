@@ -11,6 +11,7 @@ import {
   facilitiesOptions,
   fetchData,
   FormData,
+  validateHourlyDiscounts,
 } from "../../data/PitchFormData";
 import categoryClient from "../../api/client/category";
 import userClient from "../../api/client/user";
@@ -34,6 +35,28 @@ const AddNewPitch: React.FC = () => {
   const [facilities, setFacilities] = useState<any[]>([]);
 
   const [isLoading, setIsLoading] = useState(false);
+
+  const [hourlyDiscounts, setHourlyDiscounts] = React.useState<
+    { hours: number; discount: number }[]
+  >([]);
+
+  const handleAddDiscount = () => {
+    setHourlyDiscounts([...hourlyDiscounts, { hours: 0, discount: 0 }]);
+  };
+
+  const handleDiscountChange = (
+    index: number,
+    field: string,
+    value: number
+  ) => {
+    const updatedDiscounts: any = [...hourlyDiscounts];
+    updatedDiscounts[index][field] = value;
+    setHourlyDiscounts(updatedDiscounts);
+  };
+
+  const handleRemoveDiscount = (index: number) => {
+    setHourlyDiscounts(hourlyDiscounts.filter((_, i) => i !== index));
+  };
 
   const getPitchOwners = () => {
     fetchData(
@@ -166,6 +189,16 @@ const AddNewPitch: React.FC = () => {
       newErrors["image"] = "Please upload an image.";
     }
 
+    const validate = validateHourlyDiscounts(hourlyDiscounts);
+    if (validate) {
+      newErrors["hourlyDiscounts"] = validate;
+    } else if (
+      hourlyDiscounts.length > 0 &&
+      formData.discount_description == null
+    ) {
+      newErrors["hourlyDiscounts"] = "You must add a discount description";
+    }
+
     // Set errors in state
     setErrors(newErrors);
 
@@ -186,8 +219,7 @@ const AddNewPitch: React.FC = () => {
       image: fileInput,
       opening_hours: `${formData.openingHours} - ${formData.closingHours}`,
       size: formData.size,
-      booking_above_2_hours_discount:
-        formData.booking_above_2_hours_discount / 100,
+      hourly_discounts: JSON.stringify(hourlyDiscounts),
       // "gallery[0]": galleryFiles[0],
     };
     // Append gallery files
@@ -273,6 +305,10 @@ const AddNewPitch: React.FC = () => {
         setFormData={setFormData}
         handleSave={handleSave}
         isLoading={isLoading}
+        handleAddDiscount={handleAddDiscount}
+        handleDiscountChange={handleDiscountChange}
+        handleRemoveDiscount={handleRemoveDiscount}
+        hourlyDiscounts={hourlyDiscounts}
       />
     </div>
   );

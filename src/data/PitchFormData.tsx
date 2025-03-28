@@ -18,7 +18,9 @@ export interface FormData {
   amenities: any[] | null;
   facilities: any[] | null;
   image: File | any | null;
-  booking_above_2_hours_discount: number;
+  // booking_above_2_hours_discount: number;
+  hourlyDiscounts: { hours: number; discount: number } | any | null;
+  discount_description: string | null;
   // gallery: any[];
   [key: string]: any; // Add index signature
 }
@@ -41,7 +43,9 @@ export const defaultValues = {
   amenities: [],
   facilities: [],
   image: null,
-  booking_above_2_hours_discount: 0,
+  // booking_above_2_hours_discount: 0,
+  hourlyDiscounts: null,
+  discount_description: null,
   // gallery: [],
 };
 
@@ -87,3 +91,19 @@ export const facilitiesOptions = [
   { label: "Toilet", value: "Toilet" },
   { label: "Parking", value: "Parking" },
 ];
+
+export const validateHourlyDiscounts = (hourlyDiscounts: any[]) => {
+  if (!hourlyDiscounts || hourlyDiscounts.length === 0) return null;
+
+  const invalidDiscounts = hourlyDiscounts.filter(
+    (item) =>
+      !item.hours ||
+      item.hours <= 0 ||
+      item.discount === undefined ||
+      item.discount === ""
+  );
+
+  return invalidDiscounts.length > 0
+    ? "Each hourly discount must have a valid hours value (> 0) and a discount value."
+    : null;
+};

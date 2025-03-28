@@ -12,6 +12,7 @@ import {
   facilitiesOptions,
   fetchData,
   FormData,
+  validateHourlyDiscounts,
 } from "../../data/PitchFormData";
 import userClient from "../../api/client/user";
 import categoryClient from "../../api/client/category";
@@ -36,6 +37,28 @@ const UpdatePitch = () => {
   const [facilities, setFacilities] = useState<any[]>([]);
 
   const [isLoading, setIsLoading] = useState(false);
+
+  const [hourlyDiscounts, setHourlyDiscounts] = React.useState<
+    { hours: number | null; discount: number | null }[]
+  >([]);
+
+  const handleAddDiscount = () => {
+    setHourlyDiscounts([...hourlyDiscounts, { hours: null, discount: null }]);
+  };
+
+  const handleDiscountChange = (
+    index: number,
+    field: string,
+    value: number
+  ) => {
+    const updatedDiscounts: any = [...hourlyDiscounts];
+    updatedDiscounts[index][field] = value;
+    setHourlyDiscounts(updatedDiscounts);
+  };
+
+  const handleRemoveDiscount = (index: number) => {
+    setHourlyDiscounts(hourlyDiscounts.filter((_, i) => i !== index));
+  };
 
   const getPitchOwners = () => {
     fetchData(
@@ -94,6 +117,7 @@ const UpdatePitch = () => {
       const pitch = response.data;
 
       const openingHours = pitch.opening_hours.split(" - ");
+      const hourlyDiscounts = JSON.parse(pitch.hourly_discounts) || [];
 
       setFormData({
         name: pitch.name,
@@ -118,12 +142,13 @@ const UpdatePitch = () => {
         facilities: pitch.facilities,
         image: pitch.image,
         gallery: pitch.gallery,
-        booking_above_2_hours_discount:
-          pitch.booking_above_2_hours_discount * 100 || 0,
+        hourlyDiscounts,
+        discount_description: pitch.discount_description || null,
       });
 
       setAmenities(pitch.amenities);
       setFacilities(pitch.facilities);
+      setHourlyDiscounts(hourlyDiscounts);
     } catch (error) {
       toast.error("Error fetching pitch details.");
       console.error(error);
@@ -215,8 +240,19 @@ const UpdatePitch = () => {
       newErrors["image"] = "Please upload an image.";
     }
 
+    const validate = validateHourlyDiscounts(hourlyDiscounts);
+    if (validate) {
+      newErrors["hourlyDiscounts"] = validate;
+    } else if (
+      hourlyDiscounts.length > 0 &&
+      formData.discount_description == null
+    ) {
+      newErrors["hourlyDiscounts"] = "You must add a discount description";
+    }
+
     // Set errors in state
     setErrors(newErrors);
+    // validateHourlyDiscounts
 
     // If there are errors, return early
     if (Object.keys(newErrors).length > 0) {
@@ -234,8 +270,7 @@ const UpdatePitch = () => {
       facilities: JSON.stringify(facilities),
       opening_hours: `${formData.openingHours} - ${formData.closingHours}`,
       size: formData.size,
-      booking_above_2_hours_discount:
-        formData.booking_above_2_hours_discount / 100,
+      hourly_discounts: JSON.stringify(hourlyDiscounts),
     };
 
     if (fileInput) {
@@ -311,6 +346,10 @@ const UpdatePitch = () => {
         setFormData={setFormData}
         handleSave={handleSave}
         isLoading={isLoading}
+        handleAddDiscount={handleAddDiscount}
+        handleDiscountChange={handleDiscountChange}
+        handleRemoveDiscount={handleRemoveDiscount}
+        hourlyDiscounts={hourlyDiscounts}
       />
 
       <div className="w-full">

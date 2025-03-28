@@ -1,8 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import Input from "../forms/input";
 // import Select from "../forms/select";
-import { Loader, MultiSelect, Select } from "rizzui";
+import { Loader, MultiSelect, Select, Textarea } from "rizzui";
 import Button from "../forms/button";
+import {
+  FaClosedCaptioning,
+  FaExclamationCircle,
+  FaPlusCircle,
+  FaTrash,
+  FaTrashAlt,
+  FaXbox,
+} from "react-icons/fa";
 
 // Define the interface for the props
 interface PitchFormProps {
@@ -26,6 +34,10 @@ interface PitchFormProps {
   setFormData: React.Dispatch<React.SetStateAction<any>>;
   handleSave: () => void;
   isLoading: boolean;
+  handleAddDiscount: any;
+  handleDiscountChange: any;
+  handleRemoveDiscount: any;
+  hourlyDiscounts: any[];
 }
 
 const PitchForm: React.FC<PitchFormProps> = ({
@@ -47,6 +59,10 @@ const PitchForm: React.FC<PitchFormProps> = ({
   setFormData,
   handleSave,
   isLoading,
+  handleAddDiscount,
+  handleDiscountChange,
+  handleRemoveDiscount,
+  hourlyDiscounts,
 }) => {
   return (
     <>
@@ -137,7 +153,6 @@ const PitchForm: React.FC<PitchFormProps> = ({
               )}
             </div>
 
-
             <div>
               <label>Discount for bookings above 2 hours (%):</label>
               <Input
@@ -149,10 +164,12 @@ const PitchForm: React.FC<PitchFormProps> = ({
                 onChange={handleInputChange}
               />
               {errors.booking_above_2_hours_discount && (
-                <p className="text-red-500 text-sm">{errors.booking_above_2_hours_discount}</p>
+                <p className="text-red-500 text-sm">
+                  {errors.booking_above_2_hours_discount}
+                </p>
               )}
             </div>
-            
+
             <div>
               <label>Opening Hours:</label>
               <Input
@@ -272,7 +289,9 @@ const PitchForm: React.FC<PitchFormProps> = ({
                   handleSelectChange("owner_id", selected)
                 }
               />
-              {errors.owner_id && <p className="text-red-500 text-sm">{errors.owner_id}</p>}
+              {errors.owner_id && (
+                <p className="text-red-500 text-sm">{errors.owner_id}</p>
+              )}
             </div>
 
             <div>
@@ -375,6 +394,81 @@ const PitchForm: React.FC<PitchFormProps> = ({
               {errors.longitude && (
                 <p className="text-red-500 text-sm">{errors.longitude}</p>
               )}
+            </div>
+
+            <div>
+              <label>Hourly Discounts</label>
+              {hourlyDiscounts.map((discount, index) => (
+                <div key={index} className="flex gap-2 items-center">
+                  <div className="flex flex-col gap-y-">
+                    <label htmlFor="" className="text-sm text-gray-600">
+                      Hour
+                    </label>
+                    <Input
+                      type="number"
+                      disabled={isLoading}
+                      value={discount.hours || null}
+                      onChange={(e: any) =>
+                        handleDiscountChange(
+                          index,
+                          "hours",
+                          Number(e.target.value)
+                        )
+                      }
+                      placeholder="Hours"
+                    />
+                  </div>
+                  <div className="flex flex-col gap-y- ite">
+                    <label htmlFor="" className="text-sm text-gray-600">
+                      Discount (%)
+                    </label>
+                    <Input
+                      type="number"
+                      disabled={isLoading}
+                      value={discount.discount}
+                      onChange={(e: any) =>
+                        handleDiscountChange(
+                          index,
+                          "discount",
+                          Number(e.target.value)
+                        )
+                      }
+                      placeholder="Discount (%)"
+                    />
+                  </div>
+                  <button onClick={() => handleRemoveDiscount(index)}>
+                    <FaTrashAlt className="text-red" size={12} />
+                  </button>
+                </div>
+              ))}
+              <button className="mt-3" onClick={handleAddDiscount}>
+                <FaPlusCircle className="text-primary" size={12} />
+              </button>
+
+              {errors.hourlyDiscounts && (
+                <p className="text-red-500 text-sm">{errors.hourlyDiscounts}</p>
+              )}
+
+              {hourlyDiscounts.length > 0 && (
+                <div className="mt-2">
+                  <label>Discount Description:</label>
+                  <Textarea
+                    disabled={isLoading}
+                    name="discount_description"
+                    placeholder="Discount Description"
+                    className=""
+                    value={formData.discount_description}
+                    onChange={handleInputChange}
+                  />
+                  {errors.discount_description && (
+                    <p className="text-red-500 text-sm">
+                      {errors.discount_description}
+                    </p>
+                  )}
+                </div>
+              )}
+
+              {/*  */}
             </div>
           </div>
         </div>
