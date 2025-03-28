@@ -1,15 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import Input from "../forms/input";
-// import Select from "../forms/select";
 import { Loader, MultiSelect, Select, Textarea } from "rizzui";
 import Button from "../forms/button";
 import {
-  FaClosedCaptioning,
-  FaExclamationCircle,
   FaPlusCircle,
-  FaTrash,
   FaTrashAlt,
-  FaXbox,
 } from "react-icons/fa";
 
 // Define the interface for the props
