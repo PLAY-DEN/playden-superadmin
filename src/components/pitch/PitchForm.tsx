@@ -2,10 +2,7 @@ import React from "react";
 import Input from "../forms/input";
 import { Loader, MultiSelect, Select, Textarea } from "rizzui";
 import Button from "../forms/button";
-import {
-  FaPlusCircle,
-  FaTrashAlt,
-} from "react-icons/fa";
+import { FaPlusCircle, FaTrashAlt } from "react-icons/fa";
 
 // Define the interface for the props
 interface PitchFormProps {
@@ -133,7 +130,8 @@ const PitchForm: React.FC<PitchFormProps> = ({
               )}
             </div>
 
-            <div>
+            {/*  // disabled this since we already have the hourly discounts */}
+            <div className="hidden">
               <label>Discount (%):</label>
               <Input
                 disabled={isLoading}
