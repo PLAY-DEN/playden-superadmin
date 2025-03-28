@@ -147,23 +147,6 @@ const PitchForm: React.FC<PitchFormProps> = ({
             </div>
 
             <div>
-              <label>Discount for bookings above 2 hours (%):</label>
-              <Input
-                disabled={isLoading}
-                type="number"
-                name="booking_above_2_hours_discount"
-                className="border px-2 py-1"
-                value={formData.booking_above_2_hours_discount}
-                onChange={handleInputChange}
-              />
-              {errors.booking_above_2_hours_discount && (
-                <p className="text-red-500 text-sm">
-                  {errors.booking_above_2_hours_discount}
-                </p>
-              )}
-            </div>
-
-            <div>
               <label>Opening Hours:</label>
               <Input
                 disabled={isLoading}
