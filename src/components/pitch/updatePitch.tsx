@@ -123,7 +123,7 @@ const UpdatePitch = () => {
         name: pitch.name,
         address: pitch.address,
         amountPerHour: pitch.amount_per_hour.toString(),
-        discount: pitch.discount.toString(),
+        // discount: pitch.discount.toString(),
         // ratings: pitch.ratings.toString(),
         category_id: pitch.category_id.toString(),
         contact: pitch.contact,

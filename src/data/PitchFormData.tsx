@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 export interface FormData {
   name: string;
   amountPerHour: string;
-  discount: string;
+  // discount: string;
   address: string;
   category_id: string;
   contact: string;
@@ -28,7 +28,7 @@ export interface FormData {
 export const defaultValues = {
   name: "",
   amountPerHour: "",
-  discount: "",
+  // discount: "",
   address: "",
   category_id: "",
   contact: "",
