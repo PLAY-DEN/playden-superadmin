@@ -2,8 +2,8 @@ import { useState } from "react";
 import { ApiClient } from "../api/client";
 import { toast, ToastContainer } from "react-toastify";
 import Input from "../components/forms/input";
-import Textarea from "../components/forms/textarea";
-import { Button } from "rizzui";
+// import Textarea from "../components/forms/textarea";
+import { Button, Textarea } from "rizzui";
 
 interface FormData {
   message_title: string;
@@ -123,9 +123,9 @@ const SendAnnouncementForm = () => {
         <div>
           <label htmlFor="">Message Body</label>
           <Textarea
-            // disabled={isLoading}
+            disabled={isLoading}
             name="message_body"
-            placeholder="Message Body"
+            placeholder="Discount Description"
             className={`border px-2 py-1 w-full rounded-xl ${
               errors.message_body ? "border-red-500" : ""
             }`}
@@ -136,30 +136,6 @@ const SendAnnouncementForm = () => {
             <p className="text-red-500 text-sm">{errors.message_body}</p>
           )}
         </div>
-
-        {/* <div>
-          <Select
-            name="user_type"
-            disabled={isLoading}
-            className={`border px-2 py-1 w-full ${
-              errors.user_type ? "border-red-500" : ""
-            }`}
-            value={formData.user_type}
-            onChange={handleInputChange}
-            options={[
-              { label: "All", value: "all" },
-              { label: "Staff", value: "staff" },
-              { label: "Employers", value: "employers" },
-              { label: "Merchants", value: "merchants" },
-            ].map((option) => ({
-              label: option.label,
-              value: option.value,
-            }))}
-          ></Select>
-          {errors.user_type && (
-            <p className="text-red-500 text-sm">{errors.user_type}</p>
-          )}
-        </div> */}
 
         <Button
           type="submit"
