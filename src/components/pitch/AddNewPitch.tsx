@@ -11,10 +11,12 @@ import {
   facilitiesOptions,
   fetchData,
   FormData,
+  NIGERIAN_STATES,
   validateHourlyDiscounts,
 } from "../../data/PitchFormData";
 import categoryClient from "../../api/client/category";
 import userClient from "../../api/client/user";
+
 
 const AddNewPitch: React.FC = () => {
   const [fileInput, setFileInput] = useState<File | null>(null);
@@ -39,6 +41,11 @@ const AddNewPitch: React.FC = () => {
   const [hourlyDiscounts, setHourlyDiscounts] = React.useState<
     { hours: number; discount: number }[]
   >([]);
+
+  const stateOptions = NIGERIAN_STATES.map((state) => ({
+    value: state,
+    label: state,
+  }));
 
   const handleAddDiscount = () => {
     setHourlyDiscounts([...hourlyDiscounts, { hours: 0, discount: 0 }]);
@@ -220,6 +227,7 @@ const AddNewPitch: React.FC = () => {
       opening_hours: `${formData.openingHours} - ${formData.closingHours}`,
       size: formData.size,
       hourly_discounts: JSON.stringify(hourlyDiscounts),
+      state: formData.state,
       // "gallery[0]": galleryFiles[0],
     };
     // Append gallery files
@@ -301,6 +309,7 @@ const AddNewPitch: React.FC = () => {
         setAmenities={setAmenities}
         facilities={facilities}
         facilitiesOptions={facilitiesOptions}
+        stateOptions={stateOptions}
         setFacilities={setFacilities}
         setFormData={setFormData}
         handleSave={handleSave}

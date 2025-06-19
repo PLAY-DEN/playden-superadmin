@@ -88,6 +88,7 @@ const Sidebar: React.FC = () => {
           { name: "Play Points", icon: playPoint, route: "/play-point" },
           { name: "Financial & Analytics", icon: finance, route: "/finances" },
           { name: "Ratings & Reviews", icon: finance, route: "/reviews" },
+          { name: "Send Announcement", icon: finance, route: "/send-announcement" },
         ].map((item) => (
           <Link
             key={item.name}

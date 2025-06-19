@@ -47,7 +47,7 @@ const CreateCategoryModal: React.FC<CreateCategoryModalProps> = ({
     const baseUrl = import.meta.env.VITE_BASE_URL;
 
     try {
-      const response = await fetch(`${baseUrl}/admin/categories`, {
+      const response = await fetch(`${baseUrl}/api/v1/admin/categories`, {
         method: "POST",
         headers: myHeaders,
         body: formData,

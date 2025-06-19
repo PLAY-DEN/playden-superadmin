@@ -12,6 +12,7 @@ import {
   facilitiesOptions,
   fetchData,
   FormData,
+  NIGERIAN_STATES,
   validateHourlyDiscounts,
 } from "../../data/PitchFormData";
 import userClient from "../../api/client/user";
@@ -115,6 +116,7 @@ const UpdatePitch = () => {
     try {
       const response = await pitchClient.getPitch({}, pitchId!);
       const pitch = response.data;
+      console.log({ pitch: pitch });
 
       const openingHours = pitch.opening_hours.split(" - ");
       const hourlyDiscounts = JSON.parse(pitch.hourly_discounts) || [];
@@ -144,6 +146,7 @@ const UpdatePitch = () => {
         gallery: pitch.gallery,
         hourlyDiscounts,
         discount_description: pitch.discount_description || null,
+        state: pitch.state,
       });
 
       setAmenities(pitch.amenities);
@@ -158,6 +161,11 @@ const UpdatePitch = () => {
   useEffect(() => {
     fetchPitch();
   }, [pitchId]);
+
+  const stateOptions = NIGERIAN_STATES.map((state) => ({
+    value: state,
+    label: state,
+  }));
 
   const handleCategoryCreated = (newCategory: { id: string; name: string }) => {
     const newOption = { value: newCategory.id, label: newCategory.name };
@@ -343,6 +351,7 @@ const UpdatePitch = () => {
         facilities={facilities}
         facilitiesOptions={facilitiesOptions}
         setFacilities={setFacilities}
+        stateOptions={stateOptions}
         setFormData={setFormData}
         handleSave={handleSave}
         isLoading={isLoading}

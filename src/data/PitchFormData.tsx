@@ -22,6 +22,7 @@ export interface FormData {
   hourlyDiscounts: { hours: number; discount: number } | any | null;
   discount_description: string | null;
   // gallery: any[];
+  state: string;
   [key: string]: any; // Add index signature
 }
 
@@ -46,6 +47,7 @@ export const defaultValues = {
   // booking_above_2_hours_discount: 0,
   hourlyDiscounts: null,
   discount_description: null,
+  state: "",
   // gallery: [],
 };
 
@@ -107,3 +109,43 @@ export const validateHourlyDiscounts = (hourlyDiscounts: any[]) => {
     ? "Each hourly discount must have a valid hours value (> 0) and a discount value."
     : null;
 };
+
+export const NIGERIAN_STATES = [
+  "Abia",
+  "Adamawa",
+  "Akwa Ibom",
+  "Anambra",
+  "Bauchi",
+  "Bayelsa",
+  "Benue",
+  "Borno",
+  "Cross River",
+  "Delta",
+  "Ebonyi",
+  "Edo",
+  "Ekiti",
+  "Enugu",
+  "FCT - Abuja",
+  "Gombe",
+  "Imo",
+  "Jigawa",
+  "Kaduna",
+  "Kano",
+  "Katsina",
+  "Kebbi",
+  "Kogi",
+  "Kwara",
+  "Lagos",
+  "Nasarawa",
+  "Niger",
+  "Ogun",
+  "Ondo",
+  "Osun",
+  "Oyo",
+  "Plateau",
+  "Rivers",
+  "Sokoto",
+  "Taraba",
+  "Yobe",
+  "Zamfara",
+];

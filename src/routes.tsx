@@ -23,6 +23,7 @@ import BookingDetails from "./pages/bookingManagement/bookingDetails";
 import RatingManagement from "./pages/ratingMangement";
 import ProfileSettings from "./pages/accountSettings/ProfileSettings";
 import Ads from "./pages/ads";
+import SendAnnouncementForm from "./pages/SendAnnouncementForm";
 
 const MyRoutes = () => (
   <Routes>
@@ -178,7 +179,7 @@ const MyRoutes = () => (
           </ProtectedRoute>
         }
       />
-       <Route
+      <Route
         path="/profile-settings"
         element={
           <ProtectedRoute>
@@ -186,11 +187,19 @@ const MyRoutes = () => (
           </ProtectedRoute>
         }
       />
-       <Route
+      <Route
         path="/ads"
         element={
           <ProtectedRoute>
             <Ads />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/send-announcement"
+        element={
+          <ProtectedRoute>
+            <SendAnnouncementForm />
           </ProtectedRoute>
         }
       />

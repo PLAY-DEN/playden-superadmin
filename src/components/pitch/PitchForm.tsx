@@ -19,6 +19,7 @@ interface PitchFormProps {
   categories: any[];
   amenities: any[];
   amenitiesOptions: any[];
+  stateOptions: any[];
   setAmenities: (selected: any[]) => void;
   facilities: any[];
   facilitiesOptions: any[];
@@ -48,6 +49,7 @@ const PitchForm: React.FC<PitchFormProps> = ({
   facilities,
   facilitiesOptions,
   setFacilities,
+  stateOptions,
   setFormData,
   handleSave,
   isLoading,
@@ -369,6 +371,22 @@ const PitchForm: React.FC<PitchFormProps> = ({
               />
               {errors.longitude && (
                 <p className="text-red-500 text-sm">{errors.longitude}</p>
+              )}
+            </div>
+
+            <div>
+              <label>State</label>
+              <Select
+                disabled={isLoading}
+                selectClassName="py-1 rounded-full border-[0.4px] border-primary"
+                options={stateOptions}
+                value={stateOptions.find((opt) => opt.value.toLowerCase() === formData.state.toLowerCase())}
+                onChange={(selected: any) =>
+                  handleSelectChange("state", selected)
+                }
+              />
+              {errors.state && (
+                <p className="text-red-500 text-sm">{errors.state}</p>
               )}
             </div>
 
