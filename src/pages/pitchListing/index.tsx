@@ -127,7 +127,7 @@ const PitchListing: React.FC = () => {
                 id={pitch.id}
                 imageSrc={pitch.image}
                 address={pitch.address}
-                state={pitch.state}
+                pitchState={pitch.state}
                 pitchSize={pitch.size}
                 name={pitch.name}
                 contact={pitch.contact}

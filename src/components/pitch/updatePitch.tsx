@@ -116,7 +116,6 @@ const UpdatePitch = () => {
     try {
       const response = await pitchClient.getPitch({}, pitchId!);
       const pitch = response.data;
-      console.log({ pitch: pitch });
 
       const openingHours = pitch.opening_hours.split(" - ");
       const hourlyDiscounts = JSON.parse(pitch.hourly_discounts) || [];

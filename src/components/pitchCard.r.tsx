@@ -6,7 +6,7 @@ import Button from "./forms/button";
 
 interface PitchCardProps {
   address: string;
-  state: string;
+  pitchState: string;
   pitchSize: string;
   imageSrc: string;
   name: string;
@@ -18,7 +18,7 @@ interface PitchCardProps {
 
 const PitchCard: React.FC<PitchCardProps> = ({
   address,
-  state,
+  pitchState,
   pitchSize,
   imageSrc,
   name,
@@ -99,7 +99,7 @@ const PitchCard: React.FC<PitchCardProps> = ({
             )}
           </p>
           <p>
-            <span className="font-semibold">State:</span> {state}
+            <span className="font-semibold">State:</span> {pitchState}
           </p>
         </div>
       </div>
