@@ -1,21 +1,34 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import categoryClient from "../api/client/category";
 
 interface CreateCategoryModalProps {
   isOpen: boolean;
   onClose: () => void;
   onCategoryCreated: (newCategory: { id: string; name: string }) => void;
+  isEdit?: boolean;
+  initialData?: { id: string; name: string; featured_image?: string };
 }
 
 const CreateCategoryModal: React.FC<CreateCategoryModalProps> = ({
   isOpen,
   onClose,
   onCategoryCreated,
+  isEdit = false,
+  initialData,
 }) => {
   const [name, setName] = useState("");
   const [fileInput, setFileInput] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    if (isEdit && initialData) {
+      setName(initialData.name || "");
+    }
+    setErrors({}); // Reset errors
+  }, [isEdit, initialData]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -25,54 +38,59 @@ const CreateCategoryModal: React.FC<CreateCategoryModalProps> = ({
 
   const handleSubmit = async () => {
     if (!name) {
-      toast.error("Please enter a category name.");
+      setErrors({ name: "Category name is required." });
       return;
     }
 
-    if (!fileInput) {
-      toast.error("Please upload a featured image.");
+    if (!isEdit && !fileInput) {
+      setErrors({ featured_image: "Featured image is required." });
       return;
     }
-
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("featured_image", fileInput);
-
-    const myHeaders = new Headers();
-    myHeaders.append("Accept", "application/json");
-    myHeaders.append("Authorization", `Bearer ${localStorage.getItem("token")}`);
+    if (isEdit && !fileInput && !initialData?.featured_image) {
+      setErrors({ featured_image: "Featured image is required." });
+      return;
+    }
+    const formData = {
+      name: name,
+      featured_image: fileInput,
+    };
 
     setIsSubmitting(true);
 
-    const baseUrl = import.meta.env.VITE_BASE_URL;
-
     try {
-      const response = await fetch(`${baseUrl}/api/v1/admin/categories`, {
-        method: "POST",
-        headers: myHeaders,
-        body: formData,
-      });
-
-      const result = await response.json();
-      if (!response.ok) {
-        throw new Error(result.message || "Error creating category");
+      let response;
+      if (isEdit && initialData) {
+        response = await categoryClient.updateCategory(
+          formData,
+          initialData?.id || ""
+        );
+      } else {
+        response = await categoryClient.createCategory(formData);
       }
 
       const newCategory = {
-        id: result.data.id, 
-        name: result.data.name, 
+        id: response.data.id,
+        name: response.data.name,
       };
 
-      toast.success("Category created successfully!");
-      setName("");
-      setFileInput(null);
+      toast.success(isEdit ? "Category updated" : "Category created");
+
+      if (!isEdit) {
+        // Reset the form fields after successful creation
+        setName("");
+        setFileInput(null);
+      }
 
       // Pass the created category to the parent component
       onCategoryCreated(newCategory);
 
       onClose();
     } catch (error: any) {
+      console.log("Error creating/updating category:", error);
       toast.error(`Error: ${error.message}`);
+      const e = error?.data;
+      if (e) setErrors(e);
+      console.log(e);
     } finally {
       setIsSubmitting(false);
     }
@@ -85,22 +103,32 @@ const CreateCategoryModal: React.FC<CreateCategoryModalProps> = ({
       <div className="bg-white rounded-lg p-6 w-96">
         <h2 className="text-lg font-bold mb-4">Create New Category</h2>
         <div className="mb-4">
-          <label className="block text-sm font-semibold mb-2">Category Name</label>
+          <label className="block text-sm font-semibold mb-2">
+            Category Name
+          </label>
           <input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="w-full border border-gray-300 rounded px-3 py-2"
           />
+          {errors.name && (
+            <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+          )}
         </div>
         <div className="mb-4">
-          <label className="block text-sm font-semibold mb-2">Featured Image</label>
+          <label className="block text-sm font-semibold mb-2">
+            Featured Image
+          </label>
           <input
             type="file"
             accept="image/*"
             onChange={handleFileChange}
             className="w-full border border-gray-300 rounded px-3 py-2"
           />
+          {errors.featured_image && (
+            <p className="text-red-500 text-sm mt-1">{errors.featured_image}</p>
+          )}
         </div>
         <div className="flex justify-end">
           <button

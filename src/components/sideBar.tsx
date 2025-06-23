@@ -75,6 +75,7 @@ const Sidebar: React.FC = () => {
         <h1 className="font-bold text-xs">MENU</h1>
         {[
           { name: "Pitch Listing", icon: pitch, route: "/pitch-listing" },
+          { name: "Pitch Categories", icon: pitch, route: "/categories" },
           {
             name: "Booking Management",
             icon: booking,

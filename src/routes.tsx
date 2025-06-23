@@ -24,6 +24,7 @@ import RatingManagement from "./pages/ratingMangement";
 import ProfileSettings from "./pages/accountSettings/ProfileSettings";
 import Ads from "./pages/ads";
 import SendAnnouncementForm from "./pages/SendAnnouncementForm";
+import PitchCategories from "./pages/pitchCategories";
 
 const MyRoutes = () => (
   <Routes>
@@ -200,6 +201,14 @@ const MyRoutes = () => (
         element={
           <ProtectedRoute>
             <SendAnnouncementForm />
+          </ProtectedRoute>
+        }
+      />
+       <Route
+        path="/categories"
+        element={
+          <ProtectedRoute>
+            <PitchCategories />
           </ProtectedRoute>
         }
       />
